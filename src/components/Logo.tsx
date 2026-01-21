@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { cn } from '../lib/utils';
+import React from "react";
+import { cn } from "../lib/utils";
 
 interface LogoProps {
     className?: string;
@@ -10,56 +9,49 @@ interface LogoProps {
 export const Logo: React.FC<LogoProps> = ({ className, textClassName }) => {
     return (
         <div className={cn("flex items-center gap-3 select-none", className)}>
-            <svg
-                viewBox="0 0 300 60"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-full w-auto"
-                aria-label="NMU Academics Logo"
-            >
-                {/* Icon Container: Blue Vertical Pill */}
-                <rect
-                    x="0"
-                    y="5"
-                    width="36"
-                    height="50"
-                    rx="12"
-                    className="fill-indigo-600 dark:fill-indigo-500"
-                />
-
-                {/* Stylized 'N' inside the container */}
-                <path
-                    d="M12 20 V40 L24 20 V40"
-                    stroke="white"
-                    strokeWidth="3.5"
+            {/* Icon */}
+            <div className="flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                <svg
+                    viewBox="0 0 24 24"
+                    className="h-7 w-7 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                />
+                    aria-label="NMU StudyHub Logo"
+                >
+                    {/* Outer frame (authority) */}
+                    <rect x="4" y="4" width="16" height="16" rx="3" />
 
-                {/* Text: NMU */}
-                <text
-                    x="50"
-                    y="42"
-                    fontFamily="Inter, sans-serif"
-                    fontWeight="800"
-                    fontSize="32"
-                    className={cn("fill-slate-900 dark:fill-white", textClassName)}
+                    {/* Compass / Focus diamond */}
+                    <path d="M12 7 L15 12 L12 17 L9 12 Z" />
+
+                    {/* Knowledge path */}
+                    <path d="M12 4 V7" />
+                    <path d="M12 17 V20" />
+                </svg>
+            </div>
+
+            {/* Text */}
+            <div className="flex flex-col leading-none">
+                <span
+                    className={cn(
+                        "font-sans font-extrabold text-xl tracking-tight text-slate-900 dark:text-white",
+                        textClassName
+                    )}
                 >
                     NMU
-                </text>
-
-                {/* Text: ACADEMICS */}
-                <text
-                    x="135"
-                    y="42"
-                    fontFamily="Inter, sans-serif"
-                    fontWeight="300"
-                    fontSize="32"
-                    className={cn("fill-slate-900 dark:fill-white", textClassName)}
+                </span>
+                <span
+                    className={cn(
+                        "font-sans text-[0.7rem] font-medium tracking-widest uppercase text-slate-500 dark:text-slate-400",
+                        textClassName
+                    )}
                 >
-                    ACADEMICS
-                </text>
-            </svg>
+                    StudyHub
+                </span>
+            </div>
         </div>
     );
 };
