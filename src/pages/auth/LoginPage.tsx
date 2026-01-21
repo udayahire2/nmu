@@ -5,7 +5,7 @@ import { useUser } from '../../context/UserContext';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../components/ui/Card';
-import { Mail, Lock, ArrowRight, Loader } from 'lucide-react';
+import { Mail, Lock } from 'lucide-react';
 
 export default function LoginPage() {
     const navigate = useNavigate();
