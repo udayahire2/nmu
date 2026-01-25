@@ -3,22 +3,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Search, FileText, Video, File, FileCode, Download, Eye, PlayCircle } from "lucide-react";
-import { subjects, semesters, branches, type Resource } from '../data/mockResources';
+import { semesters, branches, type Resource } from '../data/mockResources';
 import { Loader2 } from "lucide-react";
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion";
+
 
 export default function StudyMaterialsPage() {
     const [searchQuery, setSearchQuery] = useState("");
-    const [selectedSubject, setSelectedSubject] = useState("All");
+    // const [selectedSubject, setSelectedSubject] = useState("All");
     const [selectedSemester, setSelectedSemester] = useState("All");
     const [selectedBranch, setSelectedBranch] = useState("All");
     const [activeTab, setActiveTab] = useState("all");
@@ -69,7 +64,7 @@ export default function StudyMaterialsPage() {
     const filteredResources = resources.filter(resource => {
         const matchesSearch = resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             resource.description.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesSubject = selectedSubject === "All" || resource.subject === selectedSubject;
+        // const matchesSubject = selectedSubject === "All" || resource.subject === selectedSubject;
         const matchesSemester = selectedSemester === "All" || resource.semester === selectedSemester;
         const matchesBranch = selectedBranch === "All" || resource.branch === selectedBranch;
         const matchesTab = activeTab === "all" ||
@@ -77,7 +72,7 @@ export default function StudyMaterialsPage() {
             (activeTab === "videos" && resource.type === 'video') ||
             (activeTab === "papers" && resource.type === 'doc');
 
-        return matchesSearch && matchesSubject && matchesSemester && matchesBranch && matchesTab;
+        return matchesSearch && matchesSemester && matchesBranch && matchesTab;
     });
 
     return (
@@ -154,7 +149,7 @@ export default function StudyMaterialsPage() {
                 )}
             </div>
 
-           
+
         </div>
     );
 }

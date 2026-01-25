@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import {
-    Maximize,
-    Minimize,
+
     Pause,
     Play,
     SkipBack,

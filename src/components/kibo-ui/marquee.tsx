@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { motion, useAnimationControls } from "framer-motion";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 
 interface MarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -49,9 +49,9 @@ const MarqueeContent = React.forwardRef<HTMLDivElement, MarqueeContentProps>(
             pauseOnHover = false,
             direction = "left",
             speed = 20,
-            ...props
+            // ...props
         },
-        ref
+        _ref
     ) => {
         // Duplicate children to create infinite effect
         const [content, setContent] = useState<React.ReactNode[]>([]);

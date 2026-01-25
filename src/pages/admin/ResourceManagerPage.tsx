@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Plus, Search, Trash2, Edit, MoreHorizontal, Link as LinkIcon } from "lucide-react";
+import { Loader2, Plus, MoreHorizontal } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,

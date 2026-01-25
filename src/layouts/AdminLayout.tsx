@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, BookOpen, Settings, LogOut, Menu, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { ThemeProvider } from "@/components/theme-provider";
+// import { ThemeProvider } from "@/components/theme-provider";
 import { Logo } from "@/components/ui/Logo";
 
 export default function AdminLayout() {

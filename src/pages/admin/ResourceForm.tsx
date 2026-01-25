@@ -18,7 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea"; // Need to ensure textarea exists or use Input for now
+// import { Textarea } from "@/components/ui/textarea"; // Need to ensure textarea exists or use Input for now
 import { branches, semesters } from "@/data/mockResources"; // Reusing these constants
 
 const formSchema = z.object({

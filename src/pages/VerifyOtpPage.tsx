@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 
 export default function VerifyOtpPage() {
     const [searchParams] = useSearchParams();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
     const [loading, setLoading] = useState(false);

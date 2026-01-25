@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { ArrowRight, Megaphone } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import React from "react";
 
 interface AnnouncementProps extends React.HTMLAttributes<HTMLDivElement> {
