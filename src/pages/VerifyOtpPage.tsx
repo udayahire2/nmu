@@ -75,7 +75,7 @@ export default function VerifyOtpPage() {
                                 id="otp"
                                 placeholder="Enter 6-digit OTP"
                                 value={otp}
-                                onChange={(e) => setOtp(e.target.value)}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOtp(e.target.value)}
                                 required
                                 maxLength={6}
                             />

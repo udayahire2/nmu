@@ -100,7 +100,7 @@ export default function StudyMaterialsPage() {
                             placeholder="Search topics..."
                             className="pl-9 h-10 bg-muted/50 border-transparent hover:bg-muted focus:bg-background transition-all"
                             value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                         />
                     </div>
                     <div className="flex gap-2 w-full md:w-auto">

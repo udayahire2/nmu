@@ -101,7 +101,7 @@ export default function ResourceManagerPage() {
                 <Input
                     placeholder="Filter resources..."
                     value={search}
-                    onChange={(event) => setSearch(event.target.value)}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSearch(event.target.value)}
                     className="max-w-sm"
                 />
             </div>

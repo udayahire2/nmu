@@ -72,7 +72,7 @@ const SignUp = () => {
               placeholder="e.g. Hitesh Patil"
               required
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
             />
           </div>
           <div className="space-y-2">
@@ -82,7 +82,7 @@ const SignUp = () => {
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               required
               value={branch}
-              onChange={(e) => setBranch(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setBranch(e.target.value)}
             >
               <option value="" disabled>Select Branch</option>
               <option value="Computer">Computer</option>
@@ -100,7 +100,7 @@ const SignUp = () => {
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               required
               value={year}
-              onChange={(e) => setYear(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setYear(e.target.value)}
             >
               <option value="" disabled>Select Year</option>
               <option value="FE">FE</option>
@@ -113,7 +113,7 @@ const SignUp = () => {
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               placeholder="m@example.com"
               type="email"
               required
@@ -124,7 +124,7 @@ const SignUp = () => {
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               type="password"
               required
               value={password}

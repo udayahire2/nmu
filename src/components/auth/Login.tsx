@@ -68,7 +68,7 @@ const Login = () => {
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               placeholder="m@example.com"
               type="email"
               required
@@ -84,7 +84,7 @@ const Login = () => {
             </div>
             <Input
               id="password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               type="password"
               required
               value={password}
