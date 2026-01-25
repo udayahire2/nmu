@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
@@ -7,7 +7,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Search, FileText, Video, File, FileCode, Download, Eye, PlayCircle } from "lucide-react";
-import { mockResources, subjects, semesters, branches, type Resource } from '../data/mockResources';
+import { subjects, semesters, branches, type Resource } from '../data/mockResources';
+import { Loader2 } from "lucide-react";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export default function StudyMaterialsPage() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -15,6 +22,28 @@ export default function StudyMaterialsPage() {
     const [selectedSemester, setSelectedSemester] = useState("All");
     const [selectedBranch, setSelectedBranch] = useState("All");
     const [activeTab, setActiveTab] = useState("all");
+    const [resources, setResources] = useState<Resource[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchResources = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/v1/resources');
+                const data = await response.json();
+                if (data.success) {
+                    // Map _id to id for frontend compatibility
+                    const mappedData = data.data.map((r: any) => ({ ...r, id: r._id }));
+                    setResources(mappedData);
+                }
+            } catch (error) {
+                console.error("Failed to fetch resources:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchResources();
+    }, []);
 
     const getBadgeVariant = (type: string) => {
         switch (type) {
@@ -37,7 +66,7 @@ export default function StudyMaterialsPage() {
     };
 
     // Filter Logic
-    const filteredResources = mockResources.filter(resource => {
+    const filteredResources = resources.filter(resource => {
         const matchesSearch = resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             resource.description.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesSubject = selectedSubject === "All" || resource.subject === selectedSubject;
@@ -114,10 +143,18 @@ export default function StudyMaterialsPage() {
                 </Tabs>
             </div>
 
-            {/* Content Area - Removing the nested TabsContent wrappers to simplify, as logic handles filtering */}
+            {/* Content Area */}
             <div className="min-h-[500px]">
-                <ResourceGrid resources={filteredResources} getBadgeVariant={getBadgeVariant} getIcon={getIcon} />
+                {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                ) : (
+                    <ResourceGrid resources={filteredResources} getBadgeVariant={getBadgeVariant} getIcon={getIcon} />
+                )}
             </div>
+
+           
         </div>
     );
 }

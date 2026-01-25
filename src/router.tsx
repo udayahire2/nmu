@@ -5,6 +5,9 @@ import AboutPage from "./pages/AboutPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import StudyMaterialsPage from "./pages/StudyMaterialsPage";
+import AdminLayout from "./layouts/AdminLayout";
+import DashboardPage from "./pages/admin/DashboardPage";
+import ResourceManagerPage from "./pages/admin/ResourceManagerPage";
 
 export const router = createBrowserRouter([
     {
@@ -32,5 +35,23 @@ export const router = createBrowserRouter([
     {
         path: "/signup",
         element: <SignUpPage />,
+    },
+    {
+        path: "/admin",
+        element: <AdminLayout />,
+        children: [
+            {
+                path: "dashboard",
+                element: <DashboardPage />,
+            },
+            {
+                path: "resources",
+                element: <ResourceManagerPage />,
+            },
+            {
+                path: "",
+                element: <DashboardPage />, // Default redirect
+            }
+        ],
     },
 ]);
