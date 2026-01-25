@@ -247,6 +247,25 @@ const VideoPlayerMuteButton = () => {
     );
 };
 
+const VideoPlayerOverlay = () => {
+    const { isPlaying, togglePlay } = useVideoPlayer();
+
+    return (
+        <div
+            className={cn(
+                "absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity duration-300",
+                isPlaying ? "opacity-0 pointer-events-none" : "opacity-100"
+            )}
+            onClick={togglePlay}
+        >
+            <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm transition-transform duration-300 hover:scale-110 cursor-pointer">
+                <div className="absolute inset-0 animate-ping rounded-full bg-white/20 opacity-0 group-hover:opacity-100" />
+                <Play className="h-10 w-10 fill-white text-white pl-1" />
+            </div>
+        </div>
+    );
+};
+
 const VideoPlayerTimeDisplay = ({ showDuration }: { showDuration?: boolean }) => {
     const { currentTime, duration } = useVideoPlayer();
 
@@ -300,4 +319,5 @@ export {
     VideoPlayerTimeRange,
     VideoPlayerVolumeRange,
     VideoPlayerMuteButton,
+    VideoPlayerOverlay,
 };

@@ -1,9 +1,11 @@
 import { Github, Twitter, Linkedin } from "lucide-react"
 import { Logo } from "@/components/ui/Logo"
+import { GridLine } from "@/components/ui/GridLine"
 
 export function Footer() {
     return (
-        <footer className="w-full border-t border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pt-16 pb-8">
+        <footer className="w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pt-16 pb-8 relative">
+            <GridLine className="absolute top-0 left-0" />
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
                     <div className="flex flex-col gap-4">

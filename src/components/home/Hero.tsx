@@ -31,7 +31,9 @@ import {
     VideoPlayerSeekForwardButton,
     VideoPlayerTimeDisplay,
     VideoPlayerTimeRange,
+
     VideoPlayerVolumeRange,
+    VideoPlayerOverlay,
 } from "@/components/kibo-ui/video-player";
 import { Link } from "react-router-dom";
 
@@ -74,7 +76,7 @@ const logos = [
 ];
 
 const Hero = () => (
-    <div className="relative flex flex-col items-center justify-center overflow-hidden pt-24 pb-16 md:pt-32 md:pb-24">
+    <div className="relative flex flex-col items-center justify-center overflow-hidden pt-20 pb-16 md:pt-28 md:pb-24">
         {/* Background Effects */}
         <div className="absolute inset-0 -z-10 h-full w-full bg-background [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] opacity-20" />
         <div className="absolute inset-0 -z-10 h-full w-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
@@ -83,48 +85,46 @@ const Hero = () => (
 
             {/* Announcement */}
             <Link to="#" className="animate-fade-in-up [--animation-delay:200ms]">
-                <Announcement className="mx-auto max-w-fit border-primary/20 bg-primary/10 transition-all hover:bg-primary/15 hover:border-primary/30">
-                    <AnnouncementTag className="bg-primary/20 text-primary">New</AnnouncementTag>
-                    <AnnouncementTitle className="text-sm font-medium">Introducing Syllabus Components</AnnouncementTitle>
+                <Announcement className="mx-auto max-w-fit border-primary/20 bg-primary/5 backdrop-blur-sm transition-all hover:bg-primary/10 hover:border-primary/40 shadow-sm">
+                    <AnnouncementTag className="bg-primary/20 text-primary">Update</AnnouncementTag>
+                    <AnnouncementTitle className="text-sm font-medium">Content is organized by syllabus</AnnouncementTitle>
                 </Announcement>
             </Link>
 
             {/* Heading */}
-            <div className="max-w-4xl space-y-4 animate-fade-in-up [--animation-delay:400ms]">
-                <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
-                    The <span className="text-primary">Ultimate</span> Platform for <br className="hidden md:block" />
-                    <span className="bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
-                        University Resources
+            <div className="max-w-5xl space-y-6 animate-fade-in-up [--animation-delay:400ms]">
+                <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1]">
+                    University <span className="bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
+                        Study Resources
                     </span>
                 </h1>
-                <p className="mx-auto max-w-2xl text-balance text-base text-muted-foreground sm:text-lg md:text-xl leading-relaxed">
-                    Access premium study materials, syllabus-wise notes, and previous year papers.
-                    Everything you need to ace your exams in one place.
+                <p className="mx-auto max-w-2xl text-balance text-lg text-muted-foreground sm:text-xl md:text-2xl leading-relaxed">
+                    Download notes, previous question papers, and other study materials for your exams.
                 </p>
             </div>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center gap-4 animate-fade-in-up [--animation-delay:600ms]">
-                <Button size="lg" className="h-12 min-w-[160px] text-base px-8 " asChild>
-                    <Link to="/resources">Start Learning</Link>
+                <Button size="lg" className="h-14 min-w-[180px] text-lg px-8 transition-all hover:-translate-y-0.5" asChild>
+                    <Link to="/resources">View Resources</Link>
                 </Button>
-                <Button size="lg" variant="outline" className="h-12 min-w-[160px] text-base px-8 " asChild>
+                <Button size="lg" variant="outline" className="h-14 min-w-[180px] text-lg px-8 transition-all hover:-translate-y-0.5" asChild>
                     <Link to="/about">
-                        How it works
+                        About Us
                     </Link>
                 </Button>
             </div>
 
             {/* Social Proof */}
-            <section className="mt-16 flex w-full flex-col items-center gap-6 animate-fade-in-up [--animation-delay:800ms]">
-                <p className="text-sm font-medium text-muted-foreground/60 uppercase tracking-widest">
-                    Trusted by students from
+            <section className="mt-20 flex w-full flex-col items-center gap-8 animate-fade-in-up [--animation-delay:800ms]">
+                <p className="text-xs font-semibold text-muted-foreground/60 uppercase tracking-[0.2em]">
+                    Used by students from
                 </p>
-                <div className="w-full max-w-[90vw] overflow-hidden opacity-70 grayscale transition-all duration-500 hover:opacity-100 hover:grayscale-0">
-                    <Marquee pauseOnHover speed={40} className="[--gap:3rem]">
+                <div className="w-full max-w-[90vw] overflow-hidden opacity-60 grayscale transition-all duration-500 hover:opacity-100 hover:grayscale-0">
+                    <Marquee pauseOnHover speed={40} className="[--gap:4rem]">
                         <MarqueeContent>
                             {logos.map((logo) => (
-                                <MarqueeItem className="mx-8 size-8 md:size-10" key={logo.name}>
+                                <MarqueeItem className="mx-8 size-8 md:size-12" key={logo.name}>
                                     <logo.icon className="h-full w-full" />
                                 </MarqueeItem>
                             ))}
@@ -136,23 +136,28 @@ const Hero = () => (
 
 
             {/* Team Collaboration Image */}
-            <div className="mt-16 w-full max-w-5xl animate-fade-in-up [--animation-delay:1200ms]">
-                <div className="relative group rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 hover:shadow-3xl">
-                    {/* Premium Gradient Border */}
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/60 via-purple-600/40 to-primary/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ padding: '2px' }} />
+            <div className="mt-24 w-full max-w-6xl animate-fade-in-up [--animation-delay:1200ms]">
+                <div className="relative group rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:shadow-[0_0_50px_-12px_rgba(var(--primary),0.5)]">
+                    {/* Strong Animated Gradient Background */}
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-purple-500 to-pink-500 rounded-3xl opacity-75 blur transition duration-1000 group-hover:opacity-100 group-hover:duration-200 animate-gradient bg-[length:200%_auto]" />
+                    <div className="absolute -inset-[1px] bg-gradient-to-r from-primary via-purple-600 to-pink-600 rounded-3xl opacity-100 animate-gradient bg-[length:200%_auto]" />
 
                     {/* Inner Container */}
                     <div className="relative rounded-2xl bg-black/50 backdrop-blur-xl border border-white/10 overflow-hidden">
+                        {/* Browser Window Header */}
+
+
                         {/* Animated Background Glow */}
                         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                             <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-radial from-primary/20 to-transparent blur-3xl pointer-events-none" />
                         </div>
 
-                        <VideoPlayer className="relative">
-                            <VideoPlayerContent src={video} className="rounded-xl w-full" loop autoPlay muted />
+                        <VideoPlayer className="relative group/video">
+                            <VideoPlayerContent src={video} className="w-full aspect-video" loop muted />
 
+                            <VideoPlayerOverlay />
 
-                            <VideoPlayerControlBar className="!flex-row !gap-2 !p-4 !bg-gradient-to-t !from-black/90 !via-black/50 !to-transparent">
+                            <VideoPlayerControlBar className="!flex-row !gap-2 !p-4 !bg-gradient-to-t !from-black/90 !via-black/50 !to-transparent transition-opacity duration-300 opacity-0 group-hover/video:opacity-100">
                                 {/* Play Button */}
                                 <VideoPlayerPlayButton />
 

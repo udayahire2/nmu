@@ -1,64 +1,106 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { BookOpen, Users, Activity, TrendingUp } from "lucide-react";
+import { DUMMY_STATS, TOP_RESOURCES, RECENT_ACTIVITY } from "@/lib/dummy-data";
+import { ArrowUpRight, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
     return (
         <div className="space-y-8">
-            <div>
-                <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-                <p className="text-muted-foreground">Overview of your platform's performance.</p>
+            <div className="flex flex-col gap-1">
+                <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text">Dashboard Overview</h1>
+                <p className="text-muted-foreground">Welcome back, here's what's happening with your content.</p>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {[
-                    { label: "Total Resources", value: "245", icon: BookOpen, change: "+12%" },
-                    { label: "Active Students", value: "1,204", icon: Users, change: "+4%" },
-                    { label: "Daily Views", value: "843", icon: Activity, change: "+18%" },
-                    { label: "Engagement", value: "87%", icon: TrendingUp, change: "+2%" }
-                ].map((stat, i) => (
-                    <Card key={i}>
+            {/* Stats Grid */}
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                {DUMMY_STATS.map((stat, i) => (
+                    <Card key={i} className="group overflow-hidden transition-all hover:shadow-lg border-border/50 bg-card/50 backdrop-blur-sm">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">
+                            <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
                                 {stat.label}
                             </CardTitle>
-                            <stat.icon className="h-4 w-4 text-muted-foreground" />
+                            <div className="p-2 rounded-full bg-primary/10 text-primary opacity-80 group-hover:scale-110 transition-transform">
+                                <stat.icon className="h-4 w-4" />
+                            </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{stat.value}</div>
-                            <p className="text-xs text-muted-foreground">
-                                <span className="text-green-500 font-medium">{stat.change}</span> from last month
+                            <div className="text-2xl font-bold tracking-tight">{stat.value}</div>
+                            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                                <span className="text-emerald-500 font-medium flex items-center">
+                                    {stat.change}
+                                </span>
+                                from last month
                             </p>
+                            {/* Decorative gradient blur */}
+                            <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors pointer-events-none" />
                         </CardContent>
                     </Card>
                 ))}
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-4">
-                    <CardHeader>
-                        <CardTitle>Recent Activity</CardTitle>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
+                {/* Recent Activity */}
+                <Card className="col-span-4 border-border/50 shadow-sm">
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <div>
+                            <CardTitle>Recent Activity</CardTitle>
+                            <p className="text-sm text-muted-foreground mt-1">
+                                Latest actions performed across the platform.
+                            </p>
+                        </div>
+                        <Button variant="outline" size="sm" className="hidden sm:flex">
+                            View All
+                        </Button>
                     </CardHeader>
-                    <CardContent className="pl-2">
-                        <div className="h-[200px] flex items-center justify-center text-muted-foreground">
-                            Chart Placeholder
+                    <CardContent>
+                        <div className="space-y-6">
+                            {RECENT_ACTIVITY.map((activity, i) => (
+                                <div key={i} className="flex items-start gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                                    <div className="mt-1 h-2 w-2 rounded-full bg-primary ring-4 ring-primary/10" />
+                                    <div className="flex-1 space-y-1">
+                                        <p className="text-sm font-medium leading-none">{activity.action}</p>
+                                        <p className="text-sm text-muted-foreground">
+                                            by <span className="text-foreground font-medium">{activity.user}</span>
+                                        </p>
+                                    </div>
+                                    <div className="text-xs text-muted-foreground flex items-center gap-1">
+                                        <Clock className="h-3 w-3" />
+                                        {activity.time}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </CardContent>
                 </Card>
-                <Card className="col-span-3">
+
+                {/* Top Resources */}
+                <Card className="col-span-3 border-border/50 shadow-sm flex flex-col">
                     <CardHeader>
-                        <CardTitle>Top Resources</CardTitle>
+                        <CardTitle>Top Performing Content</CardTitle>
+                        <p className="text-sm text-muted-foreground mt-1">
+                            Most accessed resources this week.
+                        </p>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="flex-1">
                         <div className="space-y-4">
-                            {[1, 2, 3].map((_, i) => (
-                                <div key={i} className="flex items-center">
-                                    <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs mr-4">
-                                        0{i + 1}
+                            {TOP_RESOURCES.map((resource, i) => (
+                                <div key={i} className="flex items-center justify-between bg-muted/30 p-3 rounded-xl hover:bg-muted/50 transition-all group">
+                                    <div className="flex items-center gap-4">
+                                        <div className="h-10 w-10 rounded-full bg-background border border-border flex items-center justify-center font-bold text-xs shadow-sm">
+                                            #{i + 1}
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-sm font-medium leading-none group-hover:text-primary transition-colors">
+                                                {resource.title}
+                                            </p>
+                                            <p className="text-xs text-muted-foreground">
+                                                {resource.views} views
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="ml-4 space-y-1">
-                                        <p className="text-sm font-medium leading-none">DSA - Linked Lists</p>
-                                        <p className="text-xs text-muted-foreground">2.4k views</p>
-                                    </div>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <ArrowUpRight className="h-4 w-4" />
+                                    </Button>
                                 </div>
                             ))}
                         </div>
