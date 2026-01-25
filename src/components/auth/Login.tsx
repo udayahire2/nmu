@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,9 +16,43 @@ import { Label } from "@/components/ui/label";
 
 export const title = "Login Card";
 
-const Example = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+      const res = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        // Force reload to update navbar or use context later
+        window.location.href = '/';
+      } else {
+        alert(data.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login Error:', error);
+      alert('Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Card className="w-full max-w-md">
@@ -27,36 +62,39 @@ const Example = () => {
           Enter your email below to login to your account
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="m@example.com"
-            type="email"
-            value={email}
-          />
-        </div>
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="password">Password</Label>
-            <a className="text-sm hover:underline" href="#">
-              Forgot your password?
-            </a>
+      <form onSubmit={handleLogin}>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="m@example.com"
+              type="email"
+              required
+              value={email}
+            />
           </div>
-          <Input
-            id="password"
-            onChange={(e) => setPassword(e.target.value)}
-            type="password"
-            value={password}
-          />
-        </div>
-        <Button className="w-full">Login</Button>
-        <Button className="w-full" variant="outline">
-          Login with Google
-        </Button>
-      </CardContent>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password">Password</Label>
+              <a className="text-sm hover:underline" href="#">
+                Forgot your password?
+              </a>
+            </div>
+            <Input
+              id="password"
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+              required
+              value={password}
+            />
+          </div>
+          <Button className="w-full" type="submit" disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
+          </Button>
+        </CardContent>
+      </form>
       <CardFooter className="flex justify-center">
         <p className="text-muted-foreground text-sm">
           Don't have an account?{" "}
@@ -69,4 +107,4 @@ const Example = () => {
   );
 };
 
-export default Example;
+export default Login;

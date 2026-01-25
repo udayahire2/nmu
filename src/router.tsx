@@ -4,6 +4,8 @@ import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
+import VerifyOtpPage from "./pages/VerifyOtpPage";
+import ProfilePage from "./pages/ProfilePage";
 import StudyMaterialsPage from "./pages/StudyMaterialsPage";
 import AdminLayout from "./layouts/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
@@ -35,6 +37,14 @@ export const router = createBrowserRouter([
     {
         path: "/signup",
         element: <SignUpPage />,
+    },
+    {
+        path: "/verify-otp",
+        element: <VerifyOtpPage />,
+    },
+    {
+        path: "/profile",
+        element: <ProfilePage />,
     },
     {
         path: "/admin",

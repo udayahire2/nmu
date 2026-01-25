@@ -1,16 +1,35 @@
 import { Button } from "@/components/ui/button"
 import { useTheme } from "@/components/theme-provider"
-import { Moon, Sun, Menu, X } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Moon, Sun, Menu, X, User as UserIcon, LogOut, Settings } from "lucide-react"
+import { Link, useNavigate } from "react-router-dom"
 import { Logo } from "@/components/ui/Logo"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export function Navbar() {
     const { setTheme, theme } = useTheme()
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const [errors, setErrors] = useState({})
-    const [isLoading, setIsLoading] = useState(false)
-    const [showPassword, setShowPassword] = useState(false)
+    const [user, setUser] = useState<any>(null)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user')
+        if (storedUser) {
+            try {
+                setUser(JSON.parse(storedUser))
+            } catch (e) {
+                console.error("Failed to parse user", e)
+            }
+        }
+    }, [])
 
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!mobileMenuOpen)
@@ -20,9 +39,16 @@ export function Navbar() {
         setMobileMenuOpen(false)
     }
 
-    const handleLogin = async (e) => {
-        e.preventDefault()
-        // Validate and submit
+    const handleLogout = () => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        setUser(null)
+        navigate('/login')
+    }
+
+    const getInitials = (name: string) => {
+        if (!name) return "U"
+        return name.split(' ').map((n) => n[0]).join('').toUpperCase().substring(0, 2)
     }
 
     return (
@@ -41,16 +67,56 @@ export function Navbar() {
 
                 {/* Desktop CTA Buttons */}
                 <div className="ml-auto hidden md:flex items-center gap-3">
-                    <Link to="/login">
-                        <Button variant="outline" size="sm">
-                            Student Login
-                        </Button>
-                    </Link>
-                    <Link to="/signup">
-                        <Button size="sm">
-                            Student Register
-                        </Button>
-                    </Link>
+                    {user ? (
+                        <div className="flex items-center gap-4">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                                        <Avatar className="h-8 w-8">
+                                            <AvatarImage src={user.avatar} alt={user.name} />
+                                            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                                        </Avatar>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-56" align="end" forceMount>
+                                    <DropdownMenuLabel className="font-normal">
+                                        <div className="flex flex-col space-y-1">
+                                            <p className="text-sm font-medium leading-none">{user.name}</p>
+                                            <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                                        </div>
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => navigate('/profile')}>
+                                        <UserIcon className="mr-2 h-4 w-4" />
+                                        <span>Profile</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => navigate('/profile')}>
+                                        <Settings className="mr-2 h-4 w-4" />
+                                        <span>Update Profile</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={handleLogout}>
+                                        <LogOut className="mr-2 h-4 w-4" />
+                                        <span>Log out</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    ) : (
+                        <>
+                            <Link to="/login">
+                                <Button variant="outline" size="sm">
+                                    Student Login
+                                </Button>
+                            </Link>
+                            <Link to="/signup">
+                                <Button size="sm">
+                                    Student Register
+                                </Button>
+                            </Link>
+                        </>
+                    )}
+
                     <Button
                         variant="ghost"
                         size="icon"
@@ -113,17 +179,43 @@ export function Navbar() {
                         >
                             About
                         </Link>
+
                         <div className="flex flex-col gap-2 pt-4 border-t border-border/40">
-                            <Link to="/login" onClick={closeMobileMenu}>
-                                <Button variant="outline" size="sm" className="w-full">
-                                    Student Login
-                                </Button>
-                            </Link>
-                            <Link to="/signup" onClick={closeMobileMenu}>
-                                <Button size="sm" className="w-full">
-                                    Student Register
-                                </Button>
-                            </Link>
+                            {user ? (
+                                <>
+                                    <div className="px-3 py-2 flex items-center gap-3">
+                                        <Avatar className="h-8 w-8">
+                                            <AvatarImage src={user.avatar} alt={user.name} />
+                                            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                            <p className="text-sm font-medium">{user.name}</p>
+                                            <p className="text-xs text-muted-foreground">{user.email}</p>
+                                        </div>
+                                    </div>
+                                    <Link to="/profile" onClick={closeMobileMenu}>
+                                        <Button variant="outline" size="sm" className="w-full justify-start">
+                                            <UserIcon className="mr-2 h-4 w-4" /> Profile
+                                        </Button>
+                                    </Link>
+                                    <Button variant="ghost" size="sm" className="w-full justify-start text-destructive hover:text-destructive" onClick={() => { handleLogout(); closeMobileMenu(); }}>
+                                        <LogOut className="mr-2 h-4 w-4" /> Logout
+                                    </Button>
+                                </>
+                            ) : (
+                                <>
+                                    <Link to="/login" onClick={closeMobileMenu}>
+                                        <Button variant="outline" size="sm" className="w-full">
+                                            Student Login
+                                        </Button>
+                                    </Link>
+                                    <Link to="/signup" onClick={closeMobileMenu}>
+                                        <Button size="sm" className="w-full">
+                                            Student Register
+                                        </Button>
+                                    </Link>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

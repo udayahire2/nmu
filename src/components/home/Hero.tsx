@@ -1,5 +1,5 @@
 "use client";
-import image from '../../assets/team.png'
+import video from '../../assets/video.mp4'
 import {
     SiApple,
     SiFacebook,
@@ -136,14 +136,50 @@ const Hero = () => (
            
 
             {/* Team Collaboration Image */}
-            <div className="mt-12 w-full max-w-5xl animate-fade-in-up [--animation-delay:1200ms]">
-                <div className="relative rounded-xl border border-border/50 bg-background/50 p-1 backdrop-blur-3xl shadow-2xl overflow-hidden">
-                    <div className="absolute -inset-1 z-[-1] rounded-xl bg-gradient-to-r from-primary/30 to-purple-600/30 blur-lg opacity-50" />
-                    <img 
-                    src={image}
-                        alt="Team Collaboration" 
-                        className="w-full h-auto rounded-lg object-cover"
-                    />
+            <div className="mt-16 w-full max-w-5xl animate-fade-in-up [--animation-delay:1200ms]">
+                <div className="relative group rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 hover:shadow-3xl">
+                    {/* Premium Gradient Border */}
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/60 via-purple-600/40 to-primary/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ padding: '2px' }} />
+                    
+                    {/* Inner Container */}
+                    <div className="relative rounded-2xl bg-black/50 backdrop-blur-xl border border-white/10 overflow-hidden">
+                        {/* Animated Background Glow */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-radial from-primary/20 to-transparent blur-3xl pointer-events-none" />
+                        </div>
+                        
+                        <VideoPlayer className="relative">
+                            <VideoPlayerContent src={video} className="rounded-xl w-full" loop autoPlay muted />
+                            
+                            
+                            <VideoPlayerControlBar className="!flex-row !gap-2 !p-4 !bg-gradient-to-t !from-black/90 !via-black/50 !to-transparent">
+                                {/* Play Button */}
+                                <VideoPlayerPlayButton />
+                                
+                                {/* Seek Buttons */}
+                                <div className="flex items-center gap-1">
+                                    <VideoPlayerSeekBackwardButton />
+                                    <VideoPlayerSeekForwardButton />
+                                </div>
+                                
+                                {/* Progress Bar */}
+                                <div className="flex-1">
+                                    <VideoPlayerTimeRange />
+                                </div>
+                                
+                                {/* Time Display */}
+                                <VideoPlayerTimeDisplay />
+                                
+                                {/* Volume Control */}
+                                <div className="flex items-center gap-1 group/volume">
+                                    <VideoPlayerMuteButton />
+                                    <div className="w-0 overflow-hidden group-hover/volume:w-24 transition-all duration-200">
+                                        <VideoPlayerVolumeRange />
+                                    </div>
+                                </div>
+                            </VideoPlayerControlBar>
+                        </VideoPlayer>
+                    </div>
                 </div>
             </div>
         </div>
