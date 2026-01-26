@@ -54,21 +54,31 @@ export default function ResourceManagerPage() {
         }
     };
 
+    // Bento Stats Data
+    const stats = [
+        { label: "Total Resources", value: "1,204", change: "+12%", trend: "up", color: "from-blue-500/20 to-blue-600/20", border: "border-blue-500/20", text: "text-blue-500" },
+        { label: "Active Users", value: "8,540", change: "+24%", trend: "up", color: "from-purple-500/20 to-purple-600/20", border: "border-purple-500/20", text: "text-purple-500" },
+        { label: "Storage Used", value: "45.2 GB", change: "85%", trend: "neutral", color: "from-orange-500/20 to-orange-600/20", border: "border-orange-500/20", text: "text-orange-500" },
+    ];
+
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text">Resources</h1>
-                    <p className="text-muted-foreground mt-1">Manage study materials, lectures, and notes.</p>
+        <div className="space-y-8">
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="space-y-1">
+                    <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+                        Resource Manager
+                    </h1>
+                    <p className="text-muted-foreground text-sm font-medium">Manage and organize your study materials.</p>
                 </div>
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button className="shadow-lg hover:shadow-primary/25 transition-all">
-                            <Plus className="h-4 w-4 mr-2" />
-                            Add Resource
+                        <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_20px_rgba(var(--primary),0.3)] border border-white/10 rounded-xl transition-all hover:scale-105 active:scale-95">
+                            <Plus className="h-5 w-5 mr-2" />
+                            Add New Resource
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+                    <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto bg-black/90 backdrop-blur-3xl border-white/10">
                         <ResourceForm onSuccess={() => {
                             document.getElementById('close-dialog')?.click();
                             alert("Resource added (simulated)");
@@ -77,83 +87,120 @@ export default function ResourceManagerPage() {
                 </Dialog>
             </div>
 
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden">
-                <CardHeader className="p-4 border-b border-border/50 bg-muted/20">
-                    <div className="flex items-center justify-between">
-                        <div className="relative max-w-sm w-full">
-                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="Search resources..."
-                                value={search}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSearch(event.target.value)}
-                                className="pl-9 bg-background/50 border-border/50 focus:bg-background"
-                            />
+            {/* Bento Grid Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {stats.map((stat, i) => (
+                    <div key={i} className={`p-6 rounded-2xl border ${stat.border} bg-gradient-to-br ${stat.color} backdrop-blur-xl relative overflow-hidden group`}>
+                        <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10">
+                            <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{stat.label}</p>
+                            <div className="mt-2 flex items-baseline gap-2">
+                                <span className="text-4xl font-bold text-foreground tracking-tight">{stat.value}</span>
+                                <span className={`text-xs font-bold px-2 py-0.5 rounded-full bg-white/10 ${stat.text}`}>
+                                    {stat.change}
+                                </span>
+                            </div>
                         </div>
-                        <div className="text-sm text-muted-foreground hidden sm:block">
-                            Showing {filtered.length} resources
-                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Glass Table Container */}
+            <Card className="border border-white/5 bg-black/40 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden">
+                <CardHeader className="p-6 border-b border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/5">
+                    <div className="relative max-w-sm w-full">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                            placeholder="Search by title, subject..."
+                            value={search}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSearch(event.target.value)}
+                            className="pl-10 h-10 bg-black/20 border-white/10 focus:bg-black/40 focus:border-primary/50 rounded-xl transition-all placeholder:text-muted-foreground/50"
+                        />
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="h-8 px-3 rounded-lg border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10 transition-colors cursor-pointer">
+                            Filter
+                        </Badge>
+                        <Badge variant="outline" className="h-8 px-3 rounded-lg border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10 transition-colors cursor-pointer">
+                            Sort
+                        </Badge>
                     </div>
                 </CardHeader>
                 <div className="p-0">
                     <Table>
                         <TableHeader>
-                            <TableRow className="bg-transparent hover:bg-transparent">
-                                <TableHead className="w-[400px]">Title</TableHead>
-                                <TableHead>Subject</TableHead>
-                                <TableHead>Type</TableHead>
-                                <TableHead>Author</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                            <TableRow className="hover:bg-transparent border-white/5">
+                                <TableHead className="w-[400px] pl-6 h-12 text-xs font-bold uppercase tracking-wider text-muted-foreground/70">Resource Name</TableHead>
+                                <TableHead className="h-12 text-xs font-bold uppercase tracking-wider text-muted-foreground/70">Subject</TableHead>
+                                <TableHead className="h-12 text-xs font-bold uppercase tracking-wider text-muted-foreground/70">Type</TableHead>
+                                <TableHead className="h-12 text-xs font-bold uppercase tracking-wider text-muted-foreground/70">Author</TableHead>
+                                <TableHead className="text-right pr-6 h-12 text-xs font-bold uppercase tracking-wider text-muted-foreground/70">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {filtered.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
-                                        No resources found matching your search.
+                                    <TableCell colSpan={5} className="h-64 text-center text-muted-foreground flex flex-col items-center justify-center">
+                                        <div className="h-16 w-16 mb-4 rounded-full bg-white/5 flex items-center justify-center">
+                                            <Search className="h-8 w-8 opacity-20" />
+                                        </div>
+                                        <p>No resources found matching your search.</p>
                                     </TableCell>
                                 </TableRow>
                             ) : (
                                 filtered.map((resource) => (
-                                    <TableRow key={resource.id} className="hover:bg-muted/30 transition-colors group">
-                                        <TableCell>
-                                            <div className="flex items-center gap-3">
-                                                <div className="h-9 w-9 rounded-lg bg-muted/50 flex items-center justify-center border border-border/50 group-hover:border-primary/20 transition-colors">
+                                    <TableRow key={resource.id} className="group border-white/5 hover:bg-white/[0.02] transition-colors data-[state=selected]:bg-white/[0.04]">
+                                        <TableCell className="pl-6 py-4">
+                                            <div className="flex items-center gap-4">
+                                                <div className={`
+                                                    h-10 w-10 rounded-xl flex items-center justify-center shadow-lg transition-transform group-hover:scale-110
+                                                    ${resource.type.toLowerCase() === 'pdf' ? 'bg-red-500/10 text-red-500' :
+                                                        resource.type.toLowerCase() === 'video' ? 'bg-blue-500/10 text-blue-500' :
+                                                            'bg-emerald-500/10 text-emerald-500'}
+                                                `}>
                                                     {getTypeIcon(resource.type)}
                                                 </div>
-                                                <div className="font-medium">{resource.title}</div>
+                                                <div className="flex flex-col">
+                                                    <span className="font-semibold text-foreground/90 text-sm group-hover:text-primary transition-colors">{resource.title}</span>
+                                                    <span className="text-xs text-muted-foreground">{resource.createdAt}</span>
+                                                </div>
                                             </div>
                                         </TableCell>
-                                        <TableCell>{resource.subject}</TableCell>
                                         <TableCell>
-                                            <Badge variant="secondary" className="font-normal bg-primary/5 text-primary hover:bg-primary/10">
+                                            <div className="flex items-center gap-2">
+                                                <div className="h-1.5 w-1.5 rounded-full bg-primary/50" />
+                                                <span className="text-sm text-muted-foreground font-medium">{resource.subject}</span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant="secondary" className="font-medium bg-white/5 hover:bg-white/10 border-white/5 text-foreground/80 px-2.5 py-0.5 rounded-lg">
                                                 {resource.type}
                                             </Badge>
                                         </TableCell>
                                         <TableCell>
-                                            <div className="flex items-center gap-2">
-                                                <div className="h-6 w-6 rounded-full bg-indigo-500/20 text-indigo-500 flex items-center justify-center text-[10px] font-bold">
+                                            <div className="flex -space-x-2 overflow-hidden">
+                                                <div className="inline-block h-6 w-6 rounded-full ring-2 ring-black bg-indigo-500 flex items-center justify-center text-[10px] font-bold text-white">
                                                     {resource.author.charAt(0)}
                                                 </div>
-                                                <span className="text-sm">{resource.author}</span>
                                             </div>
                                         </TableCell>
-                                        <TableCell className="text-right">
+                                        <TableCell className="text-right pr-6">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <Button variant="ghost" className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground hover:bg-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all">
                                                         <span className="sr-only">Open menu</span>
                                                         <MoreHorizontal className="h-4 w-4" />
                                                     </Button>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
+                                                <DropdownMenuContent align="end" className="w-48 bg-black/90 backdrop-blur-xl border-white/10">
                                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                    <DropdownMenuItem onClick={() => navigator.clipboard.writeText(resource.id)}>
+                                                    <DropdownMenuItem className="cursor-pointer focus:bg-white/10" onClick={() => navigator.clipboard.writeText(resource.id)}>
                                                         Copy ID
                                                     </DropdownMenuItem>
-                                                    <DropdownMenuItem>View details</DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
-                                                    <DropdownMenuItem onClick={() => deleteResource(resource.id)} className="text-destructive focus:text-destructive focus:bg-destructive/10">
-                                                        Delete
+                                                    <DropdownMenuItem className="cursor-pointer focus:bg-white/10">View details</DropdownMenuItem>
+                                                    <DropdownMenuSeparator className="bg-white/10" />
+                                                    <DropdownMenuItem onClick={() => deleteResource(resource.id)} className="text-red-500 focus:text-red-400 focus:bg-red-500/10 cursor-pointer">
+                                                        Delete Resource
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
