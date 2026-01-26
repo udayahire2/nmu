@@ -137,7 +137,7 @@ export default function AboutPage() {
             {/* Team Section */}
             <section className="container mx-auto px-6 max-w-5xl">
                 <h2 className="text-3xl font-bold tracking-tight mb-12 text-center">Our Team</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div className="flex flex-wrap justify-center gap-8 text-center">
                     {[
                         { name: "Uday Ahire", role: "Founder & Developer", color: "bg-blue-500" },
                         { name: "Hitesh Mayche", role: "Frontend Developer", color: "bg-purple-500" },
