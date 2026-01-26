@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { DUMMY_STATS, TOP_RESOURCES, RECENT_ACTIVITY } from "@/lib/dummy-data";
-import { ArrowUpRight, Clock, Activity, TrendingUp, Users, BarChart3 } from "lucide-react";
+import { ArrowUpRight, Activity, TrendingUp, Users, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
