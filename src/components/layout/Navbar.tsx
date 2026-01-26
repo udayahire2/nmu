@@ -14,7 +14,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { GridLine } from "@/components/ui/GridLine"
+import { GridLine } from "@/components/ui/grid-line"
 
 export function Navbar() {
     const { setTheme, theme } = useTheme()

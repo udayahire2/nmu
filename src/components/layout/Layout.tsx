@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom"
 import { Navbar } from "./Navbar"
 import { Footer } from "./Footer"
-import { GridLine } from "@/components/ui/GridLine"
+import { GridLine } from "@/components/ui/grid-line"
 
 export default function Layout() {
     return (

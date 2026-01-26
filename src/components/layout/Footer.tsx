@@ -1,6 +1,6 @@
 import { Github, Twitter, Linkedin } from "lucide-react"
 import { Logo } from "@/components/ui/Logo"
-import { GridLine } from "@/components/ui/GridLine"
+import { GridLine } from "@/components/ui/grid-line"
 
 export function Footer() {
     return (
