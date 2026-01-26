@@ -56,8 +56,8 @@ export function Footer() {
                 </div>
 
                 <div className="border-t border-border/40 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-                    <p>© 2024 NMU Study Hub. Open Source.</p>
-                    <p>Designed with ❤️ by Students</p>
+                    <p>© 2026 NMU Study Hub. Open Source.</p>
+                    <p>Designed by Uday Ahire</p>
                 </div>
             </div>
         </footer>

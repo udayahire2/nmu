@@ -139,10 +139,9 @@ export default function AboutPage() {
                 <h2 className="text-3xl font-bold tracking-tight mb-12 text-center">Our Team</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                     {[
-                        { name: "Alex J.", role: "Founder", color: "bg-blue-500" },
-                        { name: "Sarah C.", role: "Developer", color: "bg-purple-500" },
-                        { name: "Mike R.", role: "Product", color: "bg-green-500" },
-                        { name: "Emma W.", role: "Design", color: "bg-yellow-500" }
+                        { name: "Uday Ahire", role: "Founder & Developer", color: "bg-blue-500" },
+                        { name: "Hitesh Mayche", role: "Frontend Developer", color: "bg-purple-500" },
+                        { name: "Raj Deore", role: "UI/UX Designer", color: "bg-green-500" }
                     ].map((member, i) => (
                         <motion.div
                             key={i}
