@@ -10,6 +10,8 @@ import StudyMaterialsPage from "./pages/StudyMaterialsPage";
 import AdminLayout from "./layouts/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
 import ResourceManagerPage from "./pages/admin/ResourceManagerPage";
+import ContentApprovalPage from "./pages/admin/ContentApprovalPage";
+import SettingsPage from "./pages/admin/SettingsPage";
 
 export const router = createBrowserRouter([
     {
@@ -57,6 +59,14 @@ export const router = createBrowserRouter([
             {
                 path: "resources",
                 element: <ResourceManagerPage />,
+            },
+            {
+                path: "approvals",
+                element: <ContentApprovalPage />,
+            },
+            {
+                path: "settings",
+                element: <SettingsPage />,
             },
             {
                 path: "",

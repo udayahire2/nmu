@@ -2,8 +2,6 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { DUMMY_STATS, TOP_RESOURCES, RECENT_ACTIVITY } from "@/lib/dummy-data";
 import { ArrowUpRight, Activity, TrendingUp, Users, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
-
 export default function DashboardPage() {
     // Enhanced stats with colors
     const enrichedStats = [
@@ -12,21 +10,6 @@ export default function DashboardPage() {
         { ...DUMMY_STATS[2], color: "text-emerald-500", bg: "bg-emerald-500/10", border: "border-emerald-500/20", icon: TrendingUp },
         { ...DUMMY_STATS[3], color: "text-orange-500", bg: "bg-orange-500/10", border: "border-orange-500/20", icon: BarChart3 },
     ];
-
-    const container = {
-        hidden: { opacity: 0 },
-        show: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1
-            }
-        }
-    };
-
-    const item = {
-        hidden: { y: 20, opacity: 0 },
-        show: { y: 0, opacity: 1 }
-    };
 
     return (
         <div className="space-y-8">
@@ -38,20 +21,17 @@ export default function DashboardPage() {
             </div>
 
             {/* Bento Grid Stats */}
-            <motion.div
-                variants={container}
-                initial="hidden"
-                animate="show"
+            <div
                 className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
             >
                 {enrichedStats.map((stat, i) => (
-                    <motion.div key={i} variants={item}>
-                        <Card className={`group overflow-hidden relative border ${stat.border} bg-black/40 backdrop-blur-xl hover:bg-white/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl`}>
+                    <div key={i}>
+                        <Card className={`group overflow-hidden relative border ${stat.border} bg-black/40 backdrop-blur-xl`}>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
                                 <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
                                     {stat.label}
                                 </CardTitle>
-                                <div className={`p-2 rounded-xl ${stat.bg} ${stat.color} group-hover:scale-110 transition-transform duration-300`}>
+                                <div className={`p-2 rounded-xl ${stat.bg} ${stat.color}`}>
                                     <stat.icon className="h-4 w-4" />
                                 </div>
                             </CardHeader>
@@ -64,12 +44,12 @@ export default function DashboardPage() {
                                     <span className="opacity-60">vs last month</span>
                                 </p>
                             </CardContent>
-                            {/* Glow Effect */}
-                            <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full ${stat.bg} blur-[60px] opacity-20 group-hover:opacity-40 transition-opacity duration-500`} />
+                            {/* Glow Effect - Static now */}
+                            <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full ${stat.bg} blur-[60px] opacity-20`} />
                         </Card>
-                    </motion.div>
+                    </div>
                 ))}
-            </motion.div>
+            </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7 h-full">
                 {/* Recent Activity - Large Card */}
@@ -121,19 +101,19 @@ export default function DashboardPage() {
                     <CardContent className="p-6 flex-1">
                         <div className="space-y-4">
                             {TOP_RESOURCES.map((resource, i) => (
-                                <div key={i} className="flex items-center justify-between bg-white/5 p-4 rounded-2xl hover:bg-white/10 transition-all group border border-transparent hover:border-white/5 cursor-pointer hover:scale-[1.02] duration-300">
+                                <div key={i} className="flex items-center justify-between p-4 rounded-lg border border-white/5 hover:bg-white/5 transition-colors cursor-pointer">
                                     <div className="flex items-center gap-4 overflow-hidden">
                                         <div className={`
-                                            h-12 w-12 rounded-xl flex items-center justify-center font-bold text-lg shadow-inner
-                                            ${i === 0 ? 'bg-gradient-to-br from-yellow-400/20 to-orange-500/20 text-yellow-500' :
-                                                i === 1 ? 'bg-gradient-to-br from-gray-400/20 to-gray-500/20 text-gray-400' :
-                                                    i === 2 ? 'bg-gradient-to-br from-orange-400/20 to-red-500/20 text-orange-500' :
-                                                        'bg-white/5 text-muted-foreground'}
+                                            h-8 w-8 rounded-md flex items-center justify-center font-mono font-medium text-sm
+                                            ${i === 0 ? 'text-yellow-500 bg-yellow-500/10' :
+                                                i === 1 ? 'text-gray-400 bg-white/5' :
+                                                    i === 2 ? 'text-orange-500 bg-orange-500/10' :
+                                                        'text-muted-foreground bg-white/5'}
                                         `}>
                                             #{i + 1}
                                         </div>
                                         <div className="space-y-1 min-w-0">
-                                            <p className="text-sm font-semibold leading-none truncate group-hover:text-primary transition-colors">
+                                            <p className="text-sm font-medium leading-none truncate text-foreground">
                                                 {resource.title}
                                             </p>
                                             <p className="text-xs text-muted-foreground">
@@ -141,7 +121,7 @@ export default function DashboardPage() {
                                             </p>
                                         </div>
                                     </div>
-                                    <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
                                         <ArrowUpRight className="h-4 w-4" />
                                     </Button>
                                 </div>

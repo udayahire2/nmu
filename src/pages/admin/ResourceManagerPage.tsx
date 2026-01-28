@@ -73,12 +73,12 @@ export default function ResourceManagerPage() {
                 </div>
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_20px_rgba(var(--primary),0.3)] border border-white/10 rounded-xl transition-all hover:scale-105 active:scale-95">
+                        <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_20px_rgba(var(--primary),0.3)] border border-white/10 rounded-xl transition-all active:scale-99">
                             <Plus className="h-5 w-5 mr-2" />
                             Add New Resource
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto bg-black/90 backdrop-blur-3xl border-white/10">
+                    <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto bg-[#09090b] border-white/10">
                         <ResourceForm onSuccess={() => {
                             document.getElementById('close-dialog')?.click();
                             alert("Resource added (simulated)");
