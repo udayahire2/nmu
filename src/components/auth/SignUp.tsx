@@ -12,8 +12,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-
 export const title = "Login Card";
 
 const SignUp = () => {
@@ -77,37 +83,33 @@ const SignUp = () => {
           </div>
           <div className="space-y-2">
             <Label htmlFor="branch">Branch Name</Label>
-            <select
-              id="branch"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              required
-              value={branch}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setBranch(e.target.value)}
-            >
-              <option value="" disabled>Select Branch</option>
-              <option value="Computer">Computer</option>
-              <option value="IT">IT</option>
-              <option value="Civil">Civil</option>
-              <option value="Mechanical">Mechanical</option>
-              <option value="Electrical">Electrical</option>
-              <option value="ENTC">ENTC</option>
-            </select>
+            <Select onValueChange={setBranch} value={branch} required>
+              <SelectTrigger id="branch" className="w-full">
+                <SelectValue placeholder="Select Branch" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Computer">Computer</SelectItem>
+                <SelectItem value="IT">IT</SelectItem>
+                <SelectItem value="Civil">Civil</SelectItem>
+                <SelectItem value="Mechanical">Mechanical</SelectItem>
+                <SelectItem value="Electrical">Electrical</SelectItem>
+                <SelectItem value="ENTC">ENTC</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="year">Current Year</Label>
-            <select
-              id="year"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              required
-              value={year}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setYear(e.target.value)}
-            >
-              <option value="" disabled>Select Year</option>
-              <option value="FE">FE</option>
-              <option value="SE">SE</option>
-              <option value="TE">TE</option>
-              <option value="BE">BE</option>
-            </select>
+            <Select onValueChange={setYear} value={year} required>
+              <SelectTrigger id="year" className="w-full">
+                <SelectValue placeholder="Select Year" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="FE">FE</SelectItem>
+                <SelectItem value="SE">SE</SelectItem>
+                <SelectItem value="TE">TE</SelectItem>
+                <SelectItem value="BE">BE</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
