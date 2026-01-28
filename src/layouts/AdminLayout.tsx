@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
     LayoutDashboard,
@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Lenis from 'lenis';
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/components/ui/Logo";
@@ -19,6 +20,34 @@ import { Logo } from "@/components/ui/Logo";
 export default function AdminLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const location = useLocation();
+    const scrollContainerRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        if (!scrollContainerRef.current) return;
+
+        const lenis = new Lenis({
+            wrapper: scrollContainerRef.current,
+            content: scrollContainerRef.current.firstElementChild as HTMLElement,
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 2,
+        });
+
+        function raf(time: number) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+
+        return () => {
+            lenis.destroy();
+        };
+    }, []);
 
     const navItems = [
         { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
@@ -27,7 +56,7 @@ export default function AdminLayout() {
     ];
 
     return (
-        <div className="min-h-screen bg-transparent flex overflow-hidden font-inter selection:bg-primary/20">
+        <div className="h-screen bg-transparent flex overflow-hidden font-inter selection:bg-primary/20">
             {/* Global Metallic/Mesh Background */}
             <div className="fixed inset-0 -z-50 bg-[#0a0a0a]">
                 <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-primary/10 blur-[120px] mix-blend-screen animate-pulse" />
@@ -103,7 +132,7 @@ export default function AdminLayout() {
             )}
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col min-h-screen relative overflow-hidden">
+            <div className="flex-1 flex flex-col h-full relative overflow-hidden">
                 {/* Content Gradient Overlay */}
                 <div className="absolute inset-0 bg-background/80 md:bg-background/40 pointer-events-none -z-10" />
 
@@ -141,7 +170,10 @@ export default function AdminLayout() {
                 </header>
 
                 {/* Scrollable Page Content */}
-                <main className="flex-1 overflow-y-auto overflow-x-hidden p-6 md:p-10 scroll-smooth">
+                <main
+                    ref={scrollContainerRef}
+                    className="flex-1 overflow-y-auto overflow-x-hidden p-6 md:p-10 scroll-smooth scrollbar-none"
+                >
                     <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out">
                         <Outlet />
                     </div>

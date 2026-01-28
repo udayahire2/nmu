@@ -133,6 +133,22 @@
   mask-image: linear-gradient(to bottom, black, transparent);
 }
 
+@utility scrollbar-none {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+
+  /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
 @keyframes fade-in-up {
   0% {
     opacity: 0;
