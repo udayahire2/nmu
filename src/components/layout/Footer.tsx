@@ -1,10 +1,10 @@
 import { Github, Twitter, Linkedin } from "lucide-react"
-import { Logo } from "@/components/ui/Logo"
+import { Logo } from "@/components/ui/logo"
 import { GridLine } from "@/components/ui/grid-line"
 
 export function Footer() {
     return (
-        <footer className="w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pt-16 pb-8 relative">
+        <footer className="w-full bg-background/98 backdrop-blur-xl supports-[backdrop-filter]:bg-background/95 pt-16 pb-8 relative">
             <GridLine className="absolute top-0 left-0" />
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
@@ -55,7 +55,7 @@ export function Footer() {
                     </div>
                 </div>
 
-                <div className="border-t border-border/40 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+                <div className="border-t border-border/60 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
                     <p>© 2026 NMU Study Hub. Open Source.</p>
                     <p>Designed by Uday Ahire</p>
                 </div>

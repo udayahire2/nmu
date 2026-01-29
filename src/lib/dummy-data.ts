@@ -1,10 +1,10 @@
 import { BookOpen, Users, Activity, TrendingUp, FileText, File, MonitorPlay } from "lucide-react";
 
 export const DUMMY_STATS = [
-    { label: "Total Resources", value: "245", icon: BookOpen, change: "+12%" },
-    { label: "Active Students", value: "1,204", icon: Users, change: "+4%" },
-    { label: "Daily Views", value: "843", icon: Activity, change: "+18%" },
-    { label: "Engagement", value: "87%", icon: TrendingUp, change: "+2%" }
+    { label: "Total Resources", value: "245", icon: BookOpen, change: 12, changeType: "increase", description: "All time uploads" },
+    { label: "Active Students", value: "1,204", icon: Users, change: 4, changeType: "increase", description: "Active this month" },
+    { label: "Daily Views", value: "843", icon: Activity, change: 18, changeType: "increase", description: "Page views today" },
+    { label: "Engagement", value: "87%", icon: TrendingUp, change: 2, changeType: "decrease", description: "Bounce rate" }
 ];
 
 export const DUMMY_RESOURCES = [
@@ -77,13 +77,13 @@ export const DUMMY_RESOURCES = [
 ];
 
 export const RECENT_ACTIVITY = [
-    { id: 1, action: "New resource added", user: "Vikram Malhotra", time: "2 hours ago" },
-    { id: 2, action: "User registration", user: "Priya Singh", time: "4 hours ago" },
-    { id: 3, action: "Report generated", user: "System", time: "1 day ago" },
+    { id: 1, action: "New resource added", user: "Vikram Malhotra", time: "2 hours ago", type: "Resource" },
+    { id: 2, action: "User registration", user: "Priya Singh", time: "4 hours ago", type: "User" },
+    { id: 3, action: "Report generated", user: "System", time: "1 day ago", type: "System" },
 ];
 
 export const TOP_RESOURCES = [
-    { id: 1, title: "DSA - Linked Lists", views: "2.4k", icon: FileText },
-    { id: 2, title: "React Hooks Guide", views: "1.8k", icon: MonitorPlay },
-    { id: 3, title: "OS - Process Scheduling", views: "1.5k", icon: File },
+    { id: 1, title: "DSA - Linked Lists", views: "2.4k", downloads: 342, icon: FileText, type: "PDF" },
+    { id: 2, title: "React Hooks Guide", views: "1.8k", downloads: 256, icon: MonitorPlay, type: "Video" },
+    { id: 3, title: "OS - Process Scheduling", views: "1.5k", downloads: 189, icon: File, type: "Notes" },
 ];

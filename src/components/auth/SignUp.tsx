@@ -51,7 +51,7 @@ const SignUp = () => {
         // Redirect to verify otp page, passing email
         navigate(`/verify-otp?email=${encodeURIComponent(email)}`);
       } else {
-        alert(data.message || 'Registration failed');
+        alert(data.message || data.error || 'Registration failed');
       }
     } catch (error) {
       console.error('Registration Error:', error);

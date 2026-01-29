@@ -15,7 +15,6 @@ export function Logo({ className, showText = true, ...props }: LogoProps) {
                     height="100%"
                     viewBox="0 0 40 40"
                     fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
                 >
                     {/* Back/Left Shape - Darker */}
                     <rect x="2" y="2" width="26" height="36" rx="8" className="fill-violet-800 dark:fill-violet-700" />

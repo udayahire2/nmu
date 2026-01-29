@@ -9,6 +9,7 @@ import ProfilePage from "./pages/ProfilePage";
 import StudyMaterialsPage from "./pages/StudyMaterialsPage";
 import AdminLayout from "./layouts/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
+import StudentsPage from "./pages/admin/StudentsPage";
 import ResourceManagerPage from "./pages/admin/ResourceManagerPage";
 import ContentApprovalPage from "./pages/admin/ContentApprovalPage";
 import SettingsPage from "./pages/admin/SettingsPage";
@@ -59,6 +60,10 @@ export const router = createBrowserRouter([
             {
                 path: "resources",
                 element: <ResourceManagerPage />,
+            },
+            {
+                path: "students",
+                element: <StudentsPage />,
             },
             {
                 path: "approvals",

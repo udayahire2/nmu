@@ -10,13 +10,14 @@ import {
     Search,
     Bell,
     ClipboardCheck,
+    Users,
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Lenis from 'lenis';
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Logo } from "@/components/ui/Logo";
+import { Logo } from "@/components/ui/logo";
 
 export default function AdminLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -52,6 +53,7 @@ export default function AdminLayout() {
 
     const navItems = [
         { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
+        { icon: Users, label: 'Students', path: '/admin/students' },
         { icon: BookOpen, label: 'Resources', path: '/admin/resources' },
         { icon: ClipboardCheck, label: 'Approvals', path: '/admin/approvals' },
         { icon: Settings, label: 'Settings', path: '/admin/settings' },

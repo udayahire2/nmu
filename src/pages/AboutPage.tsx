@@ -1,214 +1,375 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
-import { Badge } from "@/components/ui/badge"
+
 import { Button } from "@/components/ui/button"
-import { Lightbulb, Award, Users, Target, CheckCircle2, ArrowRight } from "lucide-react"
+import { Lightbulb, Award, Users, CheckCircle2, ArrowRight, BookOpen, GraduationCap, Sparkles } from "lucide-react"
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
+import student_image from '../assets/students.png'
 
 export default function AboutPage() {
+    const stats = [
+        { label: "Active Students", value: "10K+", icon: Users },
+        { label: "Resources", value: "500+", icon: BookOpen },
+        { label: "Partner Colleges", value: "50+", icon: GraduationCap },
+        { label: "Success Rate", value: "100%", icon: Award }
+    ];
+
+    const values = [
+        {
+            icon: Lightbulb,
+            title: "Innovation",
+            description: "Always finding new ways to help you learn."
+        },
+        {
+            icon: Users,
+            title: "Community",
+            description: "Built by students, for students."
+        },
+        {
+            icon: Award,
+            title: "Quality",
+            description: "We ensure all notes are correct and useful."
+        }
+    ];
+
+    const team = [
+        { name: "Uday Ahire", role: "Founder & Developer", initials: "UA" },
+        { name: "Hitesh Mayche", role: "Frontend Developer", initials: "HM" },
+        { name: "Raj Deore", role: "UI/UX Designer", initials: "RD" }
+    ];
+
+    const faqs = [
+        {
+            question: "Is it free?",
+            answer: "Yes, all our resources are completely free for students."
+        },
+        {
+            question: "Can I upload my notes?",
+            answer: "Yes, you can share your notes with others after signing up and verification."
+        },
+        {
+            question: "Is the content updated regularly?",
+            answer: "We add new papers and notes every week to keep up with curriculum changes."
+        }
+    ];
+
     return (
-        <div className="min-h-screen bg-transparent space-y-20 pb-20">
-
+        <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
             {/* Hero Section */}
-            <section className="relative pt-24 pb-12 px-6 flex flex-col items-center text-center overflow-hidden">
-                <div className="absolute inset-0 -z-10 h-full w-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-background to-background" />
+            <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+                <div className="absolute inset-0 -z-10 h-full w-full bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
 
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="max-w-3xl space-y-6"
-                >
-                    <Badge variant="outline" className="px-3 py-1 border-primary/20 bg-primary/5 text-primary mb-4 backdrop-blur-sm">
-                        Since 2024
-                    </Badge>
-                    <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">
-                        About <span className="text-primary">Us</span>
-                    </h1>
-                    <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-                        We provide study materials and resources for engineering students.
-                    </p>
-                </motion.div>
+                <div className="max-w-6xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="text-center space-y-8"
+                    >
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
+                            <Sparkles className="h-4 w-4 text-primary" />
+                            <span className="text-sm font-medium text-primary">Established 2024</span>
+                        </div>
+
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+                            Empowering <span className="text-primary">Engineering</span> Students
+                        </h1>
+
+                        <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                            We provide high-quality study materials and resources curated specifically for
+                            engineering students across all branches and years.
+                        </p>
+                    </motion.div>
+                </div>
             </section>
 
             {/* Stats Section */}
-            <section className="container mx-auto px-6">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    viewport={{ once: true }}
-                    className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8"
-                >
-                    {[
-                        { label: "Students", value: "10,000+" },
-                        { label: "Resources", value: "500+" },
-                        { label: "Colleges", value: "50+" },
-                        { label: "Happy Users", value: "100%" }
-                    ].map((stat, i) => (
-                        <Card key={i} className="bg-background/40 backdrop-blur-sm border-border/40 text-center py-8 hover:bg-background/60 transition-colors">
-                            <div className="text-3xl md:text-4xl font-bold text-primary mb-2">{stat.value}</div>
-                            <div className="text-sm font-medium text-muted-foreground uppercase tracking-wide">{stat.label}</div>
-                        </Card>
-                    ))}
-                </motion.div>
+            <section className="py-12 px-6">
+                <div className="max-w-6xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, staggerChildren: 0.1 }}
+                        viewport={{ once: true }}
+                        className="grid grid-cols-2 lg:grid-cols-4 gap-6"
+                    >
+                        {stats.map((stat, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                viewport={{ once: true }}
+                            >
+                                <Card className="border-border/40 bg-background/50 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
+                                    <CardContent className="pt-6 pb-5">
+                                        <div className="flex flex-col items-center text-center space-y-4">
+                                            <div className="p-3 rounded-xl bg-primary/5">
+                                                <stat.icon className="h-6 w-6 text-primary" />
+                                            </div>
+                                            <div>
+                                                <div className="text-3xl font-bold text-foreground mb-1">
+                                                    {stat.value}
+                                                </div>
+                                                <div className="text-sm text-muted-foreground font-medium">
+                                                    {stat.label}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+                        ))}
+                    </motion.div>
+                </div>
             </section>
 
             {/* Mission Section */}
-            <section className="container mx-auto px-6">
-                <div className="grid md:grid-cols-2 gap-12 items-center">
-                    <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.5 }}
-                        viewport={{ once: true }}
-                        className="space-y-6"
-                    >
-                        <h2 className="text-3xl font-bold tracking-tight">Our Goal</h2>
-                        <p className="text-lg text-muted-foreground leading-relaxed">
-                            We want to make learning easy for everyone. We believe that good study material should be available to all students, anytime.
-                        </p>
-                        <ul className="space-y-4">
-                            {['Free access to notes', 'Content by students', 'Verified by teachers'].map((item, i) => (
-                                <li key={i} className="flex items-center gap-3 text-foreground/80">
-                                    <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
-                                        <CheckCircle2 className="h-4 w-4 text-primary" />
-                                    </div>
-                                    {item}
-                                </li>
-                            ))}
-                        </ul>
-                    </motion.div>
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.5 }}
-                        viewport={{ once: true }}
-                        className="relative h-[400px] w-full bg-gradient-to-br from-primary/10 via-background to-secondary/10 rounded-3xl border border-border/40 overflow-hidden shadow-2xl"
-                    >
-                        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,transparent,black)]" />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <Target className="h-32 w-32 text-primary/20" />
-                        </div>
-                    </motion.div>
+            <section className="py-20 px-6">
+                <div className="max-w-6xl mx-auto">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6 }}
+                            viewport={{ once: true }}
+                            className="space-y-8"
+                        >
+                            <div>
+                                <h2 className="text-3xl font-bold tracking-tight mb-4">
+                                    Our Mission & Vision
+                                </h2>
+                                <p className="text-lg text-muted-foreground leading-relaxed">
+                                    We're dedicated to democratizing access to quality education by providing
+                                    comprehensive study resources that help engineering students excel in their
+                                    academic journey.
+                                </p>
+                            </div>
+
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-semibold">What We Offer</h3>
+                                <ul className="space-y-3">
+                                    {['Free access to curated notes', 'Community-driven content', 'Quality verification by experts'].map((item, index) => (
+                                        <motion.li
+                                            key={index}
+                                            initial={{ opacity: 0, x: -10 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            transition={{ duration: 0.3, delay: index * 0.1 }}
+                                            viewport={{ once: true }}
+                                            className="flex items-center gap-3"
+                                        >
+                                            <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                                <CheckCircle2 className="h-3 w-3 text-primary" />
+                                            </div>
+                                            <span className="text-foreground/90">{item}</span>
+                                        </motion.li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, x: 20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6 }}
+                            viewport={{ once: true }}
+                            className="relative"
+                        >
+                            <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-border/50 bg-gradient-to-br from-background to-muted/30 shadow-lg">
+                                <img
+                                    src={student_image}
+                                    alt="Students collaborating"
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
+                            </div>
+                        </motion.div>
+                    </div>
                 </div>
             </section>
 
             {/* Values Section */}
-            <section className="container mx-auto px-6">
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl font-bold tracking-tight mb-4">Our Values</h2>
-                    <p className="text-muted-foreground text-lg">What matters to us.</p>
-                </div>
+            <section className="py-20 px-6 bg-muted/30">
+                <div className="max-w-6xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-12"
+                    >
+                        <h2 className="text-3xl font-bold tracking-tight mb-4">
+                            Our Core Values
+                        </h2>
+                        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                            The principles that guide everything we do
+                        </p>
+                    </motion.div>
 
-                <div className="grid md:grid-cols-3 gap-6">
-                    {[
-                        { icon: Lightbulb, title: "Innovation", desc: "Always finding new ways to help you learn." },
-                        { icon: Users, title: "Community", desc: "Built by students, for students." },
-                        { icon: Award, title: "Quality", desc: "We ensure all notes are correct and useful." }
-                    ].map((val, i) => (
-                        <motion.div
-                            key={i}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: i * 0.1 }}
-                            viewport={{ once: true }}
-                        >
-                            <Card className="h-full border-border/40 bg-background/40 backdrop-blur-sm hover:border-primary/50 transition-all hover:-translate-y-1">
-                                <CardHeader>
-                                    <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
-                                        <val.icon className="h-6 w-6" />
-                                    </div>
-                                    <CardTitle className="text-xl">{val.title}</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-muted-foreground leading-relaxed">
-                                        {val.desc}
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        </motion.div>
-                    ))}
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {values.map((value, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4, delay: index * 0.1 }}
+                                viewport={{ once: true }}
+                            >
+                                <Card className="h-full border-border/50 bg-background/60 backdrop-blur-sm hover:border-primary/30 transition-all duration-300">
+                                    <CardContent className="pt-8 pb-8 px-6">
+                                        <div className="flex flex-col items-center text-center space-y-6">
+                                            <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+                                                <value.icon className="h-8 w-8 text-primary" />
+                                            </div>
+                                            <div className="space-y-3">
+                                                <h3 className="text-xl font-semibold">{value.title}</h3>
+                                                <p className="text-muted-foreground leading-relaxed">
+                                                    {value.description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </section>
 
             {/* Team Section */}
-            <section className="container mx-auto px-6 max-w-5xl">
-                <h2 className="text-3xl font-bold tracking-tight mb-12 text-center">Our Team</h2>
-                <div className="flex flex-wrap justify-center gap-8 text-center">
-                    {[
-                        { name: "Uday Ahire", role: "Founder & Developer", color: "bg-blue-500" },
-                        { name: "Hitesh Mayche", role: "Frontend Developer", color: "bg-purple-500" },
-                        { name: "Raj Deore", role: "UI/UX Designer", color: "bg-green-500" }
-                    ].map((member, i) => (
-                        <motion.div
-                            key={i}
-                            className="group cursor-pointer"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.3, delay: i * 0.05 }}
-                            viewport={{ once: true }}
-                        >
-                            <Avatar className="h-24 w-24 mx-auto mb-4 border-4 border-background shadow-xl group-hover:scale-105 transition-transform ring-2 ring-border">
-                                <AvatarFallback className={`text-white text-xl font-bold ${member.color}`}>
-                                    {member.name[0]}
-                                </AvatarFallback>
-                            </Avatar>
-                            <h3 className="font-semibold text-lg">{member.name}</h3>
-                            <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">{member.role}</p>
-                        </motion.div>
-                    ))}
+            <section className="py-20 px-6">
+                <div className="max-w-4xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-12"
+                    >
+                        <h2 className="text-3xl font-bold tracking-tight mb-4">
+                            Meet Our Team
+                        </h2>
+                        <p className="text-muted-foreground">
+                            The passionate individuals behind the platform
+                        </p>
+                    </motion.div>
+
+                    <div className="flex flex-col md:flex-row justify-center gap-8">
+                        {team.map((member, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4, delay: index * 0.1 }}
+                                viewport={{ once: true }}
+                                className="flex-1 max-w-xs"
+                            >
+                                <div className="flex flex-col items-center text-center space-y-4 p-6 rounded-2xl bg-gradient-to-b from-background to-muted/20 border border-border/40 hover:border-primary/30 transition-all duration-300">
+                                    <Avatar className="h-20 w-20 border-2 border-background shadow-md">
+                                        <AvatarFallback className="bg-gradient-to-br from-primary/10 to-primary/5 text-foreground text-lg font-semibold">
+                                            {member.initials}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div className="space-y-2">
+                                        <h3 className="font-bold text-lg">{member.name}</h3>
+                                        <p className="text-sm text-muted-foreground font-medium">
+                                            {member.role}
+                                        </p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </section>
 
             {/* FAQ Section */}
-            <section className="container mx-auto px-6 max-w-3xl">
-                <Card className="border-border/40 bg-background/40 backdrop-blur-sm shadow-lg">
-                    <CardHeader>
-                        <CardTitle className="text-2xl text-center">Common Questions</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <Accordion type="single" collapsible className="w-full">
-                            <AccordionItem value="item-1" className="border-border/40">
-                                <AccordionTrigger className="text-left">Is it free?</AccordionTrigger>
-                                <AccordionContent className="text-muted-foreground">
-                                    Yes, most of our resources are free for students.
-                                </AccordionContent>
-                            </AccordionItem>
-                            <AccordionItem value="item-2" className="border-border/40">
-                                <AccordionTrigger className="text-left">Can I upload my notes?</AccordionTrigger>
-                                <AccordionContent className="text-muted-foreground">
-                                    Yes, you can share your notes with others after signing up.
-                                </AccordionContent>
-                            </AccordionItem>
-                            <AccordionItem value="item-3" className="border-border/40">
-                                <AccordionTrigger className="text-left">Is the content updated?</AccordionTrigger>
-                                <AccordionContent className="text-muted-foreground">
-                                    We add new papers and notes every week.
-                                </AccordionContent>
-                            </AccordionItem>
-                        </Accordion>
-                    </CardContent>
-                </Card>
-            </section>
+            <section className="py-20 px-6">
+                <div className="max-w-3xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        viewport={{ once: true }}
+                        className="mb-12 text-center"
+                    >
+                        <h2 className="text-3xl font-bold tracking-tight mb-4">
+                            Frequently Asked Questions
+                        </h2>
+                        <p className="text-muted-foreground">
+                            Find answers to common questions about our platform
+                        </p>
+                    </motion.div>
 
-            {/* CTA Section */}
-            <section className="text-center py-12 px-6">
-                <h2 className="text-3xl font-bold mb-6">Start Learning</h2>
-                <div className="flex flex-col sm:flex-row justify-center gap-4">
-                    <Button size="lg" className="h-12 px-8 text-base" asChild>
-                        <Link to="/resources">View Resources</Link>
-                    </Button>
-                    <Button size="lg" variant="outline" className="h-12 px-8 text-base" asChild>
-                        <Link to="/signup">
-                            Join Now <ArrowRight className="ml-2 h-4 w-4" />
-                        </Link>
-                    </Button>
+                    <Card className="border-border/50 bg-background/60 backdrop-blur-sm shadow-sm">
+                        <CardContent className="p-0">
+                            <Accordion type="single" collapsible className="w-full">
+                                {faqs.map((faq, index) => (
+                                    <AccordionItem
+                                        key={index}
+                                        value={`item-${index}`}
+                                        className="border-border/30 px-6"
+                                    >
+                                        <AccordionTrigger className="text-left py-4 hover:no-underline hover:text-primary">
+                                            {faq.question}
+                                        </AccordionTrigger>
+                                        <AccordionContent className="text-muted-foreground pb-4">
+                                            {faq.answer}
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                ))}
+                            </Accordion>
+                        </CardContent>
+                    </Card>
                 </div>
             </section>
 
+            {/* CTA Section */}
+            <section className="py-20 px-6">
+                <div className="max-w-4xl mx-auto text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        viewport={{ once: true }}
+                        className="space-y-8"
+                    >
+                        <div className="space-y-6">
+                            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+                                Ready to Elevate Your Learning?
+                            </h2>
+                            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                                Join thousands of engineering students who are already acing their exams with our resources.
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row justify-center gap-4">
+                            <Button
+                                size="lg"
+                                className="h-12 px-8 font-medium"
+                                asChild
+                            >
+                                <Link to="/resources">
+                                    Browse Resources
+                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                </Link>
+                            </Button>
+                            <Button
+                                size="lg"
+                                variant="outline"
+                                className="h-12 px-8 font-medium border-border hover:border-primary/50"
+                                asChild
+                            >
+                                <Link to="/signup">
+                                    Create Free Account
+                                </Link>
+                            </Button>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
         </div>
     )
 }
