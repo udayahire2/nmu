@@ -107,22 +107,6 @@ export default function StudyMaterialsPage() {
                     </p>
                 </motion.div>
 
-                {/* Stats Row */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.6 }}
-                    className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 w-full max-w-4xl px-2"
-                >
-                    {DUMMY_STATS.map((stat, i) => (
-                        <div key={i} className="group relative flex flex-col items-center justify-center p-5 rounded-2xl bg-card/30 backdrop-blur-md border border-border/50 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
-                            <stat.icon className="h-6 w-6 text-primary mb-3 group-hover:scale-110 transition-transform duration-300" />
-                            <span className="text-3xl font-bold tracking-tight text-foreground">{stat.value}</span>
-                            <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider mt-1">{stat.label}</span>
-                        </div>
-                    ))}
-                </motion.div>
             </div>
 
             {/* Sticky Controls Section */}
@@ -215,7 +199,7 @@ export default function StudyMaterialsPage() {
                                             <CardHeader className="p-5 pb-2">
                                                 <div className="flex justify-between items-start mb-3">
                                                     <div className={`p-2.5 rounded-xl ${resource.type.toLowerCase() === 'video' ? 'bg-red-500/10 text-red-500' :
-                                                            resource.type.toLowerCase() === 'pdf' ? 'bg-blue-500/10 text-blue-500' : 'bg-primary/10 text-primary'
+                                                        resource.type.toLowerCase() === 'pdf' ? 'bg-blue-500/10 text-blue-500' : 'bg-primary/10 text-primary'
                                                         } ring-1 ring-inset ring-black/5 dark:ring-white/10`}>
                                                         {getIcon(resource.type)}
                                                     </div>
@@ -295,7 +279,7 @@ export default function StudyMaterialsPage() {
                     <DialogHeader className="p-4 border-b border-border/40 flex flex-row items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className={`p-2 rounded-lg ${selectedResource?.type.toLowerCase() === 'video' ? 'bg-red-500/10 text-red-500' :
-                                    selectedResource?.type.toLowerCase() === 'pdf' ? 'bg-blue-500/10 text-blue-500' : 'bg-primary/10 text-primary'
+                                selectedResource?.type.toLowerCase() === 'pdf' ? 'bg-blue-500/10 text-blue-500' : 'bg-primary/10 text-primary'
                                 }`}>
                                 {selectedResource && getIcon(selectedResource.type)}
                             </div>
