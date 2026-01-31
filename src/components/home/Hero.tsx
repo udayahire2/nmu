@@ -107,11 +107,6 @@ const Hero = () => (
                 <Button size="lg" className="h-14 min-w-[180px] text-lg px-8 transition-all hover:-translate-y-0.5" asChild>
                     <Link to="/resources">View Resources</Link>
                 </Button>
-                <Button size="lg" variant="outline" className="h-14 min-w-[180px] text-lg px-8 transition-all hover:-translate-y-0.5" asChild>
-                    <Link to="/about">
-                        About Us
-                    </Link>
-                </Button>
             </div>
 
             {/* Social Proof */}

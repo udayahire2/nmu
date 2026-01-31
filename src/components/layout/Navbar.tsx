@@ -65,7 +65,6 @@ export function Navbar() {
                     <Link to="/" className="transition-colors hover:text-primary">Home</Link>
                     <Link to="/resources" className="transition-colors hover:text-primary">Browse Materials</Link>
                     <Link to="/syllabus" className="transition-colors hover:text-primary">Syllabus</Link>
-                    <Link to="/about" className="transition-colors hover:text-primary">About</Link>
                 </nav>
 
                 {/* Right Side Actions */}
@@ -173,13 +172,6 @@ export function Navbar() {
                                     onClick={closeMobileMenu}
                                 >
                                     Syllabus
-                                </Link>
-                                <Link
-                                    to="/about"
-                                    className="block px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-primary hover:bg-background/50 transition-colors"
-                                    onClick={closeMobileMenu}
-                                >
-                                    About
                                 </Link>
                             </div>
                             <div className="flex flex-col gap-2 p-4 pt-0 border-t border-border/60">

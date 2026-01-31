@@ -54,6 +54,7 @@ export default function AdminLayout() {
     const navItems = [
         { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
         { icon: Users, label: 'Students', path: '/admin/students' },
+        { icon: BookOpen, label: 'Syllabus', path: '/admin/syllabus' },
         { icon: BookOpen, label: 'Resources', path: '/admin/resources' },
         { icon: ClipboardCheck, label: 'Approvals', path: '/admin/approvals' },
         { icon: Settings, label: 'Settings', path: '/admin/settings' },
