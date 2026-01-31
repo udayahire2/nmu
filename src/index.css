@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -183,4 +184,22 @@
   100% {
     background-position: 0% 50%;
   }
+}
+
+/* Custom scrollbar styling for markdown preview */
+.markdown-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.markdown-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.markdown-scrollbar::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 4px;
+}
+
+.markdown-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--border) / 0.8);
 }

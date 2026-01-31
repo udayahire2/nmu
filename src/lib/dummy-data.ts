@@ -42,7 +42,34 @@ export const DUMMY_RESOURCES = [
         author: "Dr. K. Iyer",
         views: 1500,
         size: "1.1 MB",
-        url: "#"
+        url: "#",
+        content: `
+# Operating Systems Fundamentals
+
+## Introduction
+An operating system (OS) is system software that manages computer hardware, software resources, and provides common services for computer programs.
+
+### Key Concepts
+- **Process Management**: Handling creation, scheduling, and termination of processes.
+- **Memory Management**: Allocation and deallocation of memory.
+- **File System**: Organizing data storage.
+
+### Scheduling Algorithms
+1. First-Come, First-Served (FCFS)
+2. Shortest Job Next (SJN)
+3. Round Robin (RR)
+
+> "The operating system is the most important program that runs on a computer."
+
+## Code Example
+\`\`\`c
+#include <stdio.h>
+int main() {
+    printf("Hello form the scheduler!");
+    return 0;
+}
+\`\`\`
+`
     },
     {
         id: "4",
