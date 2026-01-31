@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { useTheme } from "@/components/theme-provider"
-import { Moon, Sun, User, LogOut, Settings, Menu, X, Search, Bell, ChevronDown, Home, BookOpen, GraduationCap, Sparkles } from "lucide-react"
+import { Moon, Sun, User, LogOut, Settings, Menu, Search, Bell, ChevronDown, Home, BookOpen, GraduationCap } from "lucide-react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 import { Logo } from "@/components/ui/logo"
 import { useState, useEffect, useRef } from "react"
@@ -74,8 +74,7 @@ export function Navbar() {
     const navLinks = [
         { path: "/", label: "Dashboard", icon: Home },
         { path: "/resources", label: "Study Materials", icon: BookOpen },
-        { path: "/syllabus", label: "Syllabus", icon: GraduationCap },
-        { path: "/progress", label: "Progress", icon: Sparkles },
+        { path: "/syllabus", label: "Syllabus", icon: GraduationCap }
     ]
 
     const isActive = (path: string) => location.pathname === path
@@ -309,9 +308,7 @@ export function Navbar() {
                                     <SheetTitle className="text-left flex items-center gap-2">
                                         <div className="relative">
                                             <Logo />
-                                            <div className="absolute -inset-1 bg-primary/20 rounded-full blur-md opacity-50" />
                                         </div>
-                                        <span className="font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">EduHub</span>
                                     </SheetTitle>
                                 </SheetHeader>
 
@@ -392,7 +389,7 @@ export function Navbar() {
                                                     </Button>
                                                 </Link>
                                                 <Link to="/signup">
-                                                    <Button className="w-full h-11 bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all">
+                                                    <Button className="w-full h-11 bg-primary text-primary-foreground transition-all">
                                                         Get Started
                                                     </Button>
                                                 </Link>
