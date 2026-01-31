@@ -64,6 +64,7 @@ export function Navbar() {
                 <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-sm font-medium text-muted-foreground">
                     <Link to="/" className="transition-colors hover:text-primary">Home</Link>
                     <Link to="/resources" className="transition-colors hover:text-primary">Browse Materials</Link>
+                    <Link to="/syllabus" className="transition-colors hover:text-primary">Syllabus</Link>
                     <Link to="/about" className="transition-colors hover:text-primary">About</Link>
                 </nav>
 
@@ -165,6 +166,13 @@ export function Navbar() {
                                     onClick={closeMobileMenu}
                                 >
                                     Browse Materials
+                                </Link>
+                                <Link
+                                    to="/syllabus"
+                                    className="block px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-primary hover:bg-background/50 transition-colors"
+                                    onClick={closeMobileMenu}
+                                >
+                                    Syllabus
                                 </Link>
                                 <Link
                                     to="/about"

@@ -7,6 +7,7 @@ import SignUpPage from "./pages/SignUpPage";
 import VerifyOtpPage from "./pages/VerifyOtpPage";
 import ProfilePage from "./pages/ProfilePage";
 import StudyMaterialsPage from "./pages/StudyMaterialsPage";
+import SyllabusPage from "./pages/SyllabusPage";
 import AdminLayout from "./layouts/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
 import StudentsPage from "./pages/admin/StudentsPage";
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
             {
                 path: "/about",
                 element: <AboutPage />,
+            },
+            {
+                path: "/syllabus",
+                element: <SyllabusPage />,
             },
         ],
     },

@@ -17,7 +17,8 @@ export const DUMMY_RESOURCES = [
         createdAt: "2024-03-10T10:00:00Z",
         author: "Dr. Anjali Sharma",
         views: 1250,
-        size: "2.4 MB"
+        size: "2.4 MB",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
     },
     {
         id: "2",
@@ -28,7 +29,8 @@ export const DUMMY_RESOURCES = [
         createdAt: "2024-03-12T14:30:00Z",
         author: "Prof. Rajesh Kumar",
         views: 980,
-        duration: "45:20"
+        duration: "45:20",
+        url: "https://www.youtube.com/embed/dQw4w9WgXcQ"
     },
     {
         id: "3",
@@ -39,7 +41,8 @@ export const DUMMY_RESOURCES = [
         createdAt: "2024-03-15T09:15:00Z",
         author: "Dr. K. Iyer",
         views: 1500,
-        size: "1.1 MB"
+        size: "1.1 MB",
+        url: "#"
     },
     {
         id: "4",
@@ -50,7 +53,8 @@ export const DUMMY_RESOURCES = [
         createdAt: "2024-03-18T11:45:00Z",
         author: "Prof. R. Gupta",
         views: 2100,
-        size: "3.5 MB"
+        size: "3.5 MB",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
     },
     {
         id: "5",
@@ -61,7 +65,8 @@ export const DUMMY_RESOURCES = [
         createdAt: "2024-03-20T16:20:00Z",
         author: "Dr. Meera Patel",
         views: 850,
-        duration: "1:15:00"
+        duration: "1:15:00",
+        url: "https://www.youtube.com/embed/LXb3EKWsInQ"
     },
     {
         id: "6",
@@ -72,7 +77,8 @@ export const DUMMY_RESOURCES = [
         createdAt: "2024-03-22T13:10:00Z",
         author: "Prof. S. Reddy",
         views: 3200,
-        size: "5.2 MB"
+        size: "5.2 MB",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
     }
 ];
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Table,
     TableBody,
@@ -9,76 +9,68 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, FileText, Video, File, Search, Clock, Eye } from "lucide-react";
+import { Check, X, FileText, Video, File, Search, Clock, Eye, RefreshCw, Loader2, BookOpen, ExternalLink, Download } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-// Mock Data for Student Uploads
-const MOCK_REQUESTS = [
-    {
-        id: "REQ-001",
-        title: "Advanced React Patterns",
-        subject: "Web Development",
-        type: "pdf",
-        author: "Alex Johnson (Student)",
-        submittedAt: "2 hours ago",
-        status: "pending",
-        url: "#"
-    },
-    {
-        id: "REQ-002",
-        title: "Data Structures - Trees",
-        subject: "DSA",
-        type: "video",
-        author: "Samantha Lee (Student)",
-        submittedAt: "5 hours ago",
-        status: "pending",
-        url: "#"
-    },
-    {
-        id: "REQ-003",
-        title: "Operating Systems Notes",
-        subject: "OS",
-        type: "doc",
-        author: "Rahul Gupta (Student)",
-        submittedAt: "1 day ago",
-        status: "approved",
-        url: "#"
-    },
-    {
-        id: "REQ-004",
-        title: "Invalid File Test",
-        subject: "Testing",
-        type: "pdf",
-        author: "John Doe (Student)",
-        submittedAt: "2 days ago",
-        status: "rejected",
-        url: "#"
-    }
-];
+import { fetchPendingMaterials, fetchApprovedMaterials, updateMaterialStatus, type StudyMaterial } from '@/services/study-service';
+import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function ContentApprovalPage() {
-    const [requests, setRequests] = useState(MOCK_REQUESTS);
+    const [pendingRequests, setPendingRequests] = useState<StudyMaterial[]>([]);
+    const [historyRequests, setHistoryRequests] = useState<StudyMaterial[]>([]);
+    const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
+    const [viewingRequest, setViewingRequest] = useState<StudyMaterial | null>(null);
 
-    const handleAction = (id: string, action: 'approve' | 'reject') => {
-        if (!window.confirm(`Are you sure you want to ${action} this content?`)) return;
+    const loadData = async () => {
+        setLoading(true);
+        try {
+            const [pending, approved] = await Promise.all([
+                fetchPendingMaterials(),
+                fetchApprovedMaterials()
+            ]);
+            setPendingRequests(pending);
+            // Note: Currently API gets approved
+            setHistoryRequests(approved);
+        } catch (error) {
+            toast.error("Failed to load requests");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        setRequests(prev => prev.map(req => {
-            if (req.id === id) {
-                return { ...req, status: action === 'approve' ? 'approved' : 'rejected' };
-            }
-            return req;
-        }));
+    useEffect(() => {
+        loadData();
+    }, []);
 
-        alert(`Content ${action}ed successfully!`);
+    const handleAction = async (id: string, action: 'approve' | 'reject') => {
+        const status = action === 'approve' ? 'approved' : 'rejected';
+
+        // Optimistic update
+        const request = pendingRequests.find(r => r._id === id);
+        if (!request) return;
+
+        setPendingRequests(prev => prev.filter(r => r._id !== id));
+        if (action === 'approve') {
+            setHistoryRequests(prev => [{ ...request, status: 'approved' }, ...prev]);
+        }
+
+        const result = await updateMaterialStatus(id, status);
+        if (result) {
+            toast.success(`Content ${status} successfully!`);
+        } else {
+            toast.error(`Failed to ${action} content`);
+            loadData(); // Revert
+        }
     };
 
     const getTypeIcon = (type: string) => {
-        switch (type.toLowerCase()) {
+        switch ((type || '').toLowerCase()) {
             case 'pdf': return <FileText className="h-4 w-4 text-red-500" />;
             case 'video': return <Video className="h-4 w-4 text-blue-500" />;
+            case 'notes': return <BookOpen className="h-4 w-4 text-emerald-500" />;
             default: return <File className="h-4 w-4 text-gray-500" />;
         }
     };
@@ -95,18 +87,29 @@ export default function ContentApprovalPage() {
     };
 
     // Filtered requests based on search
-    const filteredRequests = requests.filter(r =>
+    const filteredPending = pendingRequests.filter(r =>
+        r.title.toLowerCase().includes(search.toLowerCase()) ||
+        r.author.toLowerCase().includes(search.toLowerCase())
+    );
+
+    const filteredHistory = historyRequests.filter(r =>
         r.title.toLowerCase().includes(search.toLowerCase()) ||
         r.author.toLowerCase().includes(search.toLowerCase())
     );
 
     return (
         <div className="space-y-8">
-            <div className="flex flex-col gap-1">
-                <h1 className="text-3xl font-bold tracking-tight text-white">
-                    Content Approvals
-                </h1>
-                <p className="text-muted-foreground text-sm font-medium">Verify and manage student study material submissions.</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex flex-col gap-1">
+                    <h1 className="text-3xl font-bold tracking-tight text-white">
+                        Content Approvals
+                    </h1>
+                    <p className="text-muted-foreground text-sm font-medium">Verify and manage student study material submissions.</p>
+                </div>
+                <Button variant="outline" size="sm" onClick={loadData} disabled={loading} className="w-fit">
+                    <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                    Refresh Data
+                </Button>
             </div>
 
             <Tabs defaultValue="pending" className="w-full space-y-6">
@@ -116,16 +119,16 @@ export default function ContentApprovalPage() {
                             value="pending"
                             className="h-9 px-4 rounded-full border border-white/5 bg-black/20 data-[state=active]:bg-white/10 data-[state=active]:border-white/10 data-[state=active]:text-white transition-all"
                         >
-                            Pending Requests
+                            Pending
                             <Badge className="ml-2 h-5 min-w-5 px-1.5 flex items-center justify-center rounded-full bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 text-[10px]">
-                                {requests.filter(r => r.status === 'pending').length}
+                                {pendingRequests.length}
                             </Badge>
                         </TabsTrigger>
                         <TabsTrigger
                             value="history"
                             className="h-9 px-4 rounded-full border border-white/5 bg-black/20 data-[state=active]:bg-white/10 data-[state=active]:border-white/10 data-[state=active]:text-white transition-all"
                         >
-                            Approval History
+                            Approved History
                         </TabsTrigger>
                     </TabsList>
 
@@ -141,7 +144,7 @@ export default function ContentApprovalPage() {
                 </div>
 
                 <TabsContent value="pending" className="mt-0">
-                    <Card className="border border-white/5 bg-black/40 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden">
+                    <Card className="border border-white/5 bg-black/40 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden min-h-[400px]">
                         <CardHeader className="border-b border-white/5 bg-white/5 px-6 py-4">
                             <CardTitle className="text-lg font-medium">Pending Submissions</CardTitle>
                             <CardDescription>Review and take action on new content uploads.</CardDescription>
@@ -158,7 +161,13 @@ export default function ContentApprovalPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {filteredRequests.filter(r => r.status === 'pending').length === 0 ? (
+                                    {loading ? (
+                                        <TableRow>
+                                            <TableCell colSpan={5} className="h-64 text-center">
+                                                <div className="flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : filteredPending.length === 0 ? (
                                         <TableRow>
                                             <TableCell colSpan={5} className="h-64 text-center text-muted-foreground">
                                                 <div className="flex flex-col items-center justify-center gap-2">
@@ -170,8 +179,8 @@ export default function ContentApprovalPage() {
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        filteredRequests.filter(r => r.status === 'pending').map((req) => (
-                                            <TableRow key={req.id} className="group border-white/5 hover:bg-white/[0.02] transition-colors">
+                                        filteredPending.map((req) => (
+                                            <TableRow key={req._id} className="group border-white/5 hover:bg-white/[0.02] transition-colors">
                                                 <TableCell className="pl-6 py-4">
                                                     <div className="flex items-center gap-4">
                                                         <div className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center">
@@ -189,7 +198,7 @@ export default function ContentApprovalPage() {
                                                 <TableCell>
                                                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                                         <Clock className="h-3 w-3" />
-                                                        {req.submittedAt}
+                                                        {new Date(req.createdAt).toLocaleDateString()}
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>
@@ -202,13 +211,14 @@ export default function ContentApprovalPage() {
                                                             size="icon"
                                                             className="h-8 w-8 text-muted-foreground hover:text-white hover:bg-white/10"
                                                             title="View Content"
+                                                            onClick={() => setViewingRequest(req)}
                                                         >
                                                             <Eye className="h-4 w-4" />
                                                         </Button>
                                                         <Button
                                                             size="sm"
                                                             className="h-8 px-3 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20"
-                                                            onClick={() => handleAction(req.id, 'approve')}
+                                                            onClick={() => handleAction(req._id, 'approve')}
                                                         >
                                                             <Check className="h-4 w-4 mr-1.5" />
                                                             Approve
@@ -216,7 +226,7 @@ export default function ContentApprovalPage() {
                                                         <Button
                                                             size="sm"
                                                             className="h-8 px-3 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20"
-                                                            onClick={() => handleAction(req.id, 'reject')}
+                                                            onClick={() => handleAction(req._id, 'reject')}
                                                         >
                                                             <X className="h-4 w-4 mr-1.5" />
                                                             Reject
@@ -233,10 +243,10 @@ export default function ContentApprovalPage() {
                 </TabsContent>
 
                 <TabsContent value="history" className="mt-0">
-                    <Card className="border border-white/5 bg-black/40 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden">
+                    <Card className="border border-white/5 bg-black/40 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden min-h-[400px]">
                         <CardHeader className="border-b border-white/5 bg-white/5 px-6 py-4">
                             <CardTitle className="text-lg font-medium">History</CardTitle>
-                            <CardDescription>Past approval and rejection actions.</CardDescription>
+                            <CardDescription>Recently approved content.</CardDescription>
                         </CardHeader>
                         <div className="p-0">
                             <Table>
@@ -249,36 +259,102 @@ export default function ContentApprovalPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {filteredRequests.filter(r => r.status !== 'pending').map((req) => (
-                                        <TableRow key={req.id} className="group border-white/5 hover:bg-white/[0.02]">
-                                            <TableCell className="pl-6 py-4">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center opacity-60">
-                                                        {getTypeIcon(req.type)}
-                                                    </div>
-                                                    <div className="space-y-1">
-                                                        <p className="font-semibold text-sm text-foreground/70">{req.title}</p>
-                                                        <p className="text-xs text-muted-foreground">{req.subject}</p>
-                                                    </div>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                <span className="text-sm text-muted-foreground">{req.author}</span>
-                                            </TableCell>
-                                            <TableCell>
-                                                {getStatusBadge(req.status)}
-                                            </TableCell>
-                                            <TableCell className="text-right pr-6 text-sm text-muted-foreground">
-                                                {req.submittedAt}
+                                    {loading ? (
+                                        <TableRow>
+                                            <TableCell colSpan={4} className="h-64 text-center">
+                                                <div className="flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
                                             </TableCell>
                                         </TableRow>
-                                    ))}
+                                    ) : filteredHistory.length === 0 ? (
+                                        <TableRow>
+                                            <TableCell colSpan={4} className="h-64 text-center text-muted-foreground">
+                                                No history available.
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : (
+                                        filteredHistory.map((req) => (
+                                            <TableRow key={req._id} className="group border-white/5 hover:bg-white/[0.02]">
+                                                <TableCell className="pl-6 py-4">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center opacity-60">
+                                                            {getTypeIcon(req.type)}
+                                                        </div>
+                                                        <div className="space-y-1">
+                                                            <p className="font-semibold text-sm text-foreground/70">{req.title}</p>
+                                                            <p className="text-xs text-muted-foreground">{req.subject}</p>
+                                                        </div>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <span className="text-sm text-muted-foreground">{req.author}</span>
+                                                </TableCell>
+                                                <TableCell>
+                                                    {getStatusBadge(req.status)}
+                                                </TableCell>
+                                                <TableCell className="text-right pr-6 text-sm text-muted-foreground">
+                                                    {new Date(req.createdAt).toLocaleDateString()}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    )}
                                 </TableBody>
                             </Table>
                         </div>
                     </Card>
                 </TabsContent>
             </Tabs>
+
+            {/* Preview Modal */}
+            <Dialog open={!!viewingRequest} onOpenChange={(open) => !open && setViewingRequest(null)}>
+                <DialogContent className="max-w-4xl w-[90vw] p-0 overflow-hidden bg-background/95 backdrop-blur-xl border-border/50">
+                    <DialogHeader className="p-4 border-b border-border/40 flex flex-row items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-lg ${viewingRequest?.type.toLowerCase() === 'video' ? 'bg-red-500/10 text-red-500' :
+                                viewingRequest?.type.toLowerCase() === 'pdf' ? 'bg-blue-500/10 text-blue-500' : 'bg-primary/10 text-primary'
+                                }`}>
+                                {viewingRequest && getTypeIcon(viewingRequest.type)}
+                            </div>
+                            <div>
+                                <DialogTitle className="text-lg font-semibold leading-none mb-1">
+                                    {viewingRequest?.title}
+                                </DialogTitle>
+                                <p className="text-xs text-muted-foreground">
+                                    {viewingRequest?.subject} • {viewingRequest?.author}
+                                </p>
+                            </div>
+                        </div>
+                    </DialogHeader>
+
+                    <div className="flex-1 bg-muted/20 min-h-[60vh] relative flex items-center justify-center">
+                        {viewingRequest?.type.toLowerCase() === 'video' ? (
+                            <iframe
+                                src={viewingRequest.url}
+                                className="w-full h-[60vh]"
+                                title={viewingRequest.title}
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            />
+                        ) : viewingRequest?.type.toLowerCase() === 'pdf' ? (
+                            <iframe
+                                src={viewingRequest.url || (viewingRequest.filePath ? `http://localhost:5000${viewingRequest.filePath}` : '')}
+                                className="w-full h-[80vh]"
+                                title={viewingRequest.title}
+                            />
+                        ) : (
+                            <div className="text-center p-10">
+                                <h3 className="text-lg font-medium text-foreground">Preview Not Available</h3>
+                                {viewingRequest?.url && (
+                                    <a href={viewingRequest.url} target="_blank" rel="noreferrer">
+                                        <Button className="mt-4" variant="outline">
+                                            <ExternalLink className="mr-2 h-4 w-4" /> Open Link
+                                        </Button>
+                                    </a>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

@@ -21,7 +21,7 @@ import {
     DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import ResourceForm from "./ResourceForm";
+import ResourceForm from "@/components/admin/ResourceForm";
 import { Card, CardHeader } from "@/components/ui/card";
 
 export default function ResourceManagerPage() {

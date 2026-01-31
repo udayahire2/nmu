@@ -36,7 +36,7 @@ const SignUp = () => {
     setLoading(true);
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
       const res = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: {
@@ -53,9 +53,9 @@ const SignUp = () => {
       } else {
         alert(data.message || data.error || 'Registration failed');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Registration Error:', error);
-      alert('Something went wrong');
+      alert(`Registration failed: ${error.message || 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
