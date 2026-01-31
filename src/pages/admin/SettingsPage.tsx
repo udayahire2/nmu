@@ -1,11 +1,49 @@
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bell, Lock, User, Mail, Shield, Save } from "lucide-react";
+import { fetchProfile, updateProfile, type AdminProfile } from "@/services/admin-service";
 
 export default function SettingsPage() {
+    const [profile, setProfile] = useState<AdminProfile>({
+        firstName: '',
+        lastName: '',
+        email: ''
+    });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadProfile = async () => {
+            const data = await fetchProfile();
+            if (data) {
+                setProfile(data);
+            }
+            setLoading(false);
+        };
+        loadProfile();
+    }, []);
+
+    const handleSave = async () => {
+        const updated = await updateProfile(profile);
+        if (updated) {
+            setProfile(updated);
+            alert("Profile updated successfully!");
+        } else {
+            alert("Failed to update profile.");
+        }
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = e.target;
+        setProfile(prev => ({
+            ...prev,
+            [id]: value
+        }));
+    };
+
     return (
         <div className="space-y-8">
             <div className="flex flex-col gap-1">
@@ -29,11 +67,11 @@ export default function SettingsPage() {
                         <CardContent className="p-6 space-y-6">
                             <div className="flex flex-col sm:flex-row items-center gap-6">
                                 <Avatar className="h-24 w-24 border-4 border-white/5 shadow-xl">
-                                    <AvatarImage src="https://github.com/shadcn.png" />
+                                    <AvatarImage src={profile.avatarUrl || "https://github.com/shadcn.png"} />
                                     <AvatarFallback>AD</AvatarFallback>
                                 </Avatar>
                                 <div className="space-y-2 text-center sm:text-left">
-                                    <h3 className="font-medium text-white">Admin User</h3>
+                                    <h3 className="font-medium text-white">{profile.firstName || "Admin"} {profile.lastName || "User"}</h3>
                                     <p className="text-sm text-muted-foreground">Administrator</p>
                                     <div className="flex gap-2 justify-center sm:justify-start">
                                         <Button variant="outline" size="sm" className="bg-white/5 border-white/10 hover:bg-white/10">Change Photo</Button>
@@ -45,11 +83,21 @@ export default function SettingsPage() {
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div className="space-y-2">
                                     <Label htmlFor="firstName" className="text-white/80">First name</Label>
-                                    <Input id="firstName" defaultValue="Admin" className="bg-black/20 border-white/10 focus:border-primary/50" />
+                                    <Input
+                                        id="firstName"
+                                        value={loading ? "..." : profile.firstName}
+                                        onChange={handleChange}
+                                        className="bg-black/20 border-white/10 focus:border-primary/50"
+                                    />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="lastName" className="text-white/80">Last name</Label>
-                                    <Input id="lastName" defaultValue="User" className="bg-black/20 border-white/10 focus:border-primary/50" />
+                                    <Input
+                                        id="lastName"
+                                        value={loading ? "..." : profile.lastName}
+                                        onChange={handleChange}
+                                        className="bg-black/20 border-white/10 focus:border-primary/50"
+                                    />
                                 </div>
                             </div>
 
@@ -57,12 +105,17 @@ export default function SettingsPage() {
                                 <Label htmlFor="email" className="text-white/80">Email address</Label>
                                 <div className="relative">
                                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                    <Input id="email" defaultValue="admin@example.com" className="pl-9 bg-black/20 border-white/10 focus:border-primary/50" />
+                                    <Input
+                                        id="email"
+                                        value={loading ? "..." : profile.email}
+                                        onChange={handleChange}
+                                        className="pl-9 bg-black/20 border-white/10 focus:border-primary/50"
+                                    />
                                 </div>
                             </div>
 
                             <div className="flex justify-end pt-4">
-                                <Button className="bg-white text-black hover:bg-white/90">
+                                <Button onClick={handleSave} className="bg-white text-black hover:bg-white/90">
                                     <Save className="h-4 w-4 mr-2" />
                                     Save Changes
                                 </Button>

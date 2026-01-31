@@ -2,12 +2,24 @@ import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, Activity, TrendingUp, Users, BarChart3, Loader2, FileText, Eye, Download, Calendar } from "lucide-react";
+import { ArrowUpRight, Activity, TrendingUp, Users, BarChart3, Loader2, FileText, Eye, Download, Calendar, Search, CheckCircle2 } from "lucide-react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 import { DUMMY_STATS, TOP_RESOURCES, RECENT_ACTIVITY } from "@/lib/dummy-data";
+import { fetchPendingMaterials, fetchApprovedMaterials, updateMaterialStatus, type StudyMaterial } from "@/services/study-service";
 
 export default function DashboardPage() {
     const [stats, setStats] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [pendingMaterials, setPendingMaterials] = useState<StudyMaterial[]>([]);
+    const [approvedMaterials, setApprovedMaterials] = useState<StudyMaterial[]>([]);
+    const [activeTab, setActiveTab] = useState<'pending' | 'approved'>('pending');
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -33,7 +45,22 @@ export default function DashboardPage() {
         };
 
         fetchStats();
+        loadMaterials();
     }, []);
+
+    const loadMaterials = async () => {
+        const pending = await fetchPendingMaterials();
+        setPendingMaterials(pending);
+        const approved = await fetchApprovedMaterials();
+        setApprovedMaterials(approved);
+    };
+
+    const handleStatusUpdate = async (id: string, status: 'approved' | 'rejected') => {
+        const result = await updateMaterialStatus(id, status);
+        if (result) {
+            loadMaterials();
+        }
+    };
 
     // Enhanced stats with clean design
     const enrichedStats = [
@@ -55,14 +82,14 @@ export default function DashboardPage() {
             icon: FileText,
             description: "Study materials"
         },
-        { 
-            ...DUMMY_STATS[2], 
+        {
+            ...DUMMY_STATS[2],
             color: "emerald",
             icon: TrendingUp,
             description: "This week"
         },
-        { 
-            ...DUMMY_STATS[3], 
+        {
+            ...DUMMY_STATS[3],
             color: "amber",
             icon: BarChart3,
             description: "Platform usage"
@@ -105,200 +132,166 @@ export default function DashboardPage() {
 
     return (
         <div className="space-y-8">
-            {/* Header */}
-            <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-                            Dashboard Overview
-                        </h1>
-                        <p className="text-muted-foreground mt-1">
-                            Welcome back, Admin. Here's what's happening today.
-                        </p>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Calendar className="h-4 w-4" />
-                        {new Date().toLocaleDateString('en-US', { 
-                            weekday: 'long', 
-                            month: 'long', 
-                            day: 'numeric' 
-                        })}
-                    </div>
-                </div>
+            <div className="flex flex-col gap-1">
+                <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+                    Dashboard
+                </h1>
+                <p className="text-muted-foreground text-sm font-medium">Overview of your platform's performance.</p>
             </div>
 
             {/* Stats Grid */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {enrichedStats.map((stat, i) => {
-                    const colors = colorClasses[stat.color as keyof typeof colorClasses];
+                    const colors = colorClasses[stat.color as keyof typeof colorClasses] || colorClasses.blue;
+
                     return (
-                        <Card 
-                            key={i} 
-                            className={`border ${colors.border} bg-gradient-to-b from-card to-card/80 shadow-sm hover:shadow-md transition-shadow`}
-                        >
-                            <CardContent className="pt-6">
-                                <div className="flex items-start justify-between mb-4">
-                                    <div className={`p-2.5 rounded-lg ${colors.bg}`}>
-                                        <stat.icon className={`h-5 w-5 ${colors.text}`} />
+                        <div key={i} className="group relative p-6 bg-black/40 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden hover:bg-white/5 transition-all duration-300">
+                            
+                            <div className="relative z-10">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className={`p-2 rounded-lg ${colors.bg} ${colors.text}`}>
+                                        <stat.icon className="h-5 w-5" />
                                     </div>
-                                    <Badge 
-                                        variant="outline" 
-                                        className={`text-xs font-medium ${stat.changeType === 'increase' ? 'text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800' : 'text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800'}`}
-                                    >
-                                        {stat.changeType === 'increase' ? '+' : '-'}{stat.change}%
-                                    </Badge>
+                                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${colors.bg} ${colors.text} border ${colors.border}`}>
+                                        {stat.change}
+                                    </span>
                                 </div>
                                 <div className="space-y-1">
-                                    <div className="text-2xl font-bold text-foreground">
-                                        {stat.value}
-                                    </div>
-                                    <p className="text-sm text-muted-foreground">
-                                        {stat.label}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground/70">
-                                        {stat.description}
-                                    </p>
+                                    <h3 className="text-3xl font-bold text-white tracking-tight">{stat.value}</h3>
+                                    <p className="text-sm text-muted-foreground font-medium">{stat.label}</p>
                                 </div>
-                            </CardContent>
-                        </Card>
+                                <p className="mt-4 text-xs text-muted-foreground/60">{stat.description}</p>
+                            </div>
+                        </div>
                     );
                 })}
             </div>
 
-            {/* Main Content Grid */}
-            <div className="grid gap-6 lg:grid-cols-3">
-                {/* Recent Activity - Left Column */}
-                <Card className="lg:col-span-2 border-border/50 bg-card/50 backdrop-blur-sm shadow-sm">
-                    <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <CardTitle className="flex items-center gap-2">
-                                    <Activity className="h-5 w-5 text-muted-foreground" />
-                                    Recent Activity
-                                </CardTitle>
-                                <CardDescription>
-                                    Latest platform interactions
-                                </CardDescription>
-                            </div>
-                            <Button variant="ghost" size="sm" className="text-xs">
-                                View all
-                            </Button>
-                        </div>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                        {RECENT_ACTIVITY.map((activity, i) => (
-                            <div 
-                                key={i} 
-                                className="flex items-center gap-4 p-3 rounded-lg border border-border/30 hover:bg-accent/50 transition-colors"
-                            >
-                                <div className="relative flex-shrink-0">
-                                    <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-muted/50 to-background border border-border/50 flex items-center justify-center">
-                                        <span className="text-sm font-medium text-foreground">
-                                            {activity.user.charAt(0)}
-                                        </span>
-                                    </div>
-                                    <div className={`absolute -bottom-1 -right-1 h-3 w-3 rounded-full border-2 border-background ${i < 2 ? 'bg-emerald-500' : 'bg-blue-500'}`} />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-medium text-foreground truncate">
-                                        {activity.action}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground truncate">
-                                        {activity.user} • {activity.time}
-                                    </p>
-                                </div>
-                                <Badge 
-                                    variant="outline" 
-                                    className="text-xs font-normal border-border/50"
-                                >
-                                    {activity.type}
-                                </Badge>
-                            </div>
-                        ))}
-                    </CardContent>
-                </Card>
+            {/* Content Approvals Section */}
+            <div className="space-y-6">
+                <div className="flex flex-col gap-1">
+                    <h2 className="text-2xl font-bold tracking-tight text-white">Content Approvals</h2>
+                    <p className="text-muted-foreground text-sm">Verify and manage student study material submissions.</p>
+                </div>
 
-                {/* Top Resources - Right Column */}
-                <Card className="border-border/50 bg-card/50 backdrop-blur-sm shadow-sm">
-                    <CardHeader className="pb-3">
-                        <div>
-                            <CardTitle className="flex items-center gap-2">
-                                <TrendingUp className="h-5 w-5 text-muted-foreground" />
-                                Trending Resources
-                            </CardTitle>
-                            <CardDescription>
-                                Most accessed this week
-                            </CardDescription>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            {TOP_RESOURCES.map((resource, i) => (
-                                <div 
-                                    key={i} 
-                                    className="group p-3 rounded-lg border border-border/30 hover:border-primary/30 hover:bg-accent/30 transition-all cursor-pointer"
-                                >
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="flex items-center gap-3">
-                                            <div className={`
-                                                h-8 w-8 rounded-md flex items-center justify-center text-xs font-medium
-                                                ${i === 0 ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400' :
-                                                  i === 1 ? 'bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400' :
-                                                  i === 2 ? 'bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400' :
-                                                  'bg-muted text-muted-foreground'}
-                                            `}>
-                                                {i + 1}
+                {/* Tabs & Actions */}
+                <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
+                    <div className="flex items-center p-1 bg-[#111111] border border-white/5 rounded-full">
+                        <button
+                            onClick={() => setActiveTab('pending')}
+                            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${activeTab === 'pending' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'}`}
+                        >
+                            Pending <span className={`ml-2 text-xs px-1.5 py-0.5 rounded-full ${activeTab === 'pending' ? 'bg-black text-white' : 'bg-white/10 text-white'}`}>{pendingMaterials.length}</span>
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('approved')}
+                            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${activeTab === 'approved' ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'}`}
+                        >
+                            Approved History
+                        </button>
+                    </div>
+                    <div className="relative w-full md:w-64">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
+                        <input
+                            type="text"
+                            placeholder="Search requests..."
+                            className="w-full h-10 pl-9 pr-4 rounded-full bg-[#111111] border border-white/5 text-sm text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-white/10"
+                        />
+                    </div>
+                </div>
+
+                {/* Table */}
+                <div className="border border-white/5 bg-[#050505] rounded-xl overflow-hidden shadow-2xl">
+                    <Table>
+                        <TableHeader className="bg-[#0A0A0A] border-b border-white/5">
+                            <TableRow className="hover:bg-transparent border-white/5">
+                                <TableHead className="w-[300px] pl-8 h-12 text-[11px] font-bold uppercase tracking-widest text-zinc-500">Content Details</TableHead>
+                                <TableHead className="h-12 text-[11px] font-bold uppercase tracking-widest text-zinc-500">Author</TableHead>
+                                <TableHead className="h-12 text-[11px] font-bold uppercase tracking-widest text-zinc-500">Submitted</TableHead>
+                                <TableHead className="h-12 text-[11px] font-bold uppercase tracking-widest text-zinc-500">Status</TableHead>
+                                <TableHead className="text-right pr-8 h-12 text-[11px] font-bold uppercase tracking-widest text-zinc-500">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {(activeTab === 'pending' ? pendingMaterials : approvedMaterials).length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="h-64 text-center text-zinc-500 border-none">
+                                        <div className="flex flex-col items-center justify-center h-full">
+                                            <div className="h-12 w-12 mb-4 rounded-full bg-[#111111] border border-white/5 flex items-center justify-center">
+                                                <div className="h-4 w-4 rounded-full border-[1.5px] border-zinc-500 flex items-center justify-center">
+                                                    <CheckCircle2 className="h-3 w-3 text-zinc-500" />
+                                                </div>
                                             </div>
-                                            <div className="text-sm font-medium text-foreground truncate">
-                                                {resource.title}
+                                            <p className="text-zinc-500 font-medium">All caught up! No {activeTab} requests.</p>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                (activeTab === 'pending' ? pendingMaterials : approvedMaterials).map((material) => (
+                                    <TableRow key={material._id} className="group border-white/[0.02] hover:bg-white/[0.02] transition-colors">
+                                        <TableCell className="pl-8 py-4">
+                                            <div className="flex items-start gap-4">
+                                                <div className={`
+                                                        mt-1 h-10 w-10 rounded-xl flex items-center justify-center
+                                                        ${material.type.toLowerCase() === 'pdf' ? 'bg-red-500/10 text-red-500' :
+                                                        material.type.toLowerCase() === 'video' ? 'bg-blue-500/10 text-blue-500' :
+                                                            'bg-emerald-500/10 text-emerald-500'}
+                                                    `}>
+                                                    {material.type.toLowerCase() === 'pdf' ? <FileText className="h-5 w-5" /> : <Loader2 className="h-5 w-5" />}
+                                                </div>
+                                                <div className="flex flex-col gap-0.5">
+                                                    <span className="font-semibold text-white text-sm">{material.title}</span>
+                                                    <span className="text-xs text-zinc-500 font-mono tracking-wide">{material.createdAt?.substring(0, 10)}</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <ArrowUpRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                                    </div>
-                                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                                        <div className="flex items-center gap-4">
-                                            <span className="flex items-center gap-1">
-                                                <Eye className="h-3 w-3" />
-                                                {resource.views}
+                                        </TableCell>
+                                        <TableCell className="py-4">
+                                            <div className="flex items-center gap-2">
+                                                <div className="h-6 w-6 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center">
+                                                    <span className="text-[10px] font-bold text-indigo-400">{material.author?.charAt(0) || 'U'}</span>
+                                                </div>
+                                                <span className="text-sm text-zinc-300 font-medium">{material.author || 'Unknown'}</span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="py-4">
+                                            <span className="text-xs text-zinc-500 font-mono">
+                                                {new Date(material.createdAt).toLocaleDateString()}
                                             </span>
-                                            <span className="flex items-center gap-1">
-                                                <Download className="h-3 w-3" />
-                                                {resource.downloads}
-                                            </span>
-                                        </div>
-                                        <Badge 
-                                            variant="outline" 
-                                            className="text-xs border-border/50 capitalize"
-                                        >
-                                            {resource.type}
-                                        </Badge>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                        
-                        <div className="mt-6 pt-4 border-t border-border/30">
-                            <div className="grid grid-cols-2 gap-4 text-center">
-                                <div className="p-3 rounded-lg bg-gradient-to-b from-background to-muted/20 border border-border/30">
-                                    <div className="text-lg font-bold text-foreground mb-1">
-                                        1,245
-                                    </div>
-                                    <div className="text-xs text-muted-foreground">
-                                        Total Views
-                                    </div>
-                                </div>
-                                <div className="p-3 rounded-lg bg-gradient-to-b from-background to-muted/20 border border-border/30">
-                                    <div className="text-lg font-bold text-foreground mb-1">
-                                        342
-                                    </div>
-                                    <div className="text-xs text-muted-foreground">
-                                        Downloads
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                                        </TableCell>
+                                        <TableCell className="py-4">
+                                            <Badge variant="secondary" className={`
+                                                    ${material.status === 'pending' ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' :
+                                                    material.status === 'approved' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                                                        'bg-red-500/10 text-red-500 border-red-500/20'} 
+                                                    border px-2.5 py-1 rounded-md text-[10px] uppercase tracking-wider font-bold
+                                                `}>
+                                                {material.status}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-right pr-8 py-4">
+                                            {material.status === 'pending' && (
+                                                <div className="flex justify-end gap-2">
+                                                    <Button
+                                                        onClick={() => handleStatusUpdate(material._id, 'rejected')}
+                                                        size="sm" variant="ghost" className="h-8 w-8 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                                                    >
+                                                        X
+                                                    </Button>
+                                                    <Button
+                                                        onClick={() => handleStatusUpdate(material._id, 'approved')}
+                                                        size="sm" variant="ghost" className="h-8 w-8 p-0 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10"
+                                                    >
+                                                        <CheckCircle2 className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
             </div>
 
             {/* Quick Stats Bar */}
@@ -366,6 +359,6 @@ export default function DashboardPage() {
                     </CardContent>
                 </Card>
             </div>
-        </div>
+        </div >
     );
 }

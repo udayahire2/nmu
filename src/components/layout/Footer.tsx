@@ -1,6 +1,7 @@
 import { Github, Twitter, Linkedin } from "lucide-react"
 import { Logo } from "@/components/ui/logo"
 import { GridLine } from "@/components/ui/grid-line"
+import { Link } from "react-router-dom"
 
 export function Footer() {
     return (
@@ -8,9 +9,9 @@ export function Footer() {
             <GridLine className="absolute top-0 left-0" />
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-4 col-span-1 md:col-span-2">
                         <Logo />
-                        <p className="text-muted-foreground text-sm leading-relaxed mt-2">
+                        <p className="text-muted-foreground text-sm leading-relaxed mt-2 max-w-sm">
                             Dedicated to providing clear, organized, and reliable study resources for university students.
                         </p>
                         <div className="flex gap-4 mt-2">
@@ -29,28 +30,16 @@ export function Footer() {
                     <div>
                         <h3 className="font-semibold mb-4">Resources</h3>
                         <ul className="space-y-3 text-sm text-muted-foreground">
-                            <li><a href="#" className="hover:text-primary transition-colors">Syllabus</a></li>
-                            <li><a href="#" className="hover:text-primary transition-colors">Question Papers</a></li>
-                            <li><a href="#" className="hover:text-primary transition-colors">Notes</a></li>
-                            <li><a href="#" className="hover:text-primary transition-colors">Reference Books</a></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3 className="font-semibold mb-4">Legal</h3>
-                        <ul className="space-y-3 text-sm text-muted-foreground">
-                            <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
-                            <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
-                            <li><a href="#" className="hover:text-primary transition-colors">Cookie Policy</a></li>
+                            <li><Link to="/syllabus" className="hover:text-primary transition-colors">Syllabus</Link></li>
+                            <li><Link to="/resources" className="hover:text-primary transition-colors">Question Papers</Link></li>
+                            <li><Link to="/resources" className="hover:text-primary transition-colors">Notes</Link></li>
                         </ul>
                     </div>
 
                     <div>
                         <h3 className="font-semibold mb-4">Contact</h3>
                         <ul className="space-y-3 text-sm text-muted-foreground">
-                            <li><a href="#" className="hover:text-primary transition-colors">Support</a></li>
-                            <li><a href="#" className="hover:text-primary transition-colors">Feedback</a></li>
-                            <li><a href="#" className="hover:text-primary transition-colors">Contribute</a></li>
+                            <li><a href="mailto:contribute@example.com" className="hover:text-primary transition-colors">Contribute</a></li>
                         </ul>
                     </div>
                 </div>
