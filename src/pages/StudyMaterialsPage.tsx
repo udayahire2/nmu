@@ -6,9 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, FileText, Video, BookOpen, Download, Filter, Sparkles, Book, X } from "lucide-react";
+import { Search, FileText, Video, BookOpen, Download, Filter, Sparkles, Book } from "lucide-react";
 import { Loader2 } from "lucide-react";
-import { DUMMY_RESOURCES, DUMMY_STATS } from '../lib/dummy-data';
+import { DUMMY_RESOURCES } from '../lib/dummy-data';
 import { motion, AnimatePresence } from "framer-motion";
 
 const semesters = ["Semester 1", "Semester 2", "Semester 3", "Semester 4", "Semester 5", "Semester 6", "Semester 7", "Semester 8"];

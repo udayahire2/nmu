@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, FileText, Video, File, Search, Clock, Eye, RefreshCw, Loader2, BookOpen, ExternalLink, Download } from "lucide-react";
+import { Check, X, FileText, Video, File, Search, Clock, Eye, RefreshCw, Loader2, BookOpen, ExternalLink } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

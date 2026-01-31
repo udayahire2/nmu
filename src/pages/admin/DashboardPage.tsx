@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, Activity, TrendingUp, Users, BarChart3, Loader2, FileText, Eye, Download, Calendar, Search, CheckCircle2 } from "lucide-react";
+import { Activity, TrendingUp, Users, BarChart3, Loader2, FileText, Search, CheckCircle2 } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -11,7 +11,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { DUMMY_STATS, TOP_RESOURCES, RECENT_ACTIVITY } from "@/lib/dummy-data";
+import { DUMMY_STATS } from "@/lib/dummy-data";
 import { fetchPendingMaterials, fetchApprovedMaterials, updateMaterialStatus, type StudyMaterial } from "@/services/study-service";
 
 export default function DashboardPage() {
@@ -146,7 +146,7 @@ export default function DashboardPage() {
 
                     return (
                         <div key={i} className="group relative p-6 bg-black/40 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden hover:bg-white/5 transition-all duration-300">
-                            
+
                             <div className="relative z-10">
                                 <div className="flex items-center gap-3 mb-4">
                                     <div className={`p-2 rounded-lg ${colors.bg} ${colors.text}`}>

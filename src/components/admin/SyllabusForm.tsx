@@ -26,7 +26,7 @@ const formSchema = z.object({
     courseCode: z.string().min(2, { message: "Course Code is required." }),
     semester: z.string().min(1, { message: "Semester is required." }),
     branch: z.string().min(1, { message: "Branch is required." }),
-    credits: z.coerce.number().min(1, { message: "Credits must be at least 1." }),
+    credits: z.number().min(1, { message: "Credits must be at least 1." }),
     type: z.enum(["pdf", "doc", "markdown"]),
     content: z.string().min(2, { message: "Content URL or Markdown is required." }),
 });
@@ -138,7 +138,13 @@ export default function SyllabusForm({ onSuccess }: { onSuccess: () => void }) {
                             <FormItem>
                                 <FormLabel>Credits</FormLabel>
                                 <FormControl>
-                                    <Input type="number" min="1" max="10" {...field} />
+                                    <Input
+                                        type="number"
+                                        min="1"
+                                        max="10"
+                                        {...field}
+                                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
