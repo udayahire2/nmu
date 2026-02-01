@@ -1,5 +1,5 @@
 "use client";
-import video from '../../assets/video.mp4'
+
 import {
     SiApple,
     SiFacebook,
@@ -21,20 +21,6 @@ import {
     MarqueeItem,
 } from "@/components/kibo-ui/marquee";
 import { Button } from "@/components/ui/button";
-import {
-    VideoPlayer,
-    VideoPlayerContent,
-    VideoPlayerControlBar,
-    VideoPlayerMuteButton,
-    VideoPlayerPlayButton,
-    VideoPlayerSeekBackwardButton,
-    VideoPlayerSeekForwardButton,
-    VideoPlayerTimeDisplay,
-    VideoPlayerTimeRange,
-
-    VideoPlayerVolumeRange,
-    VideoPlayerOverlay,
-} from "@/components/kibo-ui/video-player";
 import { Link } from "react-router-dom";
 
 const logos = [
@@ -129,58 +115,7 @@ const Hero = () => (
 
 
 
-            {/* Team Collaboration Image */}
-            <div className="mt-24 w-full max-w-6xl animate-fade-in-up [--animation-delay:1200ms]">
-                <div className="relative group rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:shadow-[0_0_50px_-12px_rgba(var(--primary),0.5)]">
-                    {/* Strong Animated Gradient Background */}
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-purple-500 to-pink-500 rounded-3xl opacity-75 blur transition duration-1000 group-hover:opacity-100 group-hover:duration-200 animate-gradient bg-[length:200%_auto]" />
-                    <div className="absolute -inset-[1px] bg-gradient-to-r from-primary via-purple-600 to-pink-600 rounded-3xl opacity-100 animate-gradient bg-[length:200%_auto]" />
-
-                    {/* Inner Container */}
-                    <div className="relative rounded-2xl bg-black/50 backdrop-blur-xl border border-white/10 overflow-hidden">
-                        {/* Browser Window Header */}
-
-
-                        {/* Animated Background Glow */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                            <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-radial from-primary/20 to-transparent blur-3xl pointer-events-none" />
-                        </div>
-
-                        <VideoPlayer className="relative group/video">
-                            <VideoPlayerContent src={video} className="w-full aspect-video" loop muted />
-
-                            <VideoPlayerOverlay />
-
-                            <VideoPlayerControlBar className="!flex-row !gap-2 !p-4 !bg-gradient-to-t !from-black/90 !via-black/50 !to-transparent transition-opacity duration-300 opacity-0 group-hover/video:opacity-100">
-                                {/* Play Button */}
-                                <VideoPlayerPlayButton />
-
-                                {/* Seek Buttons */}
-                                <div className="flex items-center gap-1">
-                                    <VideoPlayerSeekBackwardButton />
-                                    <VideoPlayerSeekForwardButton />
-                                </div>
-
-                                {/* Progress Bar */}
-                                <div className="flex-1">
-                                    <VideoPlayerTimeRange />
-                                </div>
-
-                                {/* Time Display */}
-                                <VideoPlayerTimeDisplay />
-
-                                {/* Volume Control */}
-                                <div className="flex items-center gap-1 group/volume">
-                                    <VideoPlayerMuteButton />
-                                    <div className="w-0 overflow-hidden group-hover/volume:w-24 transition-all duration-200">
-                                        <VideoPlayerVolumeRange />
-                                    </div>
-                                </div>
-                            </VideoPlayerControlBar>
-                        </VideoPlayer>
-                    </div>
-                </div>
-            </div>
+            {/* Video Player Removed */}
         </div>
     </div>
 );
