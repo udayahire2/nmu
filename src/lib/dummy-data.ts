@@ -18,7 +18,9 @@ export const DUMMY_RESOURCES = [
         author: "Dr. Anjali Sharma",
         views: 1250,
         size: "2.4 MB",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        branch: "Computer Science",
+        semester: "sem3"
     },
     {
         id: "2",
@@ -30,7 +32,9 @@ export const DUMMY_RESOURCES = [
         author: "Prof. Rajesh Kumar",
         views: 980,
         duration: "45:20",
-        url: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+        url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        branch: "Information Technology",
+        semester: "sem5"
     },
     {
         id: "3",
@@ -43,6 +47,8 @@ export const DUMMY_RESOURCES = [
         views: 1500,
         size: "1.1 MB",
         url: "#",
+        branch: "Computer Science",
+        semester: "sem4",
         content: `
 # Operating Systems Fundamentals
 
@@ -81,7 +87,9 @@ int main() {
         author: "Prof. R. Gupta",
         views: 2100,
         size: "3.5 MB",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        branch: "Computer Science",
+        semester: "sem4"
     },
     {
         id: "5",
@@ -93,7 +101,9 @@ int main() {
         author: "Dr. Meera Patel",
         views: 850,
         duration: "1:15:00",
-        url: "https://www.youtube.com/embed/LXb3EKWsInQ"
+        url: "https://www.youtube.com/embed/LXb3EKWsInQ",
+        branch: "Information Technology",
+        semester: "sem5"
     },
     {
         id: "6",
@@ -105,7 +115,9 @@ int main() {
         author: "Prof. S. Reddy",
         views: 3200,
         size: "5.2 MB",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        branch: "Computer Science",
+        semester: "sem6"
     }
 ];
 
