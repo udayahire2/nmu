@@ -5,11 +5,16 @@ import { TestimonialsSection } from "@/components/home/TestimonialsSection"
 
 export default function HomePage() {
     return (
-        <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+        <main className="min-h-screen bg-background text-foreground flex flex-col gap-0 relative">
+            {/* 
+              QA Note: 'overflow-x-hidden' removed from here. 
+              Ideally this should be on 'body' to prevent scrollbar shifts.
+              If horizontal scroll appears, check Marquee or Hero animations.
+            */}
             <Hero />
             <StatsSection />
             <FeatureGrid />
             <TestimonialsSection />
-        </div>
+        </main>
     )
 }

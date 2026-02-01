@@ -1,31 +1,25 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription, SheetClose } from "@/components/ui/sheet";
-import { Search, FileText, Video, BookOpen, Download, Filter, Sparkles, Book, X, ExternalLink, Star, Clock, Eye } from "lucide-react";
-import { Loader2 } from "lucide-react";
-import MarkdownPreview from "@/components/ui/markdown-preview";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
+import { Search, Filter, BookOpen, FileText, Video, Book, X, Loader2 } from "lucide-react";
 import { DUMMY_RESOURCES } from '../lib/dummy-data';
 import { motion, AnimatePresence } from "framer-motion";
-import { Label } from "@/components/ui/label";
-import { GitBranch, GraduationCap, RotateCcw } from "lucide-react";
-
-const semesters = ["Semester 1", "Semester 2", "Semester 3", "Semester 4", "Semester 5", "Semester 6", "Semester 7", "Semester 8"];
-const branches = ["Computer Science", "Information Technology", "Electronics", "Mechanical", "Civil"];
+import { StudyMaterialCard } from "@/components/study-materials/StudyMaterialCard";
+import type { StudyMaterial } from "@/components/study-materials/types";
+import { StudyMaterialFilter } from "@/components/study-materials/StudyMaterialFilter";
+import { StudyMaterialViewer } from "@/components/study-materials/StudyMaterialViewer";
 
 export default function StudyMaterialsPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedSemester, setSelectedSemester] = useState("All");
     const [selectedBranch, setSelectedBranch] = useState("All");
     const [activeTab, setActiveTab] = useState("all");
-    const [resources, setResources] = useState<any[]>([]);
+    const [resources, setResources] = useState<StudyMaterial[]>([]);
     const [loading, setLoading] = useState(true);
-    const [selectedResource, setSelectedResource] = useState<any | null>(null);
+    const [selectedResource, setSelectedResource] = useState<StudyMaterial | null>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -44,54 +38,29 @@ export default function StudyMaterialsPage() {
                 e.preventDefault();
                 searchInputRef.current?.focus();
             }
-            if (e.key === 'Escape' && selectedResource) {
-                setSelectedResource(null);
-            }
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [selectedResource]);
+    }, []);
 
+    // Memoized Filter Logic
+    const filteredResources = useMemo(() => {
+        return resources.filter(resource => {
+            const matchesSearch = resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                resource.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                resource.author.toLowerCase().includes(searchQuery.toLowerCase());
 
+            const matchesTab = activeTab === "all" ||
+                (activeTab === "notes" && (resource.type.toLowerCase() === 'notes')) ||
+                (activeTab === "videos" && resource.type.toLowerCase() === 'video') ||
+                (activeTab === "papers" && (resource.type.toLowerCase() === 'pdf' || resource.type.toLowerCase() === 'doc'));
 
-    const getIcon = (type: string) => {
-        const t = type.toLowerCase();
-        if (t === 'pdf') return <FileText className="h-4 w-4" />;
-        if (t === 'video') return <Video className="h-4 w-4" />;
-        if (t === 'notes') return <BookOpen className="h-4 w-4" />;
-        return <Book className="h-4 w-4" />;
-    };
+            const matchesBranch = selectedBranch === "All" || resource.branch === selectedBranch;
+            const matchesSemester = selectedSemester === "All" || resource.semester === selectedSemester;
 
-    const getResourceColor = (type: string) => {
-        const t = type.toLowerCase();
-        switch (t) {
-            case 'video': return { bg: 'bg-red-500/10', text: 'text-red-500', ring: 'ring-red-500/20' };
-            case 'pdf': return { bg: 'bg-blue-500/10', text: 'text-blue-500', ring: 'ring-blue-500/20' };
-            case 'notes': return { bg: 'bg-emerald-500/10', text: 'text-emerald-500', ring: 'ring-emerald-500/20' };
-            default: return { bg: 'bg-primary/10', text: 'text-primary', ring: 'ring-primary/20' };
-        }
-    };
-
-    // Filter Logic
-    const filteredResources = resources.filter(resource => {
-        const matchesSearch = resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            resource.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            resource.author.toLowerCase().includes(searchQuery.toLowerCase());
-
-        const matchesTab = activeTab === "all" ||
-            (activeTab === "notes" && (resource.type.toLowerCase() === 'notes')) ||
-            (activeTab === "videos" && resource.type.toLowerCase() === 'video') ||
-            (activeTab === "papers" && (resource.type.toLowerCase() === 'pdf' || resource.type.toLowerCase() === 'doc'));
-
-        const matchesBranch = selectedBranch === "All" || resource.branch === selectedBranch;
-        const matchesSemester = selectedSemester === "All" || resource.semester === selectedSemester;
-
-        return matchesSearch && matchesTab && matchesBranch && matchesSemester;
-    });
-
-    const handleViewResource = (resource: any) => {
-        setSelectedResource(resource);
-    };
+            return matchesSearch && matchesTab && matchesBranch && matchesSemester;
+        });
+    }, [resources, searchQuery, activeTab, selectedBranch, selectedSemester]);
 
     const handleClearFilters = () => {
         setSearchQuery("");
@@ -108,78 +77,6 @@ export default function StudyMaterialsPage() {
         searchQuery.length > 0
     ].filter(Boolean).length;
 
-    const FilterContent = () => (
-        <div className="flex flex-col h-full px-4">
-            <div className="flex-1 py-4 space-y-6">
-                <div className="space-y-3">
-                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                        <GitBranch className="h-3.5 w-3.5" />
-                        Branch
-                    </Label>
-                    <Select value={selectedBranch} onValueChange={setSelectedBranch}>
-                        <SelectTrigger className="w-full h-12 bg-secondary/30 border-border/50 focus:ring-primary/20 transition-all hover:bg-secondary/50 hover:border-border">
-                            <div className="flex items-center gap-2">
-                                <SelectValue placeholder="Select Branch" />
-                            </div>
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="All" className="font-medium text-primary">All Branches</SelectItem>
-                            {branches.map(branch => (
-                                <SelectItem key={branch} value={branch}>{branch}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                <div className="space-y-3">
-                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                        <GraduationCap className="h-3.5 w-3.5" />
-                        Semester
-                    </Label>
-                    <Select value={selectedSemester} onValueChange={setSelectedSemester}>
-                        <SelectTrigger className="w-full h-12 bg-secondary/30 border-border/50 focus:ring-primary/20 transition-all hover:bg-secondary/50 hover:border-border">
-                            <div className="flex items-center gap-2">
-                                <SelectValue placeholder="Select Semester" />
-                            </div>
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="All" className="font-medium text-primary">All Semesters</SelectItem>
-                            {semesters.map(sem => (
-                                <SelectItem key={sem} value={sem}>{sem}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-            </div>
-
-            <div className="pt-6 border-t border-border/40 mt-auto space-y-4 pb-4">
-                <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground font-medium">Active Filters</span>
-                    <Badge variant="secondary" className="px-2.5 h-6 font-mono bg-secondary border border-border/50">
-                        {activeFiltersCount}
-                    </Badge>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                    <Button
-                        variant="outline"
-                        onClick={handleClearFilters}
-                        className="h-10 gap-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 transition-colors"
-                        disabled={activeFiltersCount === 0}
-                    >
-                        <RotateCcw className="h-3.5 w-3.5" />
-                        Reset
-                    </Button>
-                    <SheetClose asChild>
-                        <Button className="h-10 gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20">
-                            Apply
-                        </Button>
-                    </SheetClose>
-                </div>
-            </div>
-        </div>
-    );
-
     return (
         <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5 pb-20">
             {/* Enhanced Ambient Background */}
@@ -194,28 +91,9 @@ export default function StudyMaterialsPage() {
                 <div className="container mx-auto px-4 md:px-6 py-3 md:py-4">
                     {/* Top Navigation Bar */}
                     <div className="flex items-center justify-between mb-4 md:mb-6">
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="flex items-center gap-2 md:gap-3"
-                        >
-                            <div className="p-1.5 md:p-2 rounded-xl bg-primary/10 text-primary">
-                                <BookOpen className="h-5 w-5 md:h-6 md:w-6" />
-                            </div>
-                            <div>
-                                <h1 className="text-lg md:text-xl font-bold text-foreground leading-tight">Study Materials</h1>
-                                <p className="text-[10px] md:text-xs text-muted-foreground hidden sm:block">{resources.length} resources available</p>
-                            </div>
-                        </motion.div>
+                        <div /> {/* Spacer for flex layout */}
 
                         <div className="flex items-center gap-2">
-                            <div className="hidden sm:flex">
-                                <Badge variant="outline" className="gap-1.5">
-                                    <Sparkles className="h-3 w-3" />
-                                    Premium
-                                </Badge>
-                            </div>
-
                             <Sheet>
                                 <SheetTrigger asChild>
                                     <Button
@@ -239,7 +117,14 @@ export default function StudyMaterialsPage() {
                                             Refine your search by branch, semester, or type.
                                         </SheetDescription>
                                     </SheetHeader>
-                                    <FilterContent />
+                                    <StudyMaterialFilter
+                                        selectedBranch={selectedBranch}
+                                        setSelectedBranch={setSelectedBranch}
+                                        selectedSemester={selectedSemester}
+                                        setSelectedSemester={setSelectedSemester}
+                                        activeFiltersCount={activeFiltersCount}
+                                        onClearFilters={handleClearFilters}
+                                    />
                                 </SheetContent>
                             </Sheet>
                         </div>
@@ -288,8 +173,6 @@ export default function StudyMaterialsPage() {
                     </div>
                 </div>
             </div>
-
-            {/* Filters Section Removed (Replaced by Sheet) */}
 
             {/* Content Area */}
             <div className="container mx-auto px-4 md:px-6 pt-4 min-h-[calc(100vh-200px)]">
@@ -352,105 +235,14 @@ export default function StudyMaterialsPage() {
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                             >
-                                {filteredResources.map((resource, index) => {
-                                    const colors = getResourceColor(resource.type);
-                                    return (
-                                        <motion.div
-                                            key={resource.id}
-                                            layout
-                                            initial={{ opacity: 0, scale: 0.95 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.95 }}
-                                            transition={{ duration: 0.2, delay: index * 0.05 }}
-                                            whileHover={{ y: -4 }}
-                                        >
-                                            <Card className="group h-full flex flex-col border-border/40 bg-card/50 backdrop-blur-sm hover:bg-card hover:shadow-lg hover:border-primary/20 transition-all duration-300 overflow-hidden">
-                                                <CardHeader className="p-4 pb-2 space-y-3">
-                                                    {/* Type Badge */}
-                                                    <div className="flex justify-between items-start">
-                                                        <div className={`p-2 rounded-lg ${colors.bg} ${colors.text} ${colors.ring} ring-1`}>
-                                                            {getIcon(resource.type)}
-                                                        </div>
-                                                        <div className="flex gap-1">
-                                                            <Badge variant="secondary" className="text-[10px] px-2 py-0.5 h-5">
-                                                                {resource.type}
-                                                            </Badge>
-                                                            {resource.isNew && (
-                                                                <Badge className="bg-green-500/20 text-green-600 hover:bg-green-500/30 text-[10px] px-2 py-0.5 h-5">
-                                                                    New
-                                                                </Badge>
-                                                            )}
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Resource Info */}
-                                                    <div className="space-y-2">
-                                                        <div className="flex items-center justify-between">
-                                                            <Badge variant="outline" className="text-[10px] font-normal">
-                                                                {resource.subject}
-                                                            </Badge>
-                                                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                                                                <span>{resource.rating || 4.5}</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <CardTitle className="text-base font-semibold leading-tight group-hover:text-primary transition-colors line-clamp-2">
-                                                            {resource.title}
-                                                        </CardTitle>
-
-                                                        <p className="text-xs text-muted-foreground line-clamp-1">
-                                                            By {resource.author}
-                                                        </p>
-                                                    </div>
-                                                </CardHeader>
-
-                                                <CardContent className="p-4 pt-0 flex-grow">
-                                                    <div className="space-y-3">
-                                                        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                                                            {resource.description || "Comprehensive study material covering key concepts, examples, and problem sets."}
-                                                        </p>
-
-                                                        <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-border/20">
-                                                            <div className="flex items-center gap-3">
-                                                                <span className="flex items-center gap-1">
-                                                                    <Eye className="h-3 w-3" />
-                                                                    {resource.views}
-                                                                </span>
-                                                                <span className="flex items-center gap-1">
-                                                                    <Clock className="h-3 w-3" />
-                                                                    {resource.duration || "30m"}
-                                                                </span>
-                                                            </div>
-                                                            <span className="text-xs font-medium px-2 py-1 rounded-md bg-secondary/50">
-                                                                {resource.semester || "Sem 4"}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </CardContent>
-
-                                                <CardFooter className="p-4 pt-3 flex gap-2">
-                                                    <Button
-                                                        className="flex-1 h-9 rounded-lg bg-primary hover:bg-primary/90 shadow-sm"
-                                                        size="sm"
-                                                        onClick={() => handleViewResource(resource)}
-                                                    >
-                                                        {resource.type.toLowerCase() === 'video' ? 'Watch Now' : 'View'}
-                                                        <ExternalLink className="ml-2 h-3 w-3" />
-                                                    </Button>
-                                                    <Button
-                                                        variant="outline"
-                                                        size="icon"
-                                                        className="h-9 w-9 rounded-lg border-border/60 hover:border-primary/50 hover:bg-secondary"
-                                                        title="Download"
-                                                    >
-                                                        <Download className="h-4 w-4" />
-                                                    </Button>
-                                                </CardFooter>
-                                            </Card>
-                                        </motion.div>
-                                    );
-                                })}
+                                {filteredResources.map((resource, index) => (
+                                    <StudyMaterialCard
+                                        key={resource.id}
+                                        resource={resource}
+                                        index={index}
+                                        onView={setSelectedResource}
+                                    />
+                                ))}
                             </motion.div>
                         ) : (
                             <motion.div
@@ -488,133 +280,12 @@ export default function StudyMaterialsPage() {
                 )}
             </div>
 
-            {/* Resource Viewer Modal */}
-            <Dialog open={!!selectedResource} onOpenChange={(open) => !open && setSelectedResource(null)}>
-                <DialogContent className="max-w-6xl w-full h-full md:w-[95vw] md:h-[90vh] md:rounded-xl p-0 overflow-hidden bg-background border-border shadow-2xl rounded-none flex flex-col">
-                    <DialogHeader className="p-4 border-b border-border/40 flex flex-row items-center justify-between bg-secondary/5 shrink-0">
-                        <div className="flex items-center gap-2 md:gap-3 overflow-hidden">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => setSelectedResource(null)}
-                                className="h-8 w-8 md:hidden"
-                            >
-                                <X className="h-4 w-4" />
-                            </Button>
-                            {selectedResource && (
-                                <>
-                                    <div className={`p-1.5 md:p-2 rounded-lg ${getResourceColor(selectedResource.type).bg} ${getResourceColor(selectedResource.type).text} shrink-0`}>
-                                        {getIcon(selectedResource.type)}
-                                    </div>
-                                    <div className="flex flex-col min-w-0">
-                                        <DialogTitle className="text-base md:text-lg font-semibold leading-none truncate">
-                                            {selectedResource.title}
-                                        </DialogTitle>
-                                        <div className="flex items-center gap-2 mt-0.5 md:mt-1">
-                                            <Badge variant="outline" className="text-[10px] md:text-xs h-4 md:h-5 px-1 md:px-2">
-                                                {selectedResource.subject}
-                                            </Badge>
-                                            <span className="text-[10px] md:text-xs text-muted-foreground truncate hidden sm:inline">• By {selectedResource.author}</span>
-                                        </div>
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                        <div className="flex items-center gap-1 md:gap-2 shrink-0">
-                            <Button variant="outline" size="sm" className="gap-2 h-8 md:h-9 text-xs md:text-sm hidden sm:flex">
-                                <Download className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                                Download
-                            </Button>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => setSelectedResource(null)}
-                                className="h-8 w-8 md:h-9 md:w-9 hidden md:flex"
-                            >
-                                <X className="h-4 w-4" />
-                            </Button>
-                        </div>
-                    </DialogHeader>
+            <StudyMaterialViewer
+                resource={selectedResource}
+                onClose={() => setSelectedResource(null)}
+            />
 
-                    <DialogDescription className="sr-only">
-                        Viewing study material: {selectedResource?.title}
-                    </DialogDescription>
-
-                    <div className="flex-1 overflow-hidden p-0 md:p-2 bg-muted/10 h-full relative">
-                        {selectedResource?.type.toLowerCase() === 'video' ? (
-                            <div className="relative w-full h-full md:rounded-lg overflow-hidden bg-black flex items-center justify-center">
-                                <iframe
-                                    src={selectedResource.url}
-                                    className="w-full h-full aspect-video"
-                                    title={selectedResource.title}
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                />
-                            </div>
-                        ) : selectedResource?.type.toLowerCase() === 'markdown' || selectedResource?.type.toLowerCase() === 'notes' ? (
-                            <div className="h-full w-full md:rounded-lg border-0 md:border border-border overflow-hidden bg-background">
-                                <MarkdownPreview
-                                    content={selectedResource.content || selectedResource.url || "# No content available"}
-                                    className="h-full"
-                                />
-                            </div>
-                        ) : selectedResource?.type.toLowerCase() === 'pdf' ? (
-                            <div className="relative w-full h-full md:rounded-lg overflow-hidden bg-muted/20">
-                                <iframe
-                                    src={selectedResource.url}
-                                    className="w-full h-full"
-                                    title={selectedResource.title}
-                                />
-                                <div className="absolute bottom-4 right-4 z-10 md:hidden">
-                                    <Button size="icon" className="rounded-full h-12 w-12 shadow-lg">
-                                        <Download className="h-5 w-5" />
-                                    </Button>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="h-full flex flex-col items-center justify-center p-6 md:p-10 text-center">
-                                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-muted/50 flex items-center justify-center mb-4 md:mb-6 ring-4 ring-background">
-                                    {selectedResource && getIcon(selectedResource.type)}
-                                </div>
-                                <h3 className="text-lg md:text-xl font-medium text-foreground mb-2">Preview Not Available</h3>
-                                <p className="text-sm md:text-base text-muted-foreground max-w-sm mb-6">
-                                    This file type cannot be previewed directly. Please download the file to view its contents.
-                                </p>
-                                <Button className="gap-2 w-full sm:w-auto h-11 md:h-10">
-                                    <Download className="h-4 w-4" />
-                                    Download File ({selectedResource?.type})
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="p-3 md:p-4 border-t border-border/40 bg-background md:bg-secondary/5 shrink-0">
-                        <div className="flex items-center justify-between text-xs md:text-sm">
-                            <div className="flex items-center gap-3 md:gap-4">
-                                <span className="text-muted-foreground hidden sm:inline">
-                                    Last updated: {selectedResource?.updatedAt || "Recently"}
-                                </span>
-                                <span className="flex items-center gap-1 text-muted-foreground">
-                                    <Eye className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                                    {selectedResource?.views || 0}
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-2 md:gap-3">
-                                <Button variant="ghost" size="sm" className="h-8 md:h-9 px-2 md:px-3">
-                                    Share
-                                </Button>
-                                <Button variant="ghost" size="sm" className="h-8 md:h-9 px-2 md:px-3">
-                                    Save
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </DialogContent>
-            </Dialog>
-
-            {/* Floating Action Button for Mobile Filter - Only show if necessary or if we want duplicate entry points. 
-                With the new Header button, this is less Critical but can stay.
-            */}
+            {/* Floating Action Button for Mobile Filter */}
             <div className="fixed bottom-6 right-6 z-30 md:hidden">
                 <Sheet>
                     <SheetTrigger asChild>
@@ -629,7 +300,14 @@ export default function StudyMaterialsPage() {
                         <SheetHeader>
                             <SheetTitle>Filter Resources</SheetTitle>
                         </SheetHeader>
-                        <FilterContent />
+                        <StudyMaterialFilter
+                            selectedBranch={selectedBranch}
+                            setSelectedBranch={setSelectedBranch}
+                            selectedSemester={selectedSemester}
+                            setSelectedSemester={setSelectedSemester}
+                            activeFiltersCount={activeFiltersCount}
+                            onClearFilters={handleClearFilters}
+                        />
                     </SheetContent>
                 </Sheet>
             </div>
