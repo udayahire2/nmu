@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
+import Lenis from 'lenis';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+
 import { Maximize, Minimize } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { CodeBlock } from "@/components/ui/code-block";
 
 interface MarkdownPreviewProps {
     content: string;
@@ -13,7 +16,9 @@ interface MarkdownPreviewProps {
 export default function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
     const [isMaximized, setIsMaximized] = useState(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const normalScrollRef = useRef<HTMLDivElement>(null);
     const dialogContentRef = useRef<HTMLDivElement>(null);
+    const lenisRef = useRef<Lenis | null>(null);
 
     // Handle escape key to close dialog
     useEffect(() => {
@@ -27,13 +32,49 @@ export default function MarkdownPreview({ content, className }: MarkdownPreviewP
         return () => window.removeEventListener('keydown', handleEscape);
     }, [isMaximized]);
 
+    // Initialize Lenis for smooth scrolling
+    useEffect(() => {
+        const targetRef = isMaximized ? scrollContainerRef : normalScrollRef;
+
+        // Give a small delay for the DOM to settle (especially for Dialog open)
+        const timer = setTimeout(() => {
+            if (targetRef.current) {
+                const lenis = new Lenis({
+                    wrapper: targetRef.current,
+                    content: targetRef.current.firstElementChild as HTMLElement,
+                    duration: 0.8, // Reduced from 1.2 for snappier feel
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Keep standard easing
+                    gestureOrientation: 'vertical',
+                    smoothWheel: true,
+                    wheelMultiplier: 1.5, // Increased sensitivity
+                    touchMultiplier: 2,
+                });
+
+                lenisRef.current = lenis;
+
+                function raf(time: number) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+
+                requestAnimationFrame(raf);
+            }
+        }, 100);
+
+        return () => {
+            clearTimeout(timer);
+            lenisRef.current?.destroy();
+            lenisRef.current = null;
+        };
+    }, [isMaximized]);
+
     // Fix for dialog focus trap interfering with scroll
     useEffect(() => {
         if (isMaximized && scrollContainerRef.current) {
             // Focus the scroll container to ensure it receives wheel events
             setTimeout(() => {
                 scrollContainerRef.current?.focus({ preventScroll: true });
-            }, 10);
+            }, 50);
         }
     }, [isMaximized]);
 
@@ -50,24 +91,65 @@ export default function MarkdownPreview({ content, className }: MarkdownPreviewP
     // Shared content renderer
     const Content = () => (
         <div className={cn(
-            "p-6 md:p-8",
-            "prose prose-zinc dark:prose-invert !max-w-none w-full",
-            "prose-headings:font-bold prose-headings:tracking-tight",
-            "prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl",
-            "prose-p:leading-7 prose-p:text-muted-foreground",
-            "prose-strong:text-foreground prose-strong:font-semibold",
-            "prose-a:text-primary prose-a:no-underline hover:prose-a:underline",
-            "prose-code:text-primary prose-code:bg-secondary/50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none",
-            "prose-pre:bg-secondary/30 prose-pre:border prose-pre:border-border/50 prose-pre:text-foreground",
-            "prose-blockquote:border-l-primary prose-blockquote:bg-secondary/20 prose-blockquote:py-1 prose-blockquote:pl-4 prose-blockquote:pr-2 prose-blockquote:italic",
-            "prose-ul:my-6 prose-ul:list-disc prose-ul:pl-6",
-            "prose-ol:my-6 prose-ol:list-decimal prose-ol:pl-6",
-            "prose-li:my-2 prose-li:text-muted-foreground",
-            "prose-img:rounded-xl prose-img:border prose-img:border-border/50 prose-img:shadow-md",
-            "prose-hr:border-border/50",
+            "p-8 md:p-12 font-sans", // Notion uses generous padding
+            "prose prose-zinc dark:prose-invert !max-w-3xl mx-auto w-full", // Centered content like Notion
+            // Typography updates
+            "prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-foreground",
+            "prose-h1:text-4xl prose-h1:mt-8 prose-h1:mb-4",
+            "prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:border-b prose-h2:pb-2 prose-h2:border-border/40", // Underlined H2
+            "prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-2",
+            // Text styling
+            "prose-p:leading-relaxed prose-p:text-base prose-p:text-foreground/90 prose-p:my-3",
+            "prose-strong:font-semibold prose-strong:text-foreground",
+            "prose-a:text-primary prose-a:no-underline hover:prose-a:underline hover:prose-a:decoration-primary/50",
+            // Code & Pre styling handled by custom component, but defaults for inline code:
+            "prose-code:text-red-500 prose-code:bg-red-500/10 dark:prose-code:text-red-400 dark:prose-code:bg-red-900/20 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:font-mono prose-code:text-sm prose-code:before:content-none prose-code:after:content-none",
+            // Blockquotes
+            "prose-blockquote:border-l-4 prose-blockquote:border-foreground/20 prose-blockquote:pl-4 prose-blockquote:py-1 prose-blockquote:my-4 prose-blockquote:not-italic prose-blockquote:text-muted-foreground",
+            // Lists
+            "prose-ul:my-2 prose-ul:list-disc prose-ul:pl-6",
+            "prose-ol:my-2 prose-ol:list-decimal prose-ol:pl-6",
+            "prose-li:my-1 prose-li:text-foreground/90",
+            // Images
+            "prose-img:rounded-lg prose-img:border prose-img:border-border/40 prose-img:shadow-sm prose-img:my-8",
+            "prose-hr:my-8 prose-hr:border-border/40",
             "select-text" // Ensure text selection works
         )}>
-            <ReactMarkdown>
+            <ReactMarkdown
+                components={{
+                    code({ node, className, children, ...props }) {
+                        const match = /language-(\w+)/.exec(className || '');
+                        const isInline = !match && !String(children).includes('\n');
+
+                        if (!isInline && match) {
+                            return (
+                                <CodeBlock
+                                    language={match[1]}
+                                    value={String(children).replace(/\n$/, '')}
+                                    className="not-prose" // Prevent prose styles from interfering
+                                />
+                            );
+                        }
+
+                        // For code blocks without language specified, treat as text block
+                        if (!isInline) {
+                            return (
+                                <CodeBlock
+                                    language="text"
+                                    value={String(children).replace(/\n$/, '')}
+                                    className="not-prose"
+                                />
+                            );
+                        }
+
+                        return (
+                            <code className={className} {...props}>
+                                {children}
+                            </code>
+                        );
+                    }
+                }}
+            >
                 {content}
             </ReactMarkdown>
         </div>
@@ -93,6 +175,7 @@ export default function MarkdownPreview({ content, className }: MarkdownPreviewP
                 </div>
 
                 <div
+                    ref={normalScrollRef}
                     className="h-full w-full markdown-scrollbar"
                     style={{
                         overflowY: 'auto',
@@ -142,7 +225,6 @@ export default function MarkdownPreview({ content, className }: MarkdownPreviewP
 
                     {/* Scrollable Content - Fixed container */}
                     <div
-                        ref={scrollContainerRef}
                         className="scroll-container flex-1 w-full h-full overflow-hidden relative"
                         onClick={handleScrollContainerClick}
                         onWheel={(e) => e.stopPropagation()} // Ensure wheel events don't bubble up
@@ -153,6 +235,7 @@ export default function MarkdownPreview({ content, className }: MarkdownPreviewP
                         }}
                     >
                         <div
+                            ref={scrollContainerRef}
                             className="markdown-scrollbar w-full h-full overflow-y-auto"
                             style={{
                                 scrollbarWidth: 'thin',

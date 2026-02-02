@@ -15,10 +15,13 @@ import SyllabusManagerPage from "./pages/admin/SyllabusManagerPage";
 import ContentApprovalPage from "./pages/admin/ContentApprovalPage";
 import SettingsPage from "./pages/admin/SettingsPage";
 
+import ErrorPage from "./pages/ErrorPage";
+
 export const router = createBrowserRouter([
     {
         path: "/",
         element: <Layout />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: "/",
@@ -40,7 +43,7 @@ export const router = createBrowserRouter([
                         element: <StudyMaterialsPage />, // Shared layout, internal switching
                     },
                     {
-                        path: ":branch/:semester/:subjectId/:topicId",
+                        path: ":branch/:semester/:subjectId/topic/:topicId",
                         element: <StudyMaterialsPage />,
                     },
                 ]
@@ -54,22 +57,27 @@ export const router = createBrowserRouter([
     {
         path: "/login",
         element: <LoginPage />,
+        errorElement: <ErrorPage />,
     },
     {
         path: "/signup",
         element: <SignUpPage />,
+        errorElement: <ErrorPage />,
     },
     {
         path: "/verify-otp",
         element: <VerifyOtpPage />,
+        errorElement: <ErrorPage />,
     },
     {
         path: "/profile",
         element: <ProfilePage />,
+        errorElement: <ErrorPage />,
     },
     {
         path: "/admin",
         element: <AdminLayout />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: "dashboard",

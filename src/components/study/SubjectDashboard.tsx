@@ -83,7 +83,7 @@ export function SubjectDashboard({ subject }: SubjectDashboardProps) {
             {/* FIXED: Removed duplicate Tabs wrapper */}
             <Tabs defaultValue="syllabus" className="w-full">
                 <TabsList
-                    className="grid w-full grid-cols-2 mb-8 h-14 rounded-full bg-muted/20 p-1.5 border border-border/40"
+                    className="flex w-full mb-8 h-14 rounded-full bg-muted/20 border border-border/40"
                     aria-label="Subject content sections"
                 >
                     <TabsTrigger

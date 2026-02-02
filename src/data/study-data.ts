@@ -5,6 +5,7 @@ export interface Topic {
     title: string;
     description: string; // 2-3 lines context
     youtubeVideoId?: string; // Just the ID
+    videoDuration?: string; // Video length e.g. "10:05"
     estimatedTime?: string; // e.g., "15 mins"
     summaryPoints: string[]; // Exam ready summary
     markdownContent: string; // Full notes
@@ -54,6 +55,7 @@ const createTopic = (id: string, title: string): Topic => ({
     title,
     description: `Comprehensive detailed study note for ${title}. Focuses on core concepts required for NMU exams.`,
     youtubeVideoId: "dQw4w9WgXcQ", // Placeholder
+    videoDuration: "10:00",
     estimatedTime: "15 mins",
     summaryPoints: [
         "Key concept definition and importance.",
@@ -61,7 +63,57 @@ const createTopic = (id: string, title: string): Topic => ({
         "Common exam question patterns.",
         "Advantages and limitations."
     ],
-    markdownContent: `# ${title}\n\nThis is a placeholder for the detailed notes on **${title}**.\n\n## Introduction\nEssential concept for the exam.\n\n## Core Logic\n1. Step one\n2. Step two\n\n## Example\n> Code snippet or formula here.\n`,
+    markdownContent: `# ${title}
+
+This is a **rich content demonstration** to verify the *Notion-like* UI updates.
+
+## 1. Core Concepts
+Understanding the fundamental principles is key.
+
+> "Simplicity is the soul of efficiency." – Austin Freeman
+
+## 2. Implementation Example
+
+Here is how you might implement this algorithm in **JavaScript**:
+
+\`\`\`javascript
+function calculateEfficiency(input) {
+    // This is a comment
+    const factor = 1.5;
+    if (input > 10) {
+        return input * factor;
+    }
+    return input;
+}
+
+console.log(calculateEfficiency(20));
+\`\`\`
+
+### Python Alternative
+And here is the same logic in **Python**:
+
+\`\`\`python
+def calculate_efficiency(input_val):
+    # Python implementation
+    factor = 1.5
+    if input_val > 10:
+        return input_val * factor
+    return input_val
+
+print(calculate_efficiency(20))
+\`\`\`
+
+## 3. Deployment
+To deploy this module, run the following command:
+
+\`\`\`bash
+npm install @sassy/algorithm
+npm run build
+\`\`\`
+
+- [x] Verified installation
+- [ ] Verified build process
+`,
     quiz: {
         questions: [
             {
