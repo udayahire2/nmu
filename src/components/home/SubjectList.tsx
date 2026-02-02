@@ -58,7 +58,7 @@ export function SubjectList({ selectedSemester }: SubjectListProps) {
                 <div className="p-2 rounded-lg bg-primary/10">
                     <BookOpen className="w-5 h-5 text-primary" />
                 </div>
-                <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                <h2 className="text-xl md:text-2xl font-bold text-foreground">
                     Subjects – Semester {selectedSemester}
                 </h2>
             </div>

@@ -51,17 +51,18 @@ export function SemesterSelection({ selectedSemester, onSelect }: SemesterSelect
                         key={semester}
                         variants={item}
                         whileHover={{ y: -2 }}
-                        whileTap={{ scale: 0.99 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => onSelect(semester)}
                         className={cn(
-                            "flex items-center justify-center w-full h-16 rounded-lg border text-lg font-medium transition-all duration-200",
+                            "flex flex-col items-center justify-center w-full h-20 rounded-xl border-2 transition-all duration-200",
                             selectedSemester === semester
-                                ? "border-primary bg-primary text-primary-foreground"
-                                : "border-border/60 bg-background hover:border-primary/50 hover:bg-secondary/30"
+                                ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                                : "border-muted bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground hover:bg-accent"
                         )}
                         aria-pressed={selectedSemester === semester}
                     >
-                        Semester {semester}
+                        <span className="text-xs uppercase tracking-wider opacity-70">Semester</span>
+                        <span className="text-2xl font-bold">{semester}</span>
                     </motion.button>
                 ))}
             </motion.div>

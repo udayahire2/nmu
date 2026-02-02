@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface HeroProps {
@@ -32,10 +31,9 @@ const Hero = ({ selectedSemester }: HeroProps) => {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/50 border border-border/50"
+                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-background"
                 >
-                    <Sparkles className="h-3.5 w-3.5 text-foreground/70" />
-                    <span className="text-xs font-medium text-foreground/70 tracking-wide">
+                    <span className="text-xs font-semibold text-foreground tracking-wide uppercase">
                         NMU Study Resources
                     </span>
                 </motion.div>
@@ -45,12 +43,12 @@ const Hero = ({ selectedSemester }: HeroProps) => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: 0.1 }}
-                    className="text-center space-y-3"
+                    className="text-center space-y-4"
                 >
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.15]">
-                        Study NMU Syllabus,
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-foreground leading-[1.1]">
+                        Study NMU Syllabus
                         <br className="hidden sm:block" />
-                        <span className="text-foreground/80"> Topic by Topic</span>
+                        <span className="text-muted-foreground">Topic by Topic</span>
                     </h1>
                 </motion.div>
 
@@ -61,8 +59,8 @@ const Hero = ({ selectedSemester }: HeroProps) => {
                     transition={{ duration: 0.4, delay: 0.2 }}
                     className="max-w-2xl px-4"
                 >
-                    <p className="text-lg md:text-xl text-muted-foreground text-center leading-relaxed text-balance">
-                        Notes, videos, and exam-focused resources organized by semester and subject.
+                    <p className="text-lg md:text-xl text-muted-foreground text-center leading-relaxed font-medium">
+                        Curated notes, videos, and exam resources. <br className="hidden md:block" /> Organized for Computer Engineering.
                     </p>
                 </motion.div>
 
@@ -71,11 +69,11 @@ const Hero = ({ selectedSemester }: HeroProps) => {
                     initial={{ opacity: 0, scale: 0.98 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3, delay: 0.3 }}
-                    className="w-full max-w-xs sm:max-w-sm pt-4"
+                    className="w-full max-w-xs sm:max-w-sm pt-6"
                 >
                     <Button
                         size="lg"
-                        className="w-full h-12 sm:h-14 rounded-full text-base sm:text-lg font-medium shadow-none hover:bg-primary/90 transition-all duration-200"
+                        className="w-full h-12 rounded-lg text-base font-semibold transition-all duration-200 border border-primary bg-primary text-primary-foreground hover:bg-primary/90"
                         onClick={scrollToTarget}
                     >
                         {selectedSemester ? `Continue to Semester ${selectedSemester}` : "Select Your Semester"}

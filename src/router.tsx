@@ -26,7 +26,24 @@ export const router = createBrowserRouter([
             },
             {
                 path: "/resources",
-                element: <StudyMaterialsPage />,
+                children: [
+                    {
+                        index: true,
+                        element: <StudyMaterialsPage />, // Acts as wrapper or redirect
+                    },
+                    {
+                        path: ":branch/:semester",
+                        element: <StudyMaterialsPage />, // We will handle state inside
+                    },
+                    {
+                        path: ":branch/:semester/:subjectId",
+                        element: <StudyMaterialsPage />, // Shared layout, internal switching
+                    },
+                    {
+                        path: ":branch/:semester/:subjectId/:topicId",
+                        element: <StudyMaterialsPage />,
+                    },
+                ]
             },
             {
                 path: "/syllabus",
