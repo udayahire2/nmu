@@ -1,124 +1,90 @@
 "use client";
 
-import {
-    SiApple,
-    SiFacebook,
-    SiGithub,
-    SiGoogle,
-    SiInstagram,
-    SiX,
-    SiYoutube,
-} from "@icons-pack/react-simple-icons";
-import {
-    Announcement,
-    AnnouncementTag,
-    AnnouncementTitle,
-} from "@/components/kibo-ui/announcement";
-import {
-    Marquee,
-    MarqueeContent,
-    // MarqueeFade,
-    MarqueeItem,
-} from "@/components/kibo-ui/marquee";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
-const logos = [
-    {
-        name: "GitHub",
-        icon: SiGithub,
-        url: "https://github.com",
-    },
-    {
-        name: "Facebook",
-        icon: SiFacebook,
-        url: "https://facebook.com",
-    },
-    {
-        name: "Google",
-        icon: SiGoogle,
-        url: "https://google.com",
-    },
-    {
-        name: "X",
-        icon: SiX,
-        url: "https://x.com",
-    },
-    {
-        name: "Apple",
-        icon: SiApple,
-        url: "https://apple.com",
-    },
-    {
-        name: "Instagram",
-        icon: SiInstagram,
-        url: "https://instagram.com",
-    },
-    {
-        name: "YouTube",
-        icon: SiYoutube,
-        url: "https://youtube.com",
-    },
-];
+interface HeroProps {
+    selectedSemester?: number | null;
+}
 
-const Hero = () => (
-    <div className="relative flex flex-col items-center justify-center overflow-hidden pt-20 pb-16 md:pt-28 md:pb-24">
-        {/* Background Effects */}
+const Hero = ({ selectedSemester }: HeroProps) => {
+    const scrollToTarget = () => {
+        const targetId = selectedSemester ? '#subject-list' : '#semester-selection';
+        const section = document.querySelector(targetId);
+        if (section) {
+            const offset = 80; // Offset for sticky header
+            const elementPosition = section.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - offset;
 
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    };
 
-        <div className="container relative z-10 flex flex-col items-center gap-8 px-4 text-center sm:px-8">
-
-            {/* Announcement */}
-            <Link to="#" className="animate-fade-in-up [--animation-delay:200ms]">
-                <Announcement className="mx-auto max-w-fit border-primary/20 bg-primary/5 backdrop-blur-sm transition-all hover:bg-primary/10 hover:border-primary/40 shadow-sm">
-                    <AnnouncementTag className="bg-primary/20 text-primary">Update</AnnouncementTag>
-                    <AnnouncementTitle className="text-sm font-medium">Content is organized by syllabus</AnnouncementTitle>
-                </Announcement>
-            </Link>
-
-            {/* Heading */}
-            <div className="max-w-5xl space-y-6 animate-fade-in-up [--animation-delay:400ms]">
-                <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1]">
-                    University <span className="bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
-                        Study Resources
+    return (
+        <section className="relative flex flex-col items-center justify-center py-16 px-4 md:px-6 overflow-hidden min-h-[40vh] bg-background">
+            <div className="w-full max-w-3xl flex flex-col items-center gap-6 z-10">
+                {/* Badge */}
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/50 border border-border/50"
+                >
+                    <Sparkles className="h-3.5 w-3.5 text-foreground/70" />
+                    <span className="text-xs font-medium text-foreground/70 tracking-wide">
+                        NMU Study Resources
                     </span>
-                </h1>
-                <p className="mx-auto max-w-2xl text-balance text-lg text-muted-foreground sm:text-xl md:text-2xl leading-relaxed">
-                    Download notes, previous question papers, and other study materials for your exams.
-                </p>
+                </motion.div>
+
+                {/* Main Heading */}
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.1 }}
+                    className="text-center space-y-3"
+                >
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.15]">
+                        Study NMU Syllabus,
+                        <br className="hidden sm:block" />
+                        <span className="text-foreground/80"> Topic by Topic</span>
+                    </h1>
+                </motion.div>
+
+                {/* Subtitle */}
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.2 }}
+                    className="max-w-2xl px-4"
+                >
+                    <p className="text-lg md:text-xl text-muted-foreground text-center leading-relaxed text-balance">
+                        Notes, videos, and exam-focused resources organized by semester and subject.
+                    </p>
+                </motion.div>
+
+                {/* CTA Button */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
+                    className="w-full max-w-xs sm:max-w-sm pt-4"
+                >
+                    <Button
+                        size="lg"
+                        className="w-full h-12 sm:h-14 rounded-full text-base sm:text-lg font-medium shadow-none hover:bg-primary/90 transition-all duration-200"
+                        onClick={scrollToTarget}
+                    >
+                        {selectedSemester ? `Continue to Semester ${selectedSemester}` : "Select Your Semester"}
+                    </Button>
+                </motion.div>
             </div>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 animate-fade-in-up [--animation-delay:600ms]">
-                <Button size="lg" className="h-14 min-w-[180px] text-lg px-8 transition-all hover:-translate-y-0.5" asChild>
-                    <Link to="/resources">View Resources</Link>
-                </Button>
-            </div>
-
-            {/* Social Proof */}
-            <section className="mt-20 flex w-full flex-col items-center gap-8 animate-fade-in-up [--animation-delay:800ms]">
-                <p className="text-xs font-semibold text-muted-foreground/60 uppercase tracking-[0.2em]">
-                    Used by students from
-                </p>
-                <div className="w-full max-w-[90vw] overflow-hidden opacity-60 grayscale transition-all duration-500 hover:opacity-100 hover:grayscale-0">
-                    <Marquee pauseOnHover speed={40} className="[--gap:4rem]">
-                        <MarqueeContent>
-                            {logos.map((logo) => (
-                                <MarqueeItem className="mx-8 size-8 md:size-12" key={logo.name}>
-                                    <logo.icon className="h-full w-full" />
-                                </MarqueeItem>
-                            ))}
-                        </MarqueeContent>
-                    </Marquee>
-                </div>
-            </section>
-
-
-
-            {/* Video Player Removed */}
-        </div>
-    </div>
-);
+        </section>
+    );
+};
 
 export { Hero };
 export default Hero;

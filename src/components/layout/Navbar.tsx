@@ -72,9 +72,9 @@ export function Navbar() {
     }
 
     const navLinks = [
-        { path: "/", label: "Dashboard", icon: Home },
-        { path: "/resources", label: "Study Materials", icon: BookOpen },
-        { path: "/syllabus", label: "Syllabus", icon: GraduationCap }
+        { path: "/", label: "Home" },
+        { path: "/resources", label: "Study Materials"  },
+        { path: "/syllabus", label: "Syllabus" }
     ]
 
     const isActive = (path: string) => location.pathname === path
@@ -103,7 +103,7 @@ export function Navbar() {
                         {/* Desktop Navigation */}
                         <nav className="hidden lg:flex items-center gap-1">
                             {navLinks.map((link) => {
-                                const Icon = link.icon
+                                
                                 return (
                                     <Link
                                         key={link.path}
@@ -115,7 +115,7 @@ export function Navbar() {
                                                 : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                                         )}
                                     >
-                                        <Icon className="h-4 w-4" />
+                                        
                                         {link.label}
                                     </Link>
                                 )
@@ -330,7 +330,7 @@ export function Navbar() {
                                         <nav className="flex flex-col gap-1">
                                             <div className="text-xs font-semibold text-muted-foreground/70 tracking-wider uppercase px-2 mb-2">Menu</div>
                                             {navLinks.map((link) => {
-                                                const Icon = link.icon
+                                               
                                                 return (
                                                     <Link
                                                         key={link.path}
@@ -346,7 +346,7 @@ export function Navbar() {
                                                             "absolute inset-0 bg-primary/5 translate-x-[-100%] transition-transform duration-300 group-hover:translate-x-0 rounded-lg",
                                                             isActive(link.path) && "hidden"
                                                         )} />
-                                                        <Icon className="h-5 w-5 relative z-10" />
+                                                       
                                                         <span className="relative z-10">{link.label}</span>
                                                     </Link>
                                                 )
