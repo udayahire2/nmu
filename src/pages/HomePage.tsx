@@ -3,7 +3,6 @@ import { Hero } from "@/components/home/Hero";
 import { SemesterSelection } from "@/components/home/SemesterSelection";
 import { SubjectList } from "@/components/home/SubjectList";
 import { FeatureGrid } from "@/components/home/FeatureGrid";
-import { StatsSection } from "@/components/home/StatsSection";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { SubjectListSkeleton } from "@/components/skeletons/SubjectListSkeleton";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
@@ -70,8 +69,7 @@ export default function HomePage() {
     return (
       <main className="min-h-screen bg-background text-foreground">
         <Hero selectedSemester={null} />
-        <SemesterSelection selectedSemester={null} onSelect={() => {}} />
-        <StatsSection />
+        <SemesterSelection selectedSemester={null} onSelect={() => { }} />
         <FeatureGrid />
         <TestimonialsSection />
       </main>
@@ -111,21 +109,7 @@ export default function HomePage() {
       )}
 
       {/* Marketing sections - SEO critical, never unmount */}
-      <div
-        className={`
-          transition-all duration-500 ease-in-out
-          ${
-            isFocusMode
-              ? "opacity-20 pointer-events-none max-h-[200px] overflow-hidden grayscale"
-              : "opacity-100"
-          }
-        `}
-        aria-hidden={isFocusMode}
-      >
-        <StatsSection compact={isFocusMode} />
-        <FeatureGrid compact={isFocusMode} />
-        <TestimonialsSection compact={isFocusMode} />
-      </div>
+      
     </main>
   );
 }

@@ -21,22 +21,17 @@ const container = {
     }
 };
 
-const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 }
-};
-
 export function SemesterSelection({ selectedSemester, onSelect }: SemesterSelectionProps) {
     return (
         <section
             id="semester-selection"
-            className="w-full max-w-3xl mx-auto px-4 py-12"
+            className="w-full max-w-4xl mx-auto px-4 py-16"
         >
-            <div className="text-center mb-8 space-y-2">
-                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                    Choose Your Semester
+            <div className="text-center mb-10 space-y-2">
+                <h2 className="text-xl font-bold text-foreground uppercase tracking-widest">
+                    Select Semester
                 </h2>
-                <p className="text-muted-foreground text-sm md:text-base">Select your current semester to see relevant subjects</p>
+                <p className="text-muted-foreground text-sm font-medium">Choose your current academic term to browse subjects</p>
             </div>
 
             <motion.div
@@ -44,26 +39,26 @@ export function SemesterSelection({ selectedSemester, onSelect }: SemesterSelect
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, margin: "-50px" }}
-                className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4"
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3"
             >
                 {semesters.map((semester) => (
-                    <motion.button
+                    <button
                         key={semester}
-                        variants={item}
-                        whileHover={{ y: -2 }}
-                        whileTap={{ scale: 0.98 }}
                         onClick={() => onSelect(semester)}
                         className={cn(
-                            "flex flex-col items-center justify-center w-full h-20 rounded-xl border-2 transition-all duration-200",
+                            "flex flex-col items-center justify-center w-full h-24 rounded-lg border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                             selectedSemester === semester
-                                ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                                : "border-muted bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground hover:bg-accent"
+                                ? "border-primary bg-primary text-primary-foreground"
+                                : "border-border/60 bg-card text-muted-foreground hover:border-primary/50 hover:bg-accent/40 hover:text-foreground"
                         )}
                         aria-pressed={selectedSemester === semester}
                     >
-                        <span className="text-xs uppercase tracking-wider opacity-70">Semester</span>
+                        <span className={cn(
+                            "text-[10px] uppercase font-bold tracking-wider",
+                            selectedSemester === semester ? "text-primary-foreground/70" : "text-muted-foreground/60"
+                        )}>Sem</span>
                         <span className="text-2xl font-bold">{semester}</span>
-                    </motion.button>
+                    </button>
                 ))}
             </motion.div>
         </section>

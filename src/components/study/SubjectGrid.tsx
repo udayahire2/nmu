@@ -33,50 +33,50 @@ export function SubjectGrid({ subjects, branch, semester }: SubjectGridProps) {
 
     return (
         <div className="max-w-4xl mx-auto py-8">
-            <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold">Subjects</h2>
-                <span className="text-sm text-muted-foreground">
-                    {subjects.length} subject{subjects.length !== 1 ? 's' : ''}
+            <div className="flex items-center justify-between mb-6 px-1">
+                <h2 className="text-xl font-semibold tracking-tight text-foreground">Subjects</h2>
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    {subjects.length} total
                 </span>
             </div>
 
-            <div className="grid gap-3">
+            <div className="grid gap-2">
                 {subjects.map((subject, i) => (
                     <motion.div
                         key={subject.id}
-                        initial={{ opacity: 0, y: 8 }}
+                        initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{
-                            duration: 0.3,
-                            delay: Math.min(i * 0.03, 0.5) // Cap maximum delay at 0.5s
+                            duration: 0.2,
+                            delay: Math.min(i * 0.02, 0.4)
                         }}
-                        whileHover={{ scale: 1.01 }}
-                        whileTap={{ scale: 0.995 }}
                     >
                         <Link
                             to={`${subject.id}`}
-                            className="group flex items-center justify-between p-5 sm:p-7 rounded-2xl border border-border/50 bg-card hover:border-primary/50 hover:bg-card hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                            className="group flex items-center justify-between p-4 sm:p-5 rounded-lg border border-border/60 bg-card hover:border-primary/50 hover:bg-accent/30 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
                             aria-label={`View ${subject.name} syllabus and resources`}
                         >
                             <div className="flex items-center gap-4 min-w-0 flex-1">
-                                <div className="h-12 w-12 rounded-xl bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center text-primary shrink-0 transition-colors duration-300">
-                                    <Book className="h-5 w-5" />
+                                <div className="h-10 w-10 rounded-md bg-muted flex items-center justify-center text-muted-foreground shrink-0 border border-border/50 group-hover:text-primary group-hover:border-primary/30 transition-colors">
+                                    <Book className="h-4 w-4" />
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                    <h3 className="text-base sm:text-lg font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                                    <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors truncate">
                                         {subject.name}
                                     </h3>
-                                    <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                                        <span className="font-mono">{subject.code}</span>
-                                        <span className="text-border">•</span>
-                                        <span>{subject.units.length} learning unit{subject.units.length !== 1 ? 's' : ''}</span>
+                                    <div className="flex items-center gap-2 text-xs text-muted-foreground/80 mt-1 uppercase tracking-tight font-medium">
+                                        <span className="font-mono bg-muted/50 px-1.5 py-0.5 rounded border border-border/40 text-[10px]">{subject.code}</span>
+                                        <span className="text-border/60">•</span>
+                                        <span>{subject.units.length} Units</span>
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex flex-col items-end gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0">
-                                <span className="text-xs font-medium text-primary">View Syllabus</span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap hidden sm:inline">
+                                    View Resources
+                                </span>
+                                <ChevronRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-1 transition-all ml-2 shrink-0" />
                             </div>
-                            <ChevronRight className="h-5 w-5 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-1 transition-all duration-300 ml-4 shrink-0" />
                         </Link>
                     </motion.div>
                 ))}

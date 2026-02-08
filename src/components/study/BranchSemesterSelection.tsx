@@ -21,35 +21,33 @@ export function BranchSemesterSelection({
         <div className="space-y-12 max-w-4xl mx-auto py-8">
             {/* Branch Section */}
             <section className="space-y-6">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
-                        <GraduationCap className="h-6 w-6 text-primary" />
+                <div className="flex items-center gap-3 mb-6 px-1">
+                    <div className="p-2 rounded-lg bg-muted border border-border">
+                        <GraduationCap className="h-5 w-5 text-muted-foreground" />
                     </div>
-                    <h2 className="text-2xl font-bold tracking-tight">Select Your Branch</h2>
+                    <h2 className="text-xl font-semibold tracking-tight">Select Branch</h2>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                     {BRANCHES.map((branch) => (
-                        <motion.button
+                        <button
                             key={branch}
-                            whileHover={{ y: -2 }}
-                            whileTap={{ scale: 0.98 }}
                             onClick={() => onBranchSelect(branch)}
                             aria-pressed={selectedBranch === branch}
                             className={cn(
-                                "flex flex-col items-center justify-center p-6 rounded-xl border-2 transition-all duration-200 gap-3 text-center h-40",
+                                "flex flex-col items-center justify-center p-6 rounded-lg border transition-all duration-200 gap-3 text-center h-32 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                                 selectedBranch === branch
-                                    ? "border-primary bg-gradient-to-br from-primary/10 to-primary/5 text-primary shadow-lg shadow-primary/10 ring-2 ring-primary ring-offset-2 ring-offset-background"
-                                    : "border-border/40 bg-card hover:border-primary/30 hover:bg-accent/5 hover:shadow-md"
+                                    ? "border-primary bg-primary/5 text-primary"
+                                    : "border-border/60 bg-card hover:border-primary/50 hover:bg-accent/30"
                             )}
                         >
-                            <span className="font-semibold">{branch}</span>
+                            <span className="text-sm font-medium">{branch}</span>
                             {selectedBranch === branch && (
-                                <span className="text-xs bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
+                                <span className="text-[10px] bg-primary text-primary-foreground px-2 py-0.5 rounded-full uppercase tracking-wider font-bold">
                                     Selected
                                 </span>
                             )}
-                        </motion.button>
+                        </button>
                     ))}
                 </div>
             </section>
@@ -57,35 +55,37 @@ export function BranchSemesterSelection({
             {/* Semester Section - Only show if branch is selected (Progressive Disclosure) */}
             {selectedBranch && (
                 <motion.section
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
                     className="space-y-6"
                 >
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
-                            <BookOpen className="h-6 w-6 text-primary" />
+                    <div className="flex items-center gap-3 mb-6 px-1">
+                        <div className="p-2 rounded-lg bg-muted border border-border">
+                            <BookOpen className="h-5 w-5 text-muted-foreground" />
                         </div>
-                        <h2 className="text-2xl font-bold tracking-tight">Select Semester</h2>
+                        <h2 className="text-xl font-semibold tracking-tight">Select Semester</h2>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2">
                         {SEMESTERS.map((sem) => (
-                            <motion.button
+                            <button
                                 key={sem}
-                                whileHover={{ y: -2 }}
-                                whileTap={{ scale: 0.95 }}
                                 onClick={() => onSemesterSelect(sem.toString())}
                                 aria-pressed={selectedSemester === sem.toString()}
                                 className={cn(
-                                    "flex flex-col items-center justify-center aspect-square rounded-xl border-2 transition-all duration-200",
+                                    "flex flex-col items-center justify-center aspect-square rounded-lg border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                                     selectedSemester === sem.toString()
-                                        ? "border-primary bg-gradient-to-br from-primary to-primary/90 text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary ring-offset-2 ring-offset-background transform scale-105"
-                                        : "border-border/40 bg-card hover:border-primary/30 hover:bg-accent/5 hover:shadow-sm"
+                                        ? "border-primary bg-primary text-primary-foreground"
+                                        : "border-border/60 bg-card hover:border-primary/50 hover:bg-accent/30"
                                 )}
                             >
-                                <span className="text-xs uppercase opacity-70 font-semibold">Sem</span>
-                                <span className="text-xl font-bold">{sem}</span>
-                            </motion.button>
+                                <span className={cn(
+                                    "text-[10px] uppercase font-bold tracking-wider",
+                                    selectedSemester === sem.toString() ? "text-primary-foreground/80" : "text-muted-foreground/70"
+                                )}>Sem</span>
+                                <span className="text-lg font-bold">{sem}</span>
+                            </button>
                         ))}
                     </div>
                 </motion.section>

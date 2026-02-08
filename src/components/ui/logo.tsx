@@ -17,9 +17,9 @@ export function Logo({ className, showText = true, ...props }: LogoProps) {
                     fill="none"
                 >
                     {/* Back/Left Shape - Darker */}
-                    <rect x="2" y="2" width="26" height="36" rx="8" className="fill-violet-800 dark:fill-violet-700" />
+                    <rect x="2" y="2" width="26" height="36" rx="8" className="fill-logo-back" />
                     {/* Front/Right Shape - Lighter */}
-                    <rect x="12" y="2" width="26" height="36" rx="8" className="fill-violet-500 dark:fill-violet-400" />
+                    <rect x="12" y="2" width="26" height="36" rx="8" className="fill-logo-front" />
                 </svg>
             </div>
 

@@ -6,39 +6,33 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* Premium Light Theme (Zinc + Violet) */
+  /* Neutral Theme (Default - Zinc) */
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
   --card: 0 0% 100%;
   --card-foreground: 240 10% 3.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
-
-  /* Primary: Vibrant Violet/Indigo */
-  --primary: 262.1 83.3% 57.8%;
-  --primary-foreground: 210 40% 98%;
-
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
   --secondary: 240 4.8% 95.9%;
   --secondary-foreground: 240 5.9% 10%;
-
   --muted: 240 4.8% 95.9%;
   --muted-foreground: 240 3.8% 46.1%;
-
   --accent: 240 4.8% 95.9%;
   --accent-foreground: 240 5.9% 10%;
-
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
-
   --border: 240 5.9% 90%;
   --input: 240 5.9% 90%;
-  --ring: 262.1 83.3% 57.8%;
-
+  --ring: 240 5.9% 10%;
   --radius: 0.75rem;
+
+  --logo-back: 262.1 83.3% 57.8%;
+  --logo-front: 263.4 70% 50.4%;
 
   /* Header System */
   --header-height: 4rem;
-  /* 64px */
   --header-padding-x: 1rem;
   --header-gap: 2rem;
 
@@ -50,44 +44,48 @@
 }
 
 .dark {
-  /* Premium Dark Theme (Deep Zinc) */
-  --background: 0 0% 7.1%;
-  /* #09090b */
+  /* Neutral Theme Dark */
+  --background: 240 10% 3.9%;
   --foreground: 0 0% 98%;
-
   --card: 240 10% 3.9%;
-  /* Match background for seamless look, rely on borders */
   --card-foreground: 0 0% 98%;
-
   --popover: 240 10% 3.9%;
   --popover-foreground: 0 0% 98%;
-
-  /* Primary: Lighter Violet for Dark Mode */
-  --primary: 263.4 70% 50.4%;
-  --primary-foreground: 210 40% 98%;
-
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
   --secondary: 240 3.7% 15.9%;
   --secondary-foreground: 0 0% 98%;
-
   --muted: 240 3.7% 15.9%;
   --muted-foreground: 240 5% 64.9%;
-
   --accent: 240 3.7% 15.9%;
   --accent-foreground: 0 0% 98%;
-
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 0 0% 98%;
-
   --border: 240 3.7% 15.9%;
   --input: 240 3.7% 15.9%;
-  --ring: 263.4 70% 50.4%;
+  --ring: 240 4.9% 83.9%;
 
-  --chart-1: 220 70% 50%;
-  --chart-2: 160 60% 45%;
-  --chart-3: 30 80% 55%;
-  --chart-4: 280 65% 60%;
-  --chart-5: 340 75% 55%;
+  --logo-back: 263.4 70% 50.4%;
+  --logo-front: 262.1 83.3% 57.8%;
 }
+
+/* Purple Theme Override */
+.theme-purple {
+  --primary: 262.1 83.3% 57.8%;
+  --primary-foreground: 210 40% 98%;
+  --ring: 262.1 83.3% 57.8%;
+  --logo-back: 263.4 70% 50.4%;
+  --logo-front: 262.1 83.3% 57.8%;
+}
+
+.dark .theme-purple {
+  --primary: 263.4 70% 50.4%;
+  --primary-foreground: 210 40% 98%;
+  --ring: 263.4 70% 50.4%;
+  --logo-back: 262.1 83.3% 57.8%;
+  --logo-front: 263.4 70% 50.4%;
+}
+
 
 @theme inline {
   --color-background: hsl(var(--background));
@@ -109,6 +107,8 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
+  --color-logo-back: hsl(var(--logo-back));
+  --color-logo-front: hsl(var(--logo-front));
   --color-chart-1: hsl(var(--chart-1));
   --color-chart-2: hsl(var(--chart-2));
   --color-chart-3: hsl(var(--chart-3));

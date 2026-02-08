@@ -24,59 +24,59 @@ const Hero = ({ selectedSemester }: HeroProps) => {
     };
 
     return (
-        <section className="relative flex flex-col items-center justify-center py-16 px-4 md:px-6 overflow-hidden min-h-[40vh] bg-background">
-            <div className="w-full max-w-3xl flex flex-col items-center gap-6 z-10">
+        <section className="relative flex flex-col items-center justify-center pt-20 pb-16 px-4 md:px-6 bg-background">
+            <div className="w-full max-w-4xl flex flex-col items-center gap-6 z-10 text-center">
                 {/* Badge */}
                 <motion.div
-                    initial={{ opacity: 0, y: -10 }}
+                    initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-background"
+                    transition={{ duration: 0.3 }}
+                    className="inline-flex items-center gap-2 px-2 py-0.5 rounded-full border border-border bg-muted/30"
                 >
-                    <span className="text-xs font-semibold text-foreground tracking-wide uppercase">
-                        NMU Study Resources
+                    <span className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase px-1">
+                        SASS • Study Material
                     </span>
                 </motion.div>
 
                 {/* Main Heading */}
                 <motion.div
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.1 }}
-                    className="text-center space-y-4"
+                    transition={{ duration: 0.3, delay: 0.1 }}
+                    className="space-y-4"
                 >
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-foreground leading-[1.1]">
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground leading-[1.1]">
                         Study NMU Syllabus
                         <br className="hidden sm:block" />
-                        <span className="text-muted-foreground">Topic by Topic</span>
+                        <span className="text-muted-foreground/60">Effectively & Minimalist</span>
                     </h1>
                 </motion.div>
 
                 {/* Subtitle */}
                 <motion.div
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.2 }}
-                    className="max-w-2xl px-4"
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                    className="max-w-2xl"
                 >
-                    <p className="text-lg md:text-xl text-muted-foreground text-center leading-relaxed font-medium">
-                        Curated notes, videos, and exam resources. <br className="hidden md:block" /> Organized for Computer Engineering.
+                    <p className="text-base md:text-lg text-muted-foreground/80 leading-relaxed font-medium">
+                        Focused notes, hand-picked videos, and organized exam papers <br className="hidden md:block" /> designed for modern learning.
                     </p>
                 </motion.div>
 
                 {/* CTA Button */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     transition={{ duration: 0.3, delay: 0.3 }}
-                    className="w-full max-w-xs sm:max-w-sm pt-6"
+                    className="w-full max-w-[280px] pt-4"
                 >
                     <Button
                         size="lg"
-                        className="w-full h-12 rounded-lg text-base font-semibold transition-all duration-200 border border-primary bg-primary text-primary-foreground hover:bg-primary/90"
+                        className="w-full h-11 rounded-md text-sm font-bold uppercase tracking-wider transition-all duration-200"
                         onClick={scrollToTarget}
                     >
-                        {selectedSemester ? `Continue to Semester ${selectedSemester}` : "Select Your Semester"}
+                        {selectedSemester ? `Continue Sem ${selectedSemester}` : "Start Studying"}
                     </Button>
                 </motion.div>
             </div>

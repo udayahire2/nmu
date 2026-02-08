@@ -4,13 +4,10 @@ import type { Topic } from "@/data/study-data";
 import { Button } from "@/components/ui/button";
 import {
     CheckCircle2,
-    FileText,
-    Youtube,
     Loader2,
     AlertCircle,
     Maximize2,
     ChevronDown,
-    ChevronUp,
     Lightbulb
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -74,52 +71,42 @@ export function TopicViewer({ topic, onComplete }: TopicViewerProps) {
     const hasSummary = topic.summaryPoints && topic.summaryPoints.length > 0;
 
     return (
-        <div className="max-w-5xl mx-auto space-y-12 pb-32">
+        <div className="max-w-4xl mx-auto space-y-10 pb-32 pt-6 px-4">
             {/* Header */}
-            <motion.header
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="space-y-6 border-b border-border pb-10"
-            >
-                <div className="space-y-4">
-                    <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground">
+            <header className="space-y-4 border-b border-border/60 pb-8">
+                <div className="space-y-2">
+                    <h1 className="text-3xl font-bold tracking-tight text-foreground">
                         {topic.title}
                     </h1>
-                    <p className="text-lg text-muted-foreground leading-relaxed max-w-4xl">
+                    <p className="text-base text-muted-foreground leading-relaxed max-w-3xl">
                         {topic.description}
                     </p>
                 </div>
 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-4 pt-2">
                     {hasVideo && (
-                        <span className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-sm font-medium bg-muted text-foreground/80">
-                            <Youtube className="h-4 w-4" />
+                        <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                            <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
                             Video Lesson
                         </span>
                     )}
                     {hasNotes && (
-                        <span className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-sm font-medium bg-muted text-foreground/80">
-                            <FileText className="h-4 w-4" />
+                        <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                            <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
                             Study Notes
                         </span>
                     )}
                 </div>
-            </motion.header>
+            </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                 {/* Main Content Area */}
                 <div className="lg:col-span-8 space-y-12">
                     {/* Video Section */}
                     {hasVideo && (
-                        <motion.section
-                            initial={{ opacity: 0, scale: 0.99 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.1, duration: 0.4 }}
-                            className="space-y-4"
-                        >
+                        <section className="space-y-4">
                             <div className="flex items-center justify-between px-1">
-                                <h2 className="text-xl font-semibold tracking-tight">Video Lesson</h2>
+                                <h2 className="text-lg font-semibold tracking-tight">Lesson Video</h2>
                                 <button
                                     onClick={() => {
                                         const iframe = videoContainerRef.current?.querySelector('iframe');
@@ -127,34 +114,27 @@ export function TopicViewer({ topic, onComplete }: TopicViewerProps) {
                                             iframe.requestFullscreen();
                                         }
                                     }}
-                                    className="group flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
-                                    aria-label="Enter fullscreen mode"
+                                    className="text-xs font-bold uppercase tracking-tight text-muted-foreground hover:text-foreground transition-colors"
                                 >
-                                    <Maximize2 className="h-4 w-4" />
-                                    <span>Fullscreen</span>
+                                    {(<Maximize2 className="h-3.5 w-3.5 inline mr-1" />)}
+                                    Fullscreen
                                 </button>
                             </div>
 
                             <div
                                 ref={videoContainerRef}
-                                className="relative aspect-video rounded-lg overflow-hidden bg-black border border-border"
+                                className="relative aspect-video rounded-lg overflow-hidden bg-black border border-border/60"
                             >
                                 {isLoading && (
                                     <div className="absolute inset-0 flex items-center justify-center bg-muted/20 z-10">
-                                        <div className="flex flex-col items-center gap-4">
-                                            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-                                            <p className="text-sm font-medium text-muted-foreground">Loading...</p>
-                                        </div>
+                                        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground/50" />
                                     </div>
                                 )}
 
                                 {hasVideoError ? (
                                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-muted/10 p-8 text-center z-10">
-                                        <AlertCircle className="h-8 w-8 text-muted-foreground mb-4" />
-                                        <p className="text-foreground font-medium">Video Unavailable</p>
-                                        <p className="text-sm text-muted-foreground mt-2 max-w-xs">
-                                            Please check your connection.
-                                        </p>
+                                        <AlertCircle className="h-6 w-6 text-muted-foreground mb-4" />
+                                        <p className="text-sm font-semibold">Video Unavailable</p>
                                     </div>
                                 ) : (
                                     <iframe
@@ -172,50 +152,37 @@ export function TopicViewer({ topic, onComplete }: TopicViewerProps) {
                                     />
                                 )}
                             </div>
-                        </motion.section>
+                        </section>
                     )}
 
                     {/* Notes Section */}
                     {hasNotes && (
-                        <motion.article
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="space-y-6"
-                        >
-                            <h2 className="text-xl font-semibold tracking-tight px-1">Study Notes</h2>
-                            <div className="p-0 md:p-1">
+                        <article className="space-y-4">
+                            <h2 className="text-lg font-semibold tracking-tight px-1">Study Notes</h2>
+                            <div className="border border-border/60 rounded-lg overflow-hidden bg-card">
                                 <MarkdownPreview
                                     content={topic.markdownContent}
-                                    className="p-0 h-[500px] border rounded-lg shadow-sm"
+                                    className="h-[600px] border-0"
                                 />
                             </div>
-                        </motion.article>
+                        </article>
                     )}
                 </div>
 
-                {/* Sidebar / Secondary Content */}
+                {/* Sidebar */}
                 <div className="lg:col-span-4 space-y-8">
-                    {/* Key Takeaways */}
                     {hasSummary && (
-                        <motion.div
-                            initial={{ opacity: 0, x: 10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="sticky top-24"
-                        >
-                            <div className="rounded-lg overflow-hidden border border-border bg-card">
+                        <div className="sticky top-24">
+                            <div className="rounded-lg border border-border/60 bg-card">
                                 <button
                                     onClick={() => setIsSummaryOpen(!isSummaryOpen)}
-                                    className="w-full flex items-center justify-between p-4 bg-muted/50 hover:bg-muted transition-colors"
+                                    className="w-full flex items-center justify-between p-4 border-b border-border/40 hover:bg-muted/30 transition-colors"
                                 >
-                                    <h3 className="font-medium text-foreground flex items-center gap-2">
-                                        <Lightbulb className="h-4 w-4 text-muted-foreground" />
-                                        Key Takeaways
+                                    <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground/80 flex items-center gap-2">
+                                        <Lightbulb className="h-4 w-4" />
+                                        Summary
                                     </h3>
-                                    <span className={cn("transition-transform duration-300 text-muted-foreground", isSummaryOpen ? "rotate-180" : "rotate-0")}>
-                                        <ChevronDown className="h-4 w-4" />
-                                    </span>
+                                    <ChevronDown className={cn("h-4 w-4 text-muted-foreground/40 transition-transform duration-300", isSummaryOpen && "rotate-180")} />
                                 </button>
 
                                 <AnimatePresence initial={false}>
@@ -224,13 +191,13 @@ export function TopicViewer({ topic, onComplete }: TopicViewerProps) {
                                             initial={{ height: 0, opacity: 0 }}
                                             animate={{ height: "auto", opacity: 1 }}
                                             exit={{ height: 0, opacity: 0 }}
-                                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                                            transition={{ duration: 0.2 }}
                                         >
-                                            <div className="p-5 pt-2">
-                                                <ul className="space-y-3">
+                                            <div className="p-3 pt-4">
+                                                <ul className="space-y-4">
                                                     {topic.summaryPoints.map((point, i) => (
-                                                        <li key={i} className="flex gap-3 text-sm leading-relaxed text-muted-foreground">
-                                                            <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-muted-foreground/60 shrink-0" />
+                                                        <li key={i} className="flex gap-3 text-sm leading-relaxed text-foreground/80">
+                                                            <div className="mt-1.5 h-1 w-1 rounded-full bg-primary shrink-0" />
                                                             <span>{point}</span>
                                                         </li>
                                                     ))}
@@ -240,26 +207,23 @@ export function TopicViewer({ topic, onComplete }: TopicViewerProps) {
                                     )}
                                 </AnimatePresence>
                             </div>
-                        </motion.div>
+                        </div>
                     )}
                 </div>
             </div>
 
             {/* Floating Action Bar */}
-            <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-sm border-t border-border">
-                <div className="max-w-5xl mx-auto flex items-center justify-between">
-                    <div className={cn(
-                        "text-sm font-medium transition-opacity duration-300",
-                        isCompleted ? "text-green-600 opacity-100" : "opacity-0"
-                    )}>
-                        {isCompleted && "Topic Completed"}
+            <div className="fixed bottom-0 left-0 right-0 z-50 p-4 border-t border-border/60 bg-background/95 backdrop-blur-md">
+                <div className="max-w-4xl mx-auto flex items-center justify-between">
+                    <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                        {isCompleted && "Topic Complete"}
                     </div>
 
                     <Button
                         ref={primaryActionRef}
-                        size="default" // Reduced size from lg
+                        size="sm"
                         className={cn(
-                            "rounded-md font-medium transition-all",
+                            "h-10 px-6 rounded-md font-bold uppercase tracking-wider transition-all",
                             isCompleted
                                 ? "bg-green-600 hover:bg-green-700 text-white"
                                 : "bg-primary hover:bg-primary/90 text-primary-foreground"
@@ -268,19 +232,14 @@ export function TopicViewer({ topic, onComplete }: TopicViewerProps) {
                         disabled={isMarkingComplete || isCompleted}
                     >
                         {isMarkingComplete ? (
-                            <>
-                                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                Saving
-                            </>
+                            <Loader2 className="h-4 w-4 animate-spin" />
                         ) : isCompleted ? (
                             <>
                                 <CheckCircle2 className="h-4 w-4 mr-2" />
-                                Complete
+                                Done
                             </>
                         ) : (
-                            <>
-                                Mark as Complete
-                            </>
+                            "Mark as Complete"
                         )}
                     </Button>
                 </div>
