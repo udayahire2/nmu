@@ -180,7 +180,7 @@ export default function ContentApprovalPage() {
                                         </TableRow>
                                     ) : (
                                         filteredPending.map((req) => (
-                                            <TableRow key={req._id} className="group border-white/5 hover:bg-white/[0.02] transition-colors">
+                                            <TableRow key={req._id} className="group border-white/5 hover:bg-white/2 transition-colors">
                                                 <TableCell className="pl-6 py-4">
                                                     <div className="flex items-center gap-4">
                                                         <div className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center">
@@ -336,7 +336,7 @@ export default function ContentApprovalPage() {
                             />
                         ) : viewingRequest?.type.toLowerCase() === 'pdf' ? (
                             <iframe
-                                src={viewingRequest.url || (viewingRequest.filePath ? `http://localhost:5000${viewingRequest.filePath}` : '')}
+                                src={viewingRequest.url || (viewingRequest.filePath ? `http://localhost:5001${viewingRequest.filePath}` : '')}
                                 className="w-full h-[80vh]"
                                 title={viewingRequest.title}
                             />

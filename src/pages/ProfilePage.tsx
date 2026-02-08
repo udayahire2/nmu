@@ -69,7 +69,7 @@ export default function ProfilePage() {
         if (!token) return;
 
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
             const res = await fetch(`${API_URL}/auth/updatedetails`, {
                 method: 'PUT',
                 headers: {
@@ -123,16 +123,16 @@ export default function ProfilePage() {
     );
 
     return (
-        <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-muted/20">
+        <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-linear-to-b from-background to-muted/20">
             <div className="max-w-4xl mx-auto space-y-8">
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                     <div className="flex items-center gap-4">
                         <div className="relative">
-                            <div className="absolute -inset-1 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-sm" />
+                            <div className="absolute -inset-1 bg-linear-to-br from-primary/20 to-transparent rounded-full blur-sm" />
                             <Avatar className="h-20 w-20 relative border-2 border-background shadow-lg">
                                 <AvatarImage src={user.avatar} alt={user.name} />
-                                <AvatarFallback className="bg-gradient-to-br from-primary/10 to-primary/5 text-foreground">
+                                <AvatarFallback className="bg-linear-to-br from-primary/10 to-primary/5 text-foreground">
                                     {getInitials(user.name)}
                                 </AvatarFallback>
                             </Avatar>
@@ -184,7 +184,7 @@ export default function ProfilePage() {
                                         <span className="font-medium">{formatDate(user.createdAt || new Date().toISOString())}</span>
                                     </div>
                                     <div className="h-1 w-full bg-muted rounded-full overflow-hidden">
-                                        <div className="h-full w-full bg-gradient-to-r from-primary/30 to-primary/10" />
+                                        <div className="h-full w-full bg-linear-to-r from-primary/30 to-primary/10" />
                                     </div>
                                 </div>
 
@@ -300,7 +300,7 @@ export default function ProfilePage() {
                             ) : (
                                 <div className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div className="space-y-1 p-3 rounded-lg bg-gradient-to-br from-background to-muted/20 border border-border/50">
+                                        <div className="p-3 rounded-lg bg-linear-to-br from-background to-muted/20 border border-border/50">
                                             <p className="text-xs font-medium text-muted-foreground">Branch</p>
                                             <div className="flex items-center gap-2 mt-1">
                                                 <div className="p-1.5 rounded-md bg-violet-100 dark:bg-violet-900/30">
@@ -309,7 +309,7 @@ export default function ProfilePage() {
                                                 <p className="font-medium">{user.branch} Engineering</p>
                                             </div>
                                         </div>
-                                        <div className="space-y-1 p-3 rounded-lg bg-gradient-to-br from-background to-muted/20 border border-border/50">
+                                        <div className="p-3 rounded-lg bg-linear-to-br from-background to-muted/20 border border-border/50">
                                             <p className="text-xs font-medium text-muted-foreground">Current Year</p>
                                             <div className="flex items-center gap-2 mt-1">
                                                 <div className="p-1.5 rounded-md bg-fuchsia-100 dark:bg-fuchsia-900/30">
@@ -318,7 +318,7 @@ export default function ProfilePage() {
                                                 <p className="font-medium">{user.year}</p>
                                             </div>
                                         </div>
-                                        <div className="space-y-1 p-3 rounded-lg bg-gradient-to-br from-background to-muted/20 border border-border/50">
+                                        <div className="p-3 rounded-lg bg-linear-to-br from-background to-muted/20 border border-border/50">
                                             <p className="text-xs font-medium text-muted-foreground">Email Status</p>
                                             <div className="flex items-center gap-2 mt-1">
                                                 <div className={`p-1.5 rounded-md ${user.isVerified ? 'bg-green-100 dark:bg-green-900/30' : 'bg-amber-100 dark:bg-amber-900/30'}`}>
@@ -327,7 +327,7 @@ export default function ProfilePage() {
                                                 <p className="font-medium">{user.isVerified ? "Verified Account" : "Verification Pending"}</p>
                                             </div>
                                         </div>
-                                        <div className="space-y-1 p-3 rounded-lg bg-gradient-to-br from-background to-muted/20 border border-border/50">
+                                        <div className="p-3 rounded-lg bg-linear-to-br from-background to-muted/20 border border-border/50">
                                             <p className="text-xs font-medium text-muted-foreground">Member Since</p>
                                             <div className="flex items-center gap-2 mt-1">
                                                 <div className="p-1.5 rounded-md bg-blue-100 dark:bg-blue-900/30">

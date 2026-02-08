@@ -27,7 +27,7 @@ export default function DashboardPage() {
                 const token = localStorage.getItem('token');
                 if (!token) return;
 
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
                 const res = await fetch(`${API_URL}/admin/stats`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -133,7 +133,7 @@ export default function DashboardPage() {
     return (
         <div className="space-y-8">
             <div className="flex flex-col gap-1">
-                <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold tracking-tight bg-linear-to-r from-white to-white/60 bg-clip-text text-transparent">
                     Dashboard
                 </h1>
                 <p className="text-muted-foreground text-sm font-medium">Overview of your platform's performance.</p>
@@ -228,7 +228,7 @@ export default function DashboardPage() {
                                 </TableRow>
                             ) : (
                                 (activeTab === 'pending' ? pendingMaterials : approvedMaterials).map((material) => (
-                                    <TableRow key={material._id} className="group border-white/[0.02] hover:bg-white/[0.02] transition-colors">
+                                    <TableRow key={material._id} className="group border-white/2 hover:bg-white/2 transition-colors">
                                         <TableCell className="pl-8 py-4">
                                             <div className="flex items-start gap-4">
                                                 <div className={`
@@ -296,7 +296,7 @@ export default function DashboardPage() {
 
             {/* Quick Stats Bar */}
             <div className="grid gap-6 md:grid-cols-3">
-                <Card className="border-border/50 bg-gradient-to-br from-card to-card/80 shadow-sm">
+                <Card className="border-border/50 bg-linear-to-br from-card to-card/80 shadow-sm">
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
@@ -317,7 +317,7 @@ export default function DashboardPage() {
                     </CardContent>
                 </Card>
 
-                <Card className="border-border/50 bg-gradient-to-br from-card to-card/80 shadow-sm">
+                <Card className="border-border/50 bg-linear-to-br from-card to-card/80 shadow-sm">
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
@@ -338,7 +338,7 @@ export default function DashboardPage() {
                     </CardContent>
                 </Card>
 
-                <Card className="border-border/50 bg-gradient-to-br from-card to-card/80 shadow-sm">
+                <Card className="border-border/50 bg-linear-to-br from-card to-card/80 shadow-sm">
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>

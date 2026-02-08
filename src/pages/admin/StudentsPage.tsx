@@ -32,7 +32,7 @@ export default function StudentsPage() {
     const fetchUsers = async () => {
         try {
             const token = localStorage.getItem('token');
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
             const res = await fetch(`${API_URL}/admin/users`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -55,7 +55,7 @@ export default function StudentsPage() {
         if (!deleteId) return;
         try {
             const token = localStorage.getItem('token');
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
             await fetch(`${API_URL}/admin/users/${deleteId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
