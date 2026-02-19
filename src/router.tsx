@@ -12,8 +12,10 @@ import DashboardPage from "./pages/admin/DashboardPage";
 import StudentsPage from "./pages/admin/StudentsPage";
 import ResourceManagerPage from "./pages/admin/ResourceManagerPage";
 import SyllabusManagerPage from "./pages/admin/SyllabusManagerPage";
+import FacultyApprovals from "./pages/admin/FacultyApprovals";
 import ContentApprovalPage from "./pages/admin/ContentApprovalPage";
 import SettingsPage from "./pages/admin/SettingsPage";
+import FacultyDashboard from "./pages/dashboard/FacultyDashboard";
 
 import ErrorPage from "./pages/ErrorPage";
 
@@ -100,6 +102,10 @@ export const router = createBrowserRouter([
                 element: <ContentApprovalPage />,
             },
             {
+                path: "faculty",
+                element: <FacultyApprovals />,
+            },
+            {
                 path: "settings",
                 element: <SettingsPage />,
             },
@@ -108,5 +114,10 @@ export const router = createBrowserRouter([
                 element: <DashboardPage />, // Default redirect
             }
         ],
+    },
+    {
+        path: "/dashboard/faculty",
+        element: <Layout><FacultyDashboard /></Layout>,
+        errorElement: <ErrorPage />,
     },
 ]);
