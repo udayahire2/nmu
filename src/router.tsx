@@ -12,7 +12,7 @@ import DashboardPage from "./pages/admin/DashboardPage";
 import StudentsPage from "./pages/admin/StudentsPage";
 import ResourceManagerPage from "./pages/admin/ResourceManagerPage";
 import SyllabusManagerPage from "./pages/admin/SyllabusManagerPage";
-import FacultyApprovals from "./pages/admin/FacultyApprovals";
+import FacultyManager from "./pages/admin/FacultyManager";
 import ContentApprovalPage from "./pages/admin/ContentApprovalPage";
 import SettingsPage from "./pages/admin/SettingsPage";
 import FacultyDashboard from "./pages/dashboard/FacultyDashboard";
@@ -103,7 +103,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: "faculty",
-                element: <FacultyApprovals />,
+                element: <FacultyManager />,
             },
             {
                 path: "settings",

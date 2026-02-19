@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocalAuth } from "@/hooks/use-local-auth";
 import {
     LayoutDashboard,
     BookOpen,
@@ -23,6 +24,16 @@ export default function AdminLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const location = useLocation();
     const scrollContainerRef = useRef<HTMLElement>(null);
+    const { user } = useLocalAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user && user.role !== 'admin') {
+            navigate('/dashboard');
+        } else if (!user && !localStorage.getItem('token')) {
+            navigate('/login');
+        }
+    }, [user, navigate]);
 
     useEffect(() => {
         if (!scrollContainerRef.current) return;
@@ -56,6 +67,7 @@ export default function AdminLayout() {
         { icon: Users, label: 'Students', path: '/admin/students' },
         { icon: BookOpen, label: 'Syllabus', path: '/admin/syllabus' },
         { icon: BookOpen, label: 'Resources', path: '/admin/resources' },
+        { icon: Users, label: 'Faculty', path: '/admin/faculty' },
         { icon: ClipboardCheck, label: 'Approvals', path: '/admin/approvals' },
         { icon: Settings, label: 'Settings', path: '/admin/settings' },
     ];
