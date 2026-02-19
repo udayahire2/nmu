@@ -46,7 +46,14 @@ export default function VerifyOtpPage() {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
                 // Reload or redirect to trigger auth state update
-                window.location.href = '/';
+                // Redirect based on role
+                if (data.user.role === 'admin') {
+                    window.location.href = '/admin/dashboard';
+                } else if (data.user.role === 'faculty') {
+                    window.location.href = '/dashboard/faculty';
+                } else {
+                    window.location.href = '/';
+                }
             } else {
                 alert(data.message || 'Verification failed');
             }

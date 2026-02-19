@@ -40,9 +40,16 @@ const Login = () => {
 
       if (data.success) {
         localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        // Force reload to update navbar or use context later
-        window.location.href = '/';
+        localStorage.setItem('user', JSON.stringify(data.user)); // Includes role
+
+        // Redirect based on role
+        if (data.user.role === 'admin') {
+          window.location.href = '/admin/dashboard';
+        } else if (data.user.role === 'faculty') {
+          window.location.href = '/dashboard/faculty';
+        } else {
+          window.location.href = '/';
+        }
       } else {
         alert(data.message || 'Login failed');
       }
@@ -57,7 +64,7 @@ const Login = () => {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Student Login</CardTitle>
+        <CardTitle>Login</CardTitle>
         <CardDescription>
           Enter your email below to login to your account
         </CardDescription>

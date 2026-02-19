@@ -46,7 +46,7 @@ export function UserMenu() {
                         </Avatar>
                         <div className="hidden md:block text-left">
                             <p className="text-sm font-medium leading-none">{user.name}</p>
-                            <p className="text-xs text-muted-foreground leading-none">Student</p>
+                            <p className="text-xs text-muted-foreground leading-none capitalize">{user.role}</p>
                         </div>
                         <ChevronDown className="hidden md:block h-4 w-4 text-muted-foreground" />
                     </div>
@@ -62,7 +62,7 @@ export function UserMenu() {
                         <div className="flex flex-col">
                             <p className="text-sm font-medium leading-none">{user.name}</p>
                             <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
-                            <p className="text-xs text-primary mt-1">Premium Student</p>
+                            <p className="text-xs text-primary mt-1 capitalize">{user.role}</p>
                         </div>
                     </div>
                 </DropdownMenuLabel>

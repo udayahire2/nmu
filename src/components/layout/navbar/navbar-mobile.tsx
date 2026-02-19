@@ -51,7 +51,11 @@ export function NavbarMobile() {
                         {/* Mobile Navigation Links */}
                         <nav className="flex flex-col gap-1.5">
                             <div className="text-xs font-semibold text-muted-foreground/70 tracking-wider uppercase px-2 mb-1">Navigation</div>
-                            {NAV_LINKS.map((link) => (
+                            {[
+                                ...NAV_LINKS,
+                                ...(user?.role === 'faculty' ? [{ path: '/dashboard/faculty', label: 'Dashboard' }] : []),
+                                ...(user?.role === 'admin' ? [{ path: '/admin/dashboard', label: 'Admin' }] : [])
+                            ].map((link) => (
                                 <Link
                                     key={link.path}
                                     to={link.path}
