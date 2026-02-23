@@ -23,10 +23,10 @@ export function NavbarLinks() {
                     key={link.path}
                     to={link.path}
                     className={cn(
-                        "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                        "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-150",
                         isActive(link.path)
-                            ? "text-primary bg-primary/10"
-                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                            ? "text-foreground bg-secondary"
+                            : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                     )}
                 >
                     {link.label}

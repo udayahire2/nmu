@@ -30,7 +30,7 @@ export function NavbarSearch() {
                 <input
                     type="search"
                     placeholder="Search materials, courses, topics..."
-                    className="w-full pl-10 pr-4 py-2 text-sm bg-secondary/30 border border-border/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
+                    className="w-full pl-10 pr-4 py-2 text-sm bg-secondary border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-border transition-colors"
                     onFocus={() => setSearchOpen(true)}
                 />
                 <kbd className="absolute right-3 top-1/2 transform -translate-y-1/2 hidden lg:flex items-center gap-1 border border-border rounded-md px-1.5 py-0.5 text-xs font-mono text-muted-foreground">
@@ -45,7 +45,7 @@ export function NavbarSearch() {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="absolute top-full left-0 right-0 mt-2 bg-popover border border-border rounded-xl shadow-2xl p-2 z-50"
+                        className="absolute top-full left-0 right-0 mt-2 bg-popover border border-border rounded-xl shadow-lg p-2 z-50"
                     >
                         <div className="text-xs text-muted-foreground px-3 py-2">
                             Quick actions
@@ -54,7 +54,7 @@ export function NavbarSearch() {
                             {MOCK_QUICK_ACTIONS.map((action, index) => (
                                 <button
                                     key={index}
-                                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-secondary/50 text-sm transition-colors"
+                                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-secondary text-sm transition-colors"
                                 >
                                     {action}
                                 </button>

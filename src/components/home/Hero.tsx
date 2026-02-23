@@ -1,7 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { ArrowDown } from "lucide-react";
 
 interface HeroProps {
     selectedSemester?: number | null;
@@ -12,73 +13,61 @@ const Hero = ({ selectedSemester }: HeroProps) => {
         const targetId = selectedSemester ? '#subject-list' : '#semester-selection';
         const section = document.querySelector(targetId);
         if (section) {
-            const offset = 80; // Offset for sticky header
+            const offset = 80;
             const elementPosition = section.getBoundingClientRect().top;
             const offsetPosition = elementPosition + window.pageYOffset - offset;
 
             window.scrollTo({
                 top: offsetPosition,
-                behavior: 'smooth'
+                behavior: 'smooth',
             });
         }
     };
 
     return (
-        <section className="relative flex flex-col items-center justify-center pt-20 pb-16 px-4 md:px-6 bg-background">
-            <div className="w-full max-w-4xl flex flex-col items-center gap-6 z-10 text-center">
+        <section className="relative flex flex-col items-center justify-center pt-24 pb-20 px-4 sm:px-6 bg-background">
+            <div className="w-full max-w-3xl flex flex-col items-center gap-5 z-10 text-center">
                 {/* Badge */}
-                <motion.div
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="inline-flex items-center gap-2 px-2 py-0.5 rounded-full border border-border bg-muted/30"
-                >
-                    <span className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase px-1">
-                        SASS • Study Material
-                    </span>
-                </motion.div>
+                <div>
+                    <Badge
+                        variant="outline"
+                        className="px-3 py-1 text-[11px] font-semibold tracking-widest uppercase text-muted-foreground bg-secondary border-border rounded-full"
+                    >
+                        SASS · Study Material
+                    </Badge>
+                </div>
 
                 {/* Main Heading */}
-                <motion.div
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.1 }}
-                    className="space-y-4"
-                >
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-foreground leading-[1.1]">
+                <div className="space-y-2 mt-1">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground leading-[1.15]">
                         Study NMU Syllabus
-                        <br className="hidden sm:block" />
-                        <span className="text-muted-foreground/60">Effectively & Minimalist</span>
                     </h1>
-                </motion.div>
+                    <p className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-muted-foreground leading-[1.15]">
+                        Effectively &amp; Minimalist
+                    </p>
+                </div>
 
                 {/* Subtitle */}
-                <motion.div
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.2 }}
-                    className="max-w-2xl"
-                >
-                    <p className="text-base md:text-lg text-muted-foreground/80 leading-relaxed font-medium">
-                        Focused notes, hand-picked videos, and organized exam papers <br className="hidden md:block" /> designed for modern learning.
+                <div className="max-w-xl mt-1">
+                    <p className="text-[15px] md:text-base text-muted-foreground leading-relaxed">
+                        Focused notes, hand-picked videos, and organized exam
+                        papers — designed for modern learning.
                     </p>
-                </motion.div>
+                </div>
 
-                {/* CTA Button */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3, delay: 0.3 }}
-                    className="w-full max-w-[280px] pt-4"
-                >
+                {/* CTA */}
+                <div className="flex flex-col sm:flex-row items-center gap-3 pt-3 w-full sm:w-auto">
                     <Button
                         size="lg"
-                        className="w-full h-11 rounded-md text-sm font-bold uppercase tracking-wider transition-all duration-200"
+                        className="w-full sm:w-auto min-w-[200px] h-11 rounded-lg text-sm font-bold uppercase tracking-wider transition-colors duration-200"
                         onClick={scrollToTarget}
                     >
-                        {selectedSemester ? `Continue Sem ${selectedSemester}` : "Start Studying"}
+                        {selectedSemester
+                            ? `Continue Sem ${selectedSemester}`
+                            : "Start Studying"}
+                        <ArrowDown className="ml-1.5 size-3.5 opacity-70" />
                     </Button>
-                </motion.div>
+                </div>
             </div>
         </section>
     );

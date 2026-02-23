@@ -25,7 +25,7 @@ export function UserMenu() {
                     </Button>
                 </Link>
                 <Link to="/signup">
-                    <Button size="sm" className="h-9 px-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
+                    <Button size="sm" className="h-9 px-4">
                         Get Started
                     </Button>
                 </Link>
@@ -38,9 +38,9 @@ export function UserMenu() {
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-10 px-2 rounded-full hover:bg-secondary transition-all">
                     <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8 ring-2 ring-primary/20">
+                        <Avatar className="h-8 w-8 ring-2 ring-border">
                             <AvatarImage src={user.avatar} alt={user.name} />
-                            <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/40 text-primary">
+                            <AvatarFallback className="bg-muted text-foreground text-xs font-medium">
                                 {getInitials(user.name)}
                             </AvatarFallback>
                         </Avatar>
@@ -52,7 +52,7 @@ export function UserMenu() {
                     </div>
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 border-border/60 bg-popover/95 backdrop-blur-xl">
+            <DropdownMenuContent align="end" className="w-56 border-border bg-popover">
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex items-center gap-3">
                         <Avatar className="h-10 w-10">
@@ -76,7 +76,7 @@ export function UserMenu() {
                     <span>Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout} className="text-red-500 focus:text-red-500">
+                <DropdownMenuItem onClick={logout} className="text-destructive focus:text-destructive">
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                 </DropdownMenuItem>

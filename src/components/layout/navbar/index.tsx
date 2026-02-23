@@ -14,21 +14,16 @@ export function Navbar() {
 
     return (
         <header className={cn(
-            "sticky top-0 z-50 w-full transition-all duration-300",
+            "sticky top-0 z-50 w-full transition-all duration-200",
             scrolled
-                ? "bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-lg"
-                : "bg-background/80 backdrop-blur-md border-b border-border/30"
+                ? "bg-background/95 backdrop-blur-xl border-b border-border shadow-sm"
+                : "bg-background/80 backdrop-blur-md border-b border-transparent"
         )}>
             <div className="w-full max-w-screen-2xl mx-auto relative flex h-16 items-center px-4 sm:px-6 lg:px-8">
                 {/* Logo & Navigation */}
                 <div className="flex items-center gap-8">
-                    <Link to="/">
-                        <div className="flex items-center gap-2">
-                            <div className="relative">
-                                <Logo />
-                                <div className="absolute -inset-1 bg-primary/10 rounded-full blur-md opacity-0" />
-                            </div>
-                        </div>
+                    <Link to="/" className="flex items-center">
+                        <Logo />
                     </Link>
 
                     <NavbarLinks />

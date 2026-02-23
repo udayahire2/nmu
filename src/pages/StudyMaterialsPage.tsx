@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BranchSemesterSelection } from '@/components/study/BranchSemesterSelection';
 import { SubjectGrid } from '@/components/study/SubjectGrid';
@@ -6,7 +6,7 @@ import { SubjectDashboard } from '@/components/study/SubjectDashboard';
 import { TopicViewer } from '@/components/study/TopicViewer';
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Home } from "lucide-react";
-import { getSubjects, getSubject, type Subject } from '@/data/study-data';
+import { getSubjects, getSubject } from '@/data/study-data';
 
 export default function StudyMaterialsPage() {
     const { branch, semester, subjectId, topicId } = useParams();

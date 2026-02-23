@@ -26,7 +26,7 @@ export function FeatureGrid({ compact = false }: FeatureGridProps) {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60"
+              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
             >
               <svg
                 className="h-3.5 w-3.5 opacity-50"
@@ -68,9 +68,9 @@ export function FeatureGrid({ compact = false }: FeatureGridProps) {
             key={index}
             className="group h-full"
           >
-            <Card className="h-full border-border/60 bg-card hover:bg-accent/20 hover:border-primary/30 transition-all duration-200 rounded-lg">
+            <Card className="h-full border-border bg-card hover:bg-accent/50 hover:border-border transition-all duration-200 rounded-lg">
               <CardHeader className="pb-4">
-                <div className="w-10 h-10 rounded-md bg-muted flex items-center justify-center mb-4 border border-border/40 group-hover:text-primary group-hover:border-primary/30 transition-colors">
+                <div className="w-10 h-10 rounded-md bg-muted flex items-center justify-center mb-4 border border-border group-hover:text-primary group-hover:border-primary/40 transition-colors">
                   <svg
                     className="h-5 w-5 opacity-70"
                     viewBox="0 0 24 24"
@@ -93,7 +93,7 @@ export function FeatureGrid({ compact = false }: FeatureGridProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-sm font-medium leading-relaxed text-muted-foreground/70">
+                <CardDescription className="text-sm font-medium leading-relaxed text-muted-foreground">
                   {feature.description}
                 </CardDescription>
               </CardContent>
