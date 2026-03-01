@@ -3,14 +3,24 @@ import { ArrowUpRight } from "lucide-react";
 
 const features = [
   {
-    title: "Course Notes",
-    description: "Comprehensive notes structured by syllabus for focused learning.",
+    title: "Verified Study Materials",
+    description: "Access high-quality lecture notes and video tutorials, carefully reviewed and approved by faculty members.",
     path: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z",
   },
   {
-    title: "Question Papers",
-    description: "Previous exam archives and practice materials for better preparation.",
+    title: "Branch-Specific Curriculum",
+    description: "Personalized syllabus tracking tailored exactly to your academic year and engineering branch.",
+    path: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5",
+  },
+  {
+    title: "Previous Year Archives",
+    description: "Comprehensive repository of organized exam papers and PYQs to supercharge your test preparation.",
     path: "M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z M14 2v6h6",
+  },
+  {
+    title: "Seamless Collaboration",
+    description: "A centralized, moderated ecosystem connecting students, faculty, and administrators for better learning.",
+    path: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75",
   },
 ];
 
@@ -50,15 +60,15 @@ export function FeatureGrid({ compact = false }: FeatureGridProps) {
       className="container mx-auto py-20 px-4 md:px-6"
       aria-labelledby="features-heading"
     >
-      <div className="text-center mb-16 space-y-3">
+      <div className="text-center mb-16 space-y-4">
         <h2
           id="features-heading"
-          className="text-xl font-bold uppercase tracking-[0.2em] text-foreground"
+          className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground"
         >
-          Learning Assets
+          Everything You Need to Succeed
         </h2>
-        <p className="text-sm font-medium text-muted-foreground max-w-lg mx-auto leading-relaxed">
-          Carefully organized study materials designed to help you master the NMU curriculum effectively.
+        <p className="text-base md:text-lg font-medium text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          Our platform provides a structured, moderated environment packed with the essential tools required to master your academic curriculum.
         </p>
       </div>
 
