@@ -1,4 +1,5 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Outlet, Navigate } from "react-router-dom";
+import { RootProvider } from "fumadocs-ui/provider/react-router";
 import Layout from "./components/layout/Layout";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -16,108 +17,131 @@ import FacultyManager from "./pages/admin/FacultyManager";
 import ContentApprovalPage from "./pages/admin/ContentApprovalPage";
 import SettingsPage from "./pages/admin/SettingsPage";
 import FacultyDashboard from "./pages/dashboard/FacultyDashboard";
+import DocsPageRoute from "./pages/DocsPageRoute";
 
 import ErrorPage from "./pages/ErrorPage";
 
+const GlobalLayout = () => {
+    return (
+        <RootProvider>
+            <Outlet />
+        </RootProvider>
+    );
+};
+
 export const router = createBrowserRouter([
     {
-        path: "/",
-        element: <Layout />,
-        errorElement: <ErrorPage />,
+        element: <GlobalLayout />,
         children: [
             {
                 path: "/",
-                element: <HomePage />,
-            },
-            {
-                path: "/resources",
+                element: <Layout />,
+                errorElement: <ErrorPage />,
                 children: [
                     {
-                        index: true,
-                        element: <StudyMaterialsPage />, // Acts as wrapper or redirect
+                        path: "/",
+                        element: <HomePage />,
                     },
                     {
-                        path: ":branch/:semester",
-                        element: <StudyMaterialsPage />, // We will handle state inside
+                        path: "/resources",
+                        children: [
+                            {
+                                index: true,
+                                element: <StudyMaterialsPage />, // Acts as wrapper or redirect
+                            },
+                            {
+                                path: ":branch/:semester",
+                                element: <StudyMaterialsPage />, // We will handle state inside
+                            },
+                            {
+                                path: ":branch/:semester/:subjectId",
+                                element: <StudyMaterialsPage />, // Shared layout, internal switching
+                            },
+                            {
+                                path: ":branch/:semester/:subjectId/topic/:topicId",
+                                element: <StudyMaterialsPage />,
+                            },
+                        ]
                     },
                     {
-                        path: ":branch/:semester/:subjectId",
-                        element: <StudyMaterialsPage />, // Shared layout, internal switching
+                        path: "/syllabus",
+                        element: <SyllabusPage />,
+                    },
+                ],
+            },
+            {
+                path: "/login",
+                element: <LoginPage />,
+                errorElement: <ErrorPage />,
+            },
+            {
+                path: "/signup",
+                element: <SignUpPage />,
+                errorElement: <ErrorPage />,
+            },
+            {
+                path: "/verify-otp",
+                element: <VerifyOtpPage />,
+                errorElement: <ErrorPage />,
+            },
+            {
+                path: "/profile",
+                element: <ProfilePage />,
+                errorElement: <ErrorPage />,
+            },
+            {
+                path: "/admin",
+                element: <AdminLayout />,
+                errorElement: <ErrorPage />,
+                children: [
+                    {
+                        path: "dashboard",
+                        element: <DashboardPage />,
                     },
                     {
-                        path: ":branch/:semester/:subjectId/topic/:topicId",
-                        element: <StudyMaterialsPage />,
+                        path: "syllabus",
+                        element: <SyllabusManagerPage />,
                     },
-                ]
+                    {
+                        path: "resources",
+                        element: <ResourceManagerPage />,
+                    },
+                    {
+                        path: "students",
+                        element: <StudentsPage />,
+                    },
+                    {
+                        path: "approvals",
+                        element: <ContentApprovalPage />,
+                    },
+                    {
+                        path: "faculty",
+                        element: <FacultyManager />,
+                    },
+                    {
+                        path: "settings",
+                        element: <SettingsPage />,
+                    },
+                    {
+                        path: "",
+                        element: <DashboardPage />, // Default redirect
+                    }
+                ],
             },
             {
-                path: "/syllabus",
-                element: <SyllabusPage />,
-            },
-        ],
-    },
-    {
-        path: "/login",
-        element: <LoginPage />,
-        errorElement: <ErrorPage />,
-    },
-    {
-        path: "/signup",
-        element: <SignUpPage />,
-        errorElement: <ErrorPage />,
-    },
-    {
-        path: "/verify-otp",
-        element: <VerifyOtpPage />,
-        errorElement: <ErrorPage />,
-    },
-    {
-        path: "/profile",
-        element: <ProfilePage />,
-        errorElement: <ErrorPage />,
-    },
-    {
-        path: "/admin",
-        element: <AdminLayout />,
-        errorElement: <ErrorPage />,
-        children: [
-            {
-                path: "dashboard",
-                element: <DashboardPage />,
+                path: "/dashboard/faculty",
+                element: <Layout><FacultyDashboard /></Layout>,
+                errorElement: <ErrorPage />,
             },
             {
-                path: "syllabus",
-                element: <SyllabusManagerPage />,
+                path: "/docs/*",
+                element: <DocsPageRoute />,
+                errorElement: <ErrorPage />,
             },
             {
-                path: "resources",
-                element: <ResourceManagerPage />,
+                path: "/docs-demo",
+                element: <Navigate to="/docs/fumadocs-setup" replace />,
             },
-            {
-                path: "students",
-                element: <StudentsPage />,
-            },
-            {
-                path: "approvals",
-                element: <ContentApprovalPage />,
-            },
-            {
-                path: "faculty",
-                element: <FacultyManager />,
-            },
-            {
-                path: "settings",
-                element: <SettingsPage />,
-            },
-            {
-                path: "",
-                element: <DashboardPage />, // Default redirect
-            }
-        ],
-    },
-    {
-        path: "/dashboard/faculty",
-        element: <Layout><FacultyDashboard /></Layout>,
-        errorElement: <ErrorPage />,
+        ]
     },
 ]);

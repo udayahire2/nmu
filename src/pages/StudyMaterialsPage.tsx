@@ -86,12 +86,31 @@ export default function StudyMaterialsPage() {
                 <Breadcrumbs />
 
                 {isRoot && (
-                    <BranchSemesterSelection
-                        selectedBranch={tempBranch}
-                        selectedSemester={null}
-                        onBranchSelect={handleBranchSelect}
-                        onSemesterSelect={handleSemesterSelect}
-                    />
+                    <div className="space-y-10">
+                        {/* Page hero */}
+                        <div className="space-y-3 pb-2 border-b border-border/60">
+                            <p className="text-xs uppercase tracking-[0.2em] font-bold text-muted-foreground">
+                                Study Resources
+                            </p>
+                            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">
+                                All Your{" "}
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">
+                                    Study Materials
+                                </span>
+                                , One Place
+                            </h1>
+                            <p className="text-base text-muted-foreground max-w-2xl leading-relaxed">
+                                Select your engineering branch and semester to instantly access faculty-approved notes, video tutorials, and previous year papers — all tailored to your curriculum.
+                            </p>
+                        </div>
+
+                        <BranchSemesterSelection
+                            selectedBranch={tempBranch}
+                            selectedSemester={null}
+                            onBranchSelect={handleBranchSelect}
+                            onSemesterSelect={handleSemesterSelect}
+                        />
+                    </div>
                 )}
 
                 {isSubjectList && (

@@ -27,7 +27,10 @@ export function HowItWorksSection() {
     return (
         <section className="container mx-auto py-24 px-4 md:px-6 relative overflow-hidden">
             {/* Background decoration */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none" aria-hidden="true" />
+            <div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none"
+                aria-hidden="true"
+            />
 
             <div className="text-center mb-16 space-y-4">
                 <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">
@@ -44,7 +47,7 @@ export function HowItWorksSection() {
 
                 {steps.map((step, index) => (
                     <div key={index} className="relative flex flex-col items-center text-center group">
-                        <div className="w-16 h-16 rounded-2xl bg-background border-2 border-border flex items-center justify-center mb-6 shrink-0 group-hover:border-primary group-hover:scale-110 transition-all duration-300 shadow-sm relative z-10">
+                        <div className="w-16 h-16 rounded-2xl bg-background border-2 border-border flex items-center justify-center mb-6 shrink-0 group-hover:border-primary transition-colors duration-300 shadow-sm relative z-10">
                             <step.icon className="w-7 h-7 text-muted-foreground group-hover:text-primary transition-colors" />
                             <div className="absolute -top-3 -right-3 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shadow-md">
                                 {index + 1}
