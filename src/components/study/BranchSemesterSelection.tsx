@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
     Monitor,
     Globe,
@@ -66,7 +66,7 @@ const BRANCH_META: Record<
     },
 };
 
-const containerVariants = {
+const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
@@ -74,18 +74,18 @@ const containerVariants = {
     },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
     hidden: { opacity: 0, y: 18, scale: 0.97 },
     visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.3, ease: "easeOut" } },
 };
 
-const semPanelVariants = {
+const semPanelVariants: Variants = {
     hidden: { opacity: 0, y: 16 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut", staggerChildren: 0.04 } },
     exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
 };
 
-const semItemVariants = {
+const semItemVariants: Variants = {
     hidden: { opacity: 0, scale: 0.88 },
     visible: { opacity: 1, scale: 1, transition: { duration: 0.25, ease: "easeOut" } },
 };
