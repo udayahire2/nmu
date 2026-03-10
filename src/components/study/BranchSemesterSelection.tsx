@@ -133,13 +133,12 @@ export function BranchSemesterSelection({
                             variants={cardVariants}
                             onClick={() => onBranchSelect(branch)}
                             aria-pressed={isActive}
-                            whileHover={{ scale: 1.02, y: -2 }}
-                            whileTap={{ scale: 0.98 }}
+
                             className={cn(
-                                "group relative flex items-start gap-4 p-5 rounded-2xl border-2 text-left transition-shadow duration-300 w-full",
+                                "group relative flex items-center gap-4 p-5 rounded-2xl border-2 text-left transition-shadow duration-300 w-full",
                                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                                 isActive
-                                    ? "border-primary bg-gradient-to-br " + meta.gradient + " shadow-lg shadow-primary/10"
+                                    ? "border-primary bg-muted/50 shadow-sm"
                                     : "border-border/60 bg-card hover:border-border hover:shadow-md"
                             )}
                         >
@@ -231,8 +230,7 @@ export function BranchSemesterSelection({
                                         variants={semItemVariants}
                                         onClick={() => onSemesterSelect(sem.toString())}
                                         aria-pressed={isActive}
-                                        whileHover={{ scale: 1.08, y: -2 }}
-                                        whileTap={{ scale: 0.96 }}
+
                                         className={cn(
                                             "group relative flex flex-col items-center justify-center aspect-square rounded-2xl border-2 transition-all duration-200 overflow-hidden",
                                             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
@@ -241,10 +239,7 @@ export function BranchSemesterSelection({
                                                 : "border-border/60 bg-card hover:border-primary/50 hover:bg-accent/40 hover:shadow-md"
                                         )}
                                     >
-                                        {/* Background shimmer on active */}
-                                        {isActive && (
-                                            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
-                                        )}
+
                                         <span
                                             className={cn(
                                                 "text-[9px] uppercase font-bold tracking-widest",

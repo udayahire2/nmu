@@ -40,7 +40,7 @@ export default function StudyMaterialsPage() {
 
     // Breadcrumbs Helper
     const Breadcrumbs = () => (
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6 overflow-x-auto whitespace-nowrap pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <nav className="flex items-center justify-center gap-2 text-sm text-muted-foreground mb-8 overflow-x-auto whitespace-nowrap pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => navigate('/resources')}>
                 <Home className="h-3.5 w-3.5" />
             </Button>
@@ -88,18 +88,18 @@ export default function StudyMaterialsPage() {
                 {isRoot && (
                     <div className="space-y-10">
                         {/* Page hero */}
-                        <div className="space-y-3 pb-2 border-b border-border/60">
+                        <div className="space-y-4 pb-10 border-b border-border/60 text-center flex flex-col items-center">
                             <p className="text-xs uppercase tracking-[0.2em] font-bold text-muted-foreground">
                                 Study Resources
                             </p>
-                            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground max-w-4xl">
                                 All Your{" "}
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-500 to-indigo-600">
                                     Study Materials
                                 </span>
                                 , One Place
                             </h1>
-                            <p className="text-base text-muted-foreground max-w-2xl leading-relaxed">
+                            <p className="text-base md:text-lg text-muted-foreground max-w-2xl leading-relaxed mx-auto">
                                 Select your engineering branch and semester to instantly access faculty-approved notes, video tutorials, and previous year papers — all tailored to your curriculum.
                             </p>
                         </div>
