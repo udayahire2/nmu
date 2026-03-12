@@ -18,14 +18,14 @@ export function UserMenu() {
 
     if (!user) {
         return (
-            <div className="hidden lg:flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-4 ml-2">
                 <Link to="/login">
-                    <Button variant="ghost" size="sm" className="h-9 px-4">
+                    <span className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors">
                         Sign In
-                    </Button>
+                    </span>
                 </Link>
                 <Link to="/signup">
-                    <Button size="sm" className="h-9 px-4">
+                    <Button size="sm" className="h-[34px] px-4 rounded-md text-[13px] font-semibold bg-foreground text-background hover:bg-foreground/90 shadow-none border-0">
                         Get Started
                     </Button>
                 </Link>

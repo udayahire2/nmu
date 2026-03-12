@@ -17,16 +17,16 @@ export function NavbarLinks() {
     }
 
     return (
-        <nav className="hidden lg:flex items-center gap-1">
+        <nav className="hidden lg:flex items-center gap-2 ml-4">
             {links.map((link) => (
                 <Link
                     key={link.path}
                     to={link.path}
                     className={cn(
-                        "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-150",
+                        "flex items-center gap-2 px-4 py-2 rounded-md text-[13px] font-semibold transition-all duration-200",
                         isActive(link.path)
-                            ? "text-foreground bg-secondary"
-                            : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                            ? "text-foreground bg-muted/60"
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
                     )}
                 >
                     {link.label}

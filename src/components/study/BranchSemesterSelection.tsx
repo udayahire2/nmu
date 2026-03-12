@@ -5,9 +5,7 @@ import {
     Cog,
     Building2,
     Zap,
-    CheckCircle2,
-    ChevronRight,
-    Layers,
+    Check,
 } from "lucide-react";
 import { BRANCHES, SEMESTERS } from "@/data/study-data";
 import { cn } from "@/lib/utils";
@@ -25,69 +23,46 @@ const BRANCH_META: Record<
         icon: React.ElementType;
         label: string;
         desc: string;
-        gradient: string;
-        accent: string;
     }
 > = {
     Computer: {
         icon: Monitor,
         label: "Computer Engg.",
         desc: "Software, DSA, OS & Networking",
-        gradient: "from-blue-500/10 to-violet-500/10",
-        accent: "text-blue-500",
     },
     IT: {
         icon: Globe,
         label: "Information Tech.",
         desc: "Web, Databases & Cloud Systems",
-        gradient: "from-cyan-500/10 to-teal-500/10",
-        accent: "text-cyan-500",
     },
     Mechanical: {
         icon: Cog,
         label: "Mechanical Engg.",
         desc: "Thermodynamics, CAD & Mechanics",
-        gradient: "from-orange-500/10 to-amber-500/10",
-        accent: "text-orange-500",
     },
     Civil: {
         icon: Building2,
         label: "Civil Engg.",
         desc: "Structures, Surveying & Materials",
-        gradient: "from-emerald-500/10 to-green-500/10",
-        accent: "text-emerald-500",
     },
     Electrical: {
         icon: Zap,
         label: "Electrical Engg.",
         desc: "Circuits, Machines & Power Systems",
-        gradient: "from-yellow-500/10 to-rose-500/10",
-        accent: "text-yellow-500",
     },
 };
 
-const containerVariants: Variants = {
+const staggerContainer: Variants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        transition: { staggerChildren: 0.07, delayChildren: 0.05 },
+        transition: { staggerChildren: 0.05 },
     },
 };
 
-const cardVariants: Variants = {
-    hidden: { opacity: 0, y: 18, scale: 0.97 },
-    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.3, ease: "easeOut" } },
-};
-
-const semPanelVariants: Variants = {
-    hidden: { opacity: 0, y: 16 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut", staggerChildren: 0.04 } },
-    exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
-};
-
-const semItemVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.88 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.25, ease: "easeOut" } },
+const fadeUpVariants: Variants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
 };
 
 export function BranchSemesterSelection({
@@ -99,170 +74,135 @@ export function BranchSemesterSelection({
     const selectedMeta = selectedBranch ? BRANCH_META[selectedBranch] : null;
 
     return (
-        <div className="space-y-14 max-w-5xl mx-auto py-6">
-            {/* ── Step header ─────────────────────────────────────── */}
-            <div className="flex items-center gap-3 mb-2">
-                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold shrink-0">
-                    1
-                </div>
-                <div>
-                    <p className="text-xs uppercase tracking-widest font-semibold text-muted-foreground">
-                        Step 1 of 2
-                    </p>
-                    <h2 className="text-xl font-bold tracking-tight text-foreground leading-tight">
-                        Choose Your Branch
-                    </h2>
-                </div>
-            </div>
-
-            {/* ── Branch Cards ─────────────────────────────────────── */}
+        <div className="w-full max-w-4xl mx-auto py-8 lg:py-12 space-y-12">
+            {/* ── Branch Selection ─────────────────────────────────────── */}
             <motion.div
-                variants={containerVariants}
+                variants={staggerContainer}
                 initial="hidden"
                 animate="visible"
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+                className="space-y-4"
             >
-                {BRANCHES.map((branch) => {
-                    const meta = BRANCH_META[branch];
-                    const Icon = meta.icon;
-                    const isActive = selectedBranch === branch;
+                <div className="flex flex-col gap-1.5 px-0.5">
+                    <h2 className="text-lg font-semibold tracking-tight text-foreground">
+                        Select your branch
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                        Choose your engineering discipline to access relevant study materials.
+                    </p>
+                </div>
 
-                    return (
-                        <motion.button
-                            key={branch}
-                            variants={cardVariants}
-                            onClick={() => onBranchSelect(branch)}
-                            aria-pressed={isActive}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {BRANCHES.map((branch) => {
+                        const meta = BRANCH_META[branch];
+                        if (!meta) return null;
 
-                            className={cn(
-                                "group relative flex items-center gap-4 p-5 rounded-2xl border-2 text-left transition-shadow duration-300 w-full",
-                                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                                isActive
-                                    ? "border-primary bg-muted/50 shadow-sm"
-                                    : "border-border/60 bg-card hover:border-border hover:shadow-md"
-                            )}
-                        >
-                            {/* Icon bubble */}
-                            <div
+                        const Icon = meta.icon;
+                        const isActive = selectedBranch === branch;
+
+                        return (
+                            <motion.button
+                                key={branch}
+                                variants={fadeUpVariants}
+                                onClick={() => onBranchSelect(branch)}
+                                aria-pressed={isActive}
                                 className={cn(
-                                    "shrink-0 flex items-center justify-center w-11 h-11 rounded-xl border transition-colors duration-200",
+                                    "group relative flex items-start gap-4 p-4 rounded-xl border text-left transition-all duration-200 outline-none w-full",
+                                    "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
                                     isActive
-                                        ? "bg-primary/10 border-primary/30 " + meta.accent
-                                        : "bg-muted border-border/60 text-muted-foreground group-hover:border-border group-hover:text-foreground"
+                                        ? "border-primary/50 bg-primary/[0.03] ring-1 ring-primary/20 shadow-sm"
+                                        : "border-border/60 bg-transparent hover:bg-accent/40 hover:border-border"
                                 )}
                             >
-                                <Icon className="w-5 h-5" />
-                            </div>
+                                <div
+                                    className={cn(
+                                        "shrink-0 flex items-center justify-center w-10 h-10 rounded-[10px] border transition-colors duration-200 mt-0.5",
+                                        isActive
+                                            ? "bg-background border-primary/20 text-primary"
+                                            : "bg-background border-border/50 text-muted-foreground group-hover:text-foreground group-hover:border-border"
+                                    )}
+                                >
+                                    <Icon className="w-[18px] h-[18px]" strokeWidth={2} />
+                                </div>
 
-                            {/* Text */}
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-bold text-foreground truncate">{meta.label}</p>
-                                <p className="text-xs text-muted-foreground leading-snug mt-0.5 line-clamp-2">
-                                    {meta.desc}
-                                </p>
-                            </div>
-
-                            {/* Check badge */}
-                            <AnimatePresence>
-                                {isActive && (
-                                    <motion.div
-                                        initial={{ scale: 0, opacity: 0 }}
-                                        animate={{ scale: 1, opacity: 1 }}
-                                        exit={{ scale: 0, opacity: 0 }}
-                                        transition={{ duration: 0.2, type: "spring", stiffness: 300 }}
-                                        className="absolute top-3 right-3"
-                                    >
-                                        <CheckCircle2 className="w-5 h-5 text-primary" />
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </motion.button>
-                    );
-                })}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center justify-between gap-2">
+                                            <p className={cn("text-[15px] font-medium truncate transition-colors", isActive ? "text-primary" : "text-foreground")}>
+                                                {meta.label}
+                                            </p>
+                                            {isActive && (
+                                                <motion.div
+                                                    initial={{ scale: 0.5, opacity: 0 }}
+                                                    animate={{ scale: 1, opacity: 1 }}
+                                                    className="shrink-0"
+                                                >
+                                                    <Check className="w-[18px] h-[18px] text-primary" />
+                                                </motion.div>
+                                            )}
+                                        </div>
+                                        <p className="text-[13px] text-muted-foreground leading-snug mt-1 line-clamp-2">
+                                            {meta.desc}
+                                        </p>
+                                    </div>
+                                </motion.button>
+                            );
+                        })}
+                    </div>
             </motion.div>
 
             {/* ── Semester Selection ───────────────────────────────── */}
-            <AnimatePresence>
+            <AnimatePresence mode="popLayout">
                 {selectedBranch && selectedMeta && (
                     <motion.div
                         key="semester-section"
-                        variants={semPanelVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        className="space-y-8"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto", transition: { duration: 0.3, ease: "easeOut" } }}
+                        exit={{ opacity: 0, height: 0, transition: { duration: 0.2, ease: "easeIn" } }}
+                        className="overflow-hidden"
                     >
-                        {/* Divider with connector */}
-                        <div className="flex items-center gap-3">
-                            <div className="h-px flex-1 bg-border" />
-                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted border border-border text-xs font-semibold text-muted-foreground">
-                                <ChevronRight className="w-3 h-3" />
-                                {selectedMeta.label}
-                            </div>
-                            <div className="h-px flex-1 bg-border" />
-                        </div>
+                        <div className="pt-2 space-y-5">
+                            <div className="h-px w-full bg-border/40" />
 
-                        {/* Step header */}
-                        <div className="flex items-center gap-3">
-                            <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs font-bold shrink-0">
-                                2
-                            </div>
-                            <div>
-                                <p className="text-xs uppercase tracking-widest font-semibold text-muted-foreground">
-                                    Step 2 of 2
-                                </p>
-                                <h2 className="text-xl font-bold tracking-tight text-foreground leading-tight">
-                                    Pick Your Semester
+                            <div className="flex flex-col gap-1.5 px-0.5">
+                                <h2 className="text-lg font-semibold tracking-tight text-foreground">
+                                    Select semester
                                 </h2>
+                                <p className="text-sm text-muted-foreground">
+                                    What semester are you currently studying in?
+                                </p>
                             </div>
-                        </div>
 
-                        {/* Semester grid */}
-                        <motion.div
-                            variants={semPanelVariants}
-                            className="grid grid-cols-4 sm:grid-cols-8 gap-3"
-                        >
-                            {SEMESTERS.map((sem) => {
-                                const isActive = selectedSemester === sem.toString();
-                                return (
-                                    <motion.button
-                                        key={sem}
-                                        variants={semItemVariants}
-                                        onClick={() => onSemesterSelect(sem.toString())}
-                                        aria-pressed={isActive}
-
-                                        className={cn(
-                                            "group relative flex flex-col items-center justify-center aspect-square rounded-2xl border-2 transition-all duration-200 overflow-hidden",
-                                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                                            isActive
-                                                ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20"
-                                                : "border-border/60 bg-card hover:border-primary/50 hover:bg-accent/40 hover:shadow-md"
-                                        )}
-                                    >
-
-                                        <span
+                            <motion.div
+                                variants={staggerContainer}
+                                initial="hidden"
+                                animate="visible"
+                                className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 gap-2"
+                            >
+                                {SEMESTERS.map((sem) => {
+                                    const isActive = selectedSemester === sem.toString();
+                                    return (
+                                        <motion.button
+                                            variants={fadeUpVariants}
+                                            key={sem}
+                                            onClick={() => onSemesterSelect(sem.toString())}
+                                            aria-pressed={isActive}
                                             className={cn(
-                                                "text-[9px] uppercase font-bold tracking-widest",
-                                                isActive ? "text-primary-foreground/60" : "text-muted-foreground/60"
+                                                "relative flex flex-col items-center justify-center p-3 h-14 rounded-xl border transition-all duration-200 outline-none",
+                                                "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+                                                isActive
+                                                    ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                                                    : "border-border/60 bg-transparent hover:bg-accent/60 hover:border-border text-foreground"
                                             )}
                                         >
-                                            Sem
-                                        </span>
-                                        <span className="text-xl font-extrabold leading-tight">{sem}</span>
-                                        {isActive && (
-                                            <div className="absolute bottom-1.5">
-                                                <div className="w-4 h-0.5 rounded-full bg-primary-foreground/40" />
-                                            </div>
-                                        )}
-                                    </motion.button>
-                                );
-                            })}
-                        </motion.div>
-
-                        {/* Helper tip */}
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground px-1">
-                            <Layers className="w-3.5 h-3.5 shrink-0" />
-                            <span>Selecting a semester will instantly load subjects for <span className="font-semibold text-foreground">{selectedMeta.label}</span>.</span>
+                                            <span className={cn("text-[10px] uppercase tracking-wider font-semibold", isActive ? "text-primary-foreground/90" : "text-muted-foreground")}>
+                                                Sem
+                                            </span>
+                                            <span className="text-[15px] font-bold mt-0.5">
+                                                {sem}
+                                            </span>
+                                        </motion.button>
+                                    );
+                                })}
+                            </motion.div>
                         </div>
                     </motion.div>
                 )}

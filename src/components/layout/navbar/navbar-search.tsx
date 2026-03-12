@@ -26,14 +26,14 @@ export function NavbarSearch() {
     return (
         <div className="hidden md:flex mx-4 flex-1 max-w-md relative" ref={searchRef}>
             <div className="relative w-full">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/60" strokeWidth={2.5} />
                 <input
                     type="search"
                     placeholder="Search materials, courses, topics..."
-                    className="w-full pl-10 pr-4 py-2 text-sm bg-secondary border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-border transition-colors"
+                    className="w-full pl-9 pr-12 py-2 text-[13px] font-medium placeholder:text-muted-foreground/50 bg-muted/40 border border-transparent rounded-md focus:outline-none focus:ring-1 focus:ring-ring/30 focus:bg-muted/60 transition-all"
                     onFocus={() => setSearchOpen(true)}
                 />
-                <kbd className="absolute right-3 top-1/2 transform -translate-y-1/2 hidden lg:flex items-center gap-1 border border-border rounded-md px-1.5 py-0.5 text-xs font-mono text-muted-foreground">
+                <kbd className="absolute right-2 top-1/2 transform -translate-y-1/2 hidden lg:flex items-center gap-1.5 px-2 py-0.5 text-[10px] uppercase font-bold text-muted-foreground/50 bg-background/50 rounded-md">
                     ⌘K
                 </kbd>
             </div>
