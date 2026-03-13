@@ -1,4 +1,3 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowUpRight } from "lucide-react";
 
 const features = [
@@ -32,7 +31,7 @@ export function FeatureGrid({ compact = false }: FeatureGridProps) {
   if (compact) {
     return (
       <section className="container mx-auto py-2 px-4">
-        <div className="flex gap-6 justify-center">
+        <div className="flex flex-wrap gap-4 md:gap-6 justify-center">
           {features.map((feature, index) => (
             <div
               key={index}
@@ -57,57 +56,54 @@ export function FeatureGrid({ compact = false }: FeatureGridProps) {
 
   return (
     <section
-      className="container mx-auto py-20 px-4 md:px-6"
+      className="container mx-auto py-24 px-4 sm:px-6 lg:px-8"
       aria-labelledby="features-heading"
     >
-      <div className="text-center mb-16 space-y-4">
+      <div className="text-center mb-20 space-y-5">
         <h2
           id="features-heading"
-          className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground"
+          className="text-3xl md:text-5xl font-[900] tracking-tight text-foreground text-balance"
         >
           Everything You Need to Succeed
         </h2>
-        <p className="text-base md:text-lg font-medium text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+        <p className="text-[15px] md:text-[17px] font-medium text-muted-foreground/80 max-w-2xl mx-auto leading-relaxed text-balance">
           Our platform provides a structured, moderated environment packed with the essential tools required to master your academic curriculum.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 max-w-5xl mx-auto">
         {features.map((feature, index) => (
           <div
             key={index}
-            className="group h-full"
+            className="group flex flex-col text-left space-y-4 rounded-xl p-6 -m-6 hover:bg-muted/30 transition-colors duration-300"
           >
-            <Card className="h-full border-border bg-card hover:bg-accent/50 hover:border-border transition-all duration-200 rounded-lg">
-              <CardHeader className="pb-4">
-                <div className="w-10 h-10 rounded-md bg-muted flex items-center justify-center mb-4 border border-border group-hover:text-primary group-hover:border-primary/40 transition-colors">
-                  <svg
-                    className="h-5 w-5 opacity-70"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d={feature.path} />
-                  </svg>
-                </div>
-                <CardTitle className="flex items-center justify-between text-lg font-bold tracking-tight">
-                  {feature.title}
-                  <ArrowUpRight
-                    className="h-4 w-4 opacity-0 group-hover:opacity-60 transition-opacity text-foreground"
-                    aria-hidden="true"
-                  />
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-sm font-medium leading-relaxed text-muted-foreground">
-                  {feature.description}
-                </CardDescription>
-              </CardContent>
-            </Card>
+            <div className="w-12 h-12 rounded-lg bg-foreground/5 flex items-center justify-center text-foreground group-hover:bg-foreground group-hover:text-background transition-colors duration-300">
+              <svg
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d={feature.path} />
+              </svg>
+            </div>
+            
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold tracking-tight text-foreground flex items-center justify-between">
+                {feature.title}
+                <ArrowUpRight
+                  className="h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-muted-foreground"
+                  aria-hidden="true"
+                />
+              </h3>
+              <p className="text-[14px] font-medium leading-relaxed text-muted-foreground/80">
+                {feature.description}
+              </p>
+            </div>
           </div>
         ))}
       </div>

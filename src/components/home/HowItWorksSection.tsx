@@ -25,37 +25,32 @@ const steps = [
 
 export function HowItWorksSection() {
     return (
-        <section className="container mx-auto py-24 px-4 md:px-6 relative overflow-hidden">
-            {/* Background decoration */}
-            <div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none"
-                aria-hidden="true"
-            />
-
-            <div className="text-center mb-16 space-y-4">
-                <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">
-                    How It Works
+        <section className="container mx-auto py-32 px-4 sm:px-6 lg:px-8 border-t border-border/50">
+            <div className="text-center mb-20 space-y-5">
+                <h2 className="text-3xl md:text-5xl font-[900] tracking-tight text-foreground text-balance">
+                    Start Learning in Minutes
                 </h2>
-                <p className="text-base md:text-lg font-medium text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                    Get started in minutes and unlock a world of structured educational resources tailored to your syllabus.
+                <p className="text-[15px] md:text-[17px] font-medium text-muted-foreground/80 max-w-2xl mx-auto leading-relaxed text-balance">
+                    Get started instantly and unlock a world of structured educational resources tailored to your syllabus.
                 </p>
             </div>
 
-            <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-12 relative">
                 {/* Connecting Line for Desktop */}
-                <div className="hidden md:block absolute top-[45px] left-[10%] right-[10%] h-[2px] bg-border -z-10" />
+                <div className="hidden md:block absolute top-[28px] left-[12%] right-[12%] h-[1px] bg-border -z-10" />
 
                 {steps.map((step, index) => (
-                    <div key={index} className="relative flex flex-col items-center text-center group">
-                        <div className="w-16 h-16 rounded-2xl bg-background border-2 border-border flex items-center justify-center mb-6 shrink-0 group-hover:border-primary transition-colors duration-300 shadow-sm relative z-10">
-                            <step.icon className="w-7 h-7 text-muted-foreground group-hover:text-primary transition-colors" />
-                            <div className="absolute -top-3 -right-3 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shadow-md">
-                                {index + 1}
-                            </div>
+                    <div key={index} className="relative flex flex-col items-center md:items-start text-center md:text-left group">
+                        <div className="w-14 h-14 rounded-full bg-background border shadow-sm flex items-center justify-center mb-6 shrink-0 z-10 transition-transform duration-300 group-hover:-translate-y-1">
+                            <span className="text-[15px] font-[900] text-foreground font-mono">
+                                0{index + 1}
+                            </span>
                         </div>
 
-                        <h3 className="text-lg font-bold text-foreground mb-3">{step.title}</h3>
-                        <p className="text-sm font-medium text-muted-foreground leading-relaxed">
+                        <h3 className="text-[17px] font-bold text-foreground mb-3 flex items-center gap-2">
+                            {step.title}
+                        </h3>
+                        <p className="text-[14px] font-medium text-muted-foreground/80 leading-relaxed pr-0 md:pr-4">
                             {step.description}
                         </p>
                     </div>
