@@ -20,37 +20,38 @@ export function NavbarMobile() {
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="lg:hidden h-9 w-9 rounded-full"
+                    className="group lg:hidden h-10 w-10 shrink-0 rounded-full hover:bg-secondary/80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 transition-colors relative"
+                    aria-label="Open mobile menu"
                 >
-                    <Menu className="h-5 w-5" />
+                    <Menu className="h-5 w-5 text-muted-foreground transition-colors group-hover:text-foreground" strokeWidth={2} />
                 </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] border-l border-border bg-background p-0 sm:max-w-xs">
-                <SheetHeader className="px-6 py-6 border-b border-border">
+            <SheetContent side="right" className="w-[320px] border-l-0 bg-background/95 backdrop-blur-2xl p-0 sm:max-w-sm shadow-2xl">
+                <SheetHeader className="px-6 py-6 border-b border-border/50">
                     <SheetTitle className="text-left flex items-center gap-2">
-                        <div className="relative">
+                        <div className="relative hover:opacity-80 transition-opacity">
                             <Logo />
                         </div>
                     </SheetTitle>
                 </SheetHeader>
 
-                <div className="flex flex-col h-full pb-6">
-                    <div className="p-4 space-y-6 overflow-y-auto flex-1">
-                        {/* Mobile Search */}
+                <div className="flex flex-col h-full bg-background/50">
+                    <div className="p-5 space-y-8 overflow-y-auto flex-1">
+                        {/* Mobile Search - Pill Design */}
                         <div className="relative group">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Search className="h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                <Search className="h-4 w-4 text-muted-foreground/60 transition-colors group-focus-within:text-foreground" strokeWidth={2.5} />
                             </div>
                             <input
                                 type="search"
                                 placeholder="Search materials..."
-                                className="w-full pl-10 pr-4 py-2.5 text-sm bg-secondary border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-ring/40 focus:border-border transition-colors placeholder:text-muted-foreground"
+                                className="w-full pl-10 pr-4 py-2.5 text-[15px] font-medium bg-muted/50 border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-ring/20 focus:bg-muted/80 transition-all placeholder:text-muted-foreground/60"
                             />
                         </div>
 
                         {/* Mobile Navigation Links */}
                         <nav className="flex flex-col gap-1.5">
-                            <div className="text-xs font-semibold text-muted-foreground tracking-wider uppercase px-2 mb-1">Navigation</div>
+                            <div className="text-[11px] font-bold text-muted-foreground/50 tracking-widest uppercase px-3 mb-2">Navigation</div>
                             {[
                                 ...NAV_LINKS,
                                 ...(user?.role === 'faculty' ? [{ path: '/dashboard/faculty', label: 'Dashboard' }] : []),
@@ -60,16 +61,17 @@ export function NavbarMobile() {
                                     key={link.path}
                                     to={link.path}
                                     className={cn(
-                                        "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150 relative",
+                                        "flex items-center gap-3 px-4 py-3.5 rounded-2xl text-[15px] font-semibold transition-all duration-200 relative group",
                                         isActive(link.path)
-                                            ? "text-foreground bg-secondary"
-                                            : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                                            ? "text-foreground bg-muted/60"
+                                            : "text-muted-foreground hover:bg-muted/40 hover:text-foreground"
                                     )}
                                 >
-
                                     <span>{link.label}</span>
-                                    {isActive(link.path) && (
-                                        <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary" />
+                                    {isActive(link.path) ? (
+                                        <div className="ml-auto h-2 w-2 rounded-full bg-foreground shadow-sm" />
+                                    ) : (
+                                        <div className="ml-auto h-2 w-2 rounded-full bg-foreground/0 transition-colors group-hover:bg-foreground/20" />
                                     )}
                                 </Link>
                             ))}
@@ -77,58 +79,58 @@ export function NavbarMobile() {
                     </div>
 
                     {/* Footer Actions */}
-                    <div className="p-4 border-t border-border mt-auto space-y-4">
+                    <div className="p-5 border-t border-border/50 mt-auto bg-background/80 backdrop-blur-md">
                         {user ? (
-                            <>
+                            <div className="space-y-4">
                                 {/* User Info Card */}
-                                <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary border border-border">
-                                    <Avatar className="h-11 w-11 ring-2 ring-border">
+                                <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-muted/40 border border-border/40">
+                                    <Avatar className="h-12 w-12 ring-1 ring-border/50">
                                         <AvatarImage src={user.avatar} alt={user.name} />
-                                        <AvatarFallback className="bg-muted text-foreground font-semibold">
+                                        <AvatarFallback className="bg-background text-foreground font-semibold">
                                             {getInitials(user.name)}
                                         </AvatarFallback>
                                     </Avatar>
-                                    <div className="overflow-hidden flex-1">
-                                        <p className="text-sm font-semibold truncate">{user.name}</p>
-                                        <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                                    <div className="overflow-hidden flex-1 flex flex-col justify-center">
+                                        <p className="text-[15px] font-semibold tracking-tight truncate">{user.name}</p>
+                                        <p className="text-[13px] font-medium text-muted-foreground truncate">{user.email}</p>
                                     </div>
                                 </div>
 
                                 {/* Action Buttons */}
-                                <div className="grid grid-cols-2 gap-2">
-                                    <Link to="/profile">
-                                        <Button variant="outline" className="w-full h-10 border-border hover:bg-secondary transition-colors">
-                                            <User className="mr-2 h-4 w-4" />
+                                <div className="grid grid-cols-2 gap-3">
+                                    <Link to="/profile" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xl">
+                                        <Button variant="outline" className="w-full h-11 rounded-xl border-border/60 hover:bg-secondary transition-colors font-semibold">
+                                            <User className="mr-2 h-[18px] w-[18px]" strokeWidth={2} />
                                             Profile
                                         </Button>
                                     </Link>
                                     <Button
                                         variant="outline"
-                                        className="w-full h-10 border-destructive/20 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 transition-colors"
+                                        className="w-full h-11 rounded-xl border-destructive/20 text-destructive font-semibold hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30 transition-colors"
                                         onClick={logout}
                                     >
-                                        <LogOut className="mr-2 h-4 w-4" />
+                                        <LogOut className="mr-2 h-[18px] w-[18px]" strokeWidth={2} />
                                         Logout
                                     </Button>
                                 </div>
-                            </>
+                            </div>
                         ) : (
-                            <div className="space-y-3">
+                            <div className="space-y-5 py-2">
                                 {/* Welcome Message */}
-                                <div className="text-center pb-2">
-                                    <p className="text-sm font-medium text-foreground">Welcome!</p>
-                                    <p className="text-xs text-muted-foreground">Sign in to access your materials</p>
+                                <div className="text-center">
+                                    <p className="text-[17px] font-semibold tracking-tight text-foreground">Welcome to the Platform</p>
+                                    <p className="text-sm font-medium text-muted-foreground mt-1">Sign in to access your materials</p>
                                 </div>
 
                                 {/* Auth Buttons */}
-                                <div className="space-y-2">
-                                    <Link to="/signup">
-                                        <Button className="w-full h-11 transition-colors">
+                                <div className="space-y-3">
+                                    <Link to="/signup" className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
+                                        <Button className="w-full h-12 rounded-full font-semibold text-[15px] shadow-none hover:ring-4 hover:ring-foreground/10 transition-all">
                                             Get Started
                                         </Button>
                                     </Link>
-                                    <Link to="/login">
-                                        <Button variant="outline" className="w-full h-11 border-border hover:bg-secondary transition-colors">
+                                    <Link to="/login" className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
+                                        <Button variant="outline" className="w-full h-12 rounded-full font-semibold text-[15px] border-border/80 hover:bg-secondary transition-colors">
                                             Sign In
                                         </Button>
                                     </Link>
