@@ -3,7 +3,8 @@ import { CheckCircle2, UserPlus, BookOpen, GraduationCap } from "lucide-react";
 const steps = [
     {
         title: "Create Your Account",
-        description: "Sign up quickly and verify your email to get secure access to the platform.",
+        description:      
+"Sign up quickly and verify your email to get secure access to the platform.",
         icon: UserPlus,
     },
     {
