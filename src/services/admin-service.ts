@@ -1,11 +1,12 @@
-const API_URL = 'http://localhost:5001/api/v1/admin';
+import { buildApiUrl, getAuthHeaders } from './api';
+
+const API_URL = buildApiUrl('/admin');
 
 export interface DashboardStats {
     totalUsers: number;
-    activeUsers: number;
     totalResources: number;
-    storageUsed: string;
-    recentActivity: any[];
+    newUsers: number;
+    newResources: number;
 }
 
 export interface AdminProfile {
@@ -17,9 +18,12 @@ export interface AdminProfile {
 
 export const fetchDashboardStats = async (): Promise<DashboardStats | null> => {
     try {
-        const response = await fetch(`${API_URL}/stats`);
+        const response = await fetch(`${API_URL}/stats`, {
+            headers: getAuthHeaders(),
+        });
         if (!response.ok) throw new Error('Failed to fetch stats');
-        return await response.json();
+        const data = await response.json();
+        return data.stats ?? null;
     } catch (error) {
         console.error('Error fetching dashboard stats:', error);
         return null;
@@ -28,9 +32,12 @@ export const fetchDashboardStats = async (): Promise<DashboardStats | null> => {
 
 export const fetchProfile = async (): Promise<AdminProfile | null> => {
     try {
-        const response = await fetch(`${API_URL}/profile`);
+        const response = await fetch(`${API_URL}/profile`, {
+            headers: getAuthHeaders(),
+        });
         if (!response.ok) throw new Error('Failed to fetch profile');
-        return await response.json();
+        const data = await response.json();
+        return data.profile ?? null;
     } catch (error) {
         console.error('Error fetching profile:', error);
         return null;
@@ -43,11 +50,13 @@ export const updateProfile = async (data: Partial<AdminProfile>): Promise<AdminP
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
+                ...getAuthHeaders(),
             },
             body: JSON.stringify(data),
         });
         if (!response.ok) throw new Error('Failed to update profile');
-        return await response.json();
+        const payload = await response.json();
+        return payload.profile ?? null;
     } catch (error) {
         console.error('Error updating profile:', error);
         return null;

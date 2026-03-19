@@ -1,7 +1,9 @@
-const API_URL = 'http://localhost:5001/api/v1/syllabus';
+import { buildApiUrl, getAuthHeaders } from './api';
+
+const API_URL = buildApiUrl('/syllabus');
 
 export interface SyllabusItem {
-    id: string; // Frontend often needs string ID. Backend might send _id.
+    id?: string;
     _id?: string;
     title: string;
     code: string;
@@ -9,7 +11,9 @@ export interface SyllabusItem {
     semester: string;
     type: 'pdf' | 'markdown';
     credits: number;
-    updatedAt: string;
+    contentUrl: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export const fetchSyllabus = async (): Promise<SyllabusItem[]> => {
@@ -23,12 +27,15 @@ export const fetchSyllabus = async (): Promise<SyllabusItem[]> => {
     }
 };
 
-export const createSyllabus = async (data: Omit<SyllabusItem, 'id' | '_id' | 'updatedAt'>): Promise<SyllabusItem | null> => {
+export const createSyllabus = async (
+    data: Omit<SyllabusItem, 'id' | '_id' | 'createdAt' | 'updatedAt'>
+): Promise<SyllabusItem | null> => {
     try {
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                ...getAuthHeaders(),
             },
             body: JSON.stringify(data),
         });
@@ -44,6 +51,7 @@ export const deleteSyllabus = async (id: string): Promise<boolean> => {
     try {
         const response = await fetch(`${API_URL}/${id}`, {
             method: 'DELETE',
+            headers: getAuthHeaders(),
         });
         return response.ok;
     } catch (error) {

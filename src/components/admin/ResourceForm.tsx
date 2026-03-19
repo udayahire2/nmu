@@ -1,7 +1,7 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Button } from '@/components/ui/button';
 import {
     Form,
     FormControl,
@@ -9,61 +9,72 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-// import { Textarea } from "@/components/ui/textarea"; // Need to ensure textarea exists or use Input for now
-import { branches, semesters } from "@/data/mockResources"; // Reusing these constants
+} from '@/components/ui/select';
+import { createResource, type CreateResourcePayload } from '@/services/resource-service';
+
+const branchOptions = ['Computer', 'IT', 'Civil', 'Mechanical', 'Electrical', 'ENTC'];
+const semesterOptions = ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7', 'Sem 8'];
+const yearOptions = ['FE', 'SE', 'TE', 'BE'] as const;
+const categoryOptions = ['Notes', 'PYQ', 'Syllabus', 'Lab Manual', 'Reference Book', 'Other'] as const;
 
 const formSchema = z.object({
-    title: z.string().min(2, { message: "Title must be at least 2 characters." }),
-    subject: z.string().min(2, { message: "Subject is required." }),
-    semester: z.string().min(1, { message: "Semester is required." }),
-    branch: z.string().min(1, { message: "Branch is required." }),
-    type: z.enum(["pdf", "video", "doc", "markdown"]),
-    description: z.string().min(10, { message: "Description must be at least 10 characters." }),
-    author: z.string().min(2, { message: "Author is required." }),
-    url: z.string().url({ message: "Please enter a valid URL." }),
+    title: z.string().min(2, { message: 'Title must be at least 2 characters.' }),
+    subject: z.string().min(2, { message: 'Subject is required.' }),
+    semester: z.string().min(1, { message: 'Semester is required.' }),
+    branch: z.string().min(1, { message: 'Branch is required.' }),
+    year: z.enum(yearOptions),
+    category: z.enum(categoryOptions),
+    type: z.enum(['pdf', 'video', 'doc', 'markdown']),
+    description: z.string().min(10, { message: 'Description must be at least 10 characters.' }),
+    author: z.string().min(2, { message: 'Author is required.' }),
+    url: z.string().min(1, { message: 'Please enter a valid resource URL.' }),
 });
 
 export default function ResourceForm({ onSuccess }: { onSuccess: () => void }) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            title: "",
-            subject: "",
-            semester: "",
-            branch: "",
-            type: "pdf",
-            description: "",
-            author: "",
-            url: "",
+            title: '',
+            subject: '',
+            semester: '',
+            branch: '',
+            year: 'SE',
+            category: 'Notes',
+            type: 'pdf',
+            description: '',
+            author: '',
+            url: '',
         },
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        try {
-            const response = await fetch('http://localhost:5001/api/v1/resources', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(values),
-            });
+        const payload: CreateResourcePayload = {
+            ...values,
+            pattern: '2019',
+            unit: 'All',
+        };
 
-            if (response.ok) {
-                form.reset();
-                onSuccess();
-            } else {
-                console.error("Failed to submit");
-            }
-        } catch (error) {
-            console.error(error);
+        const resource = await createResource(payload);
+
+        if (resource) {
+            form.reset();
+            onSuccess();
+            return;
         }
+
+        form.setError('root', {
+            type: 'server',
+            message: 'Failed to save resource. Please check your admin session and try again.',
+        });
     }
 
     return (
@@ -76,12 +87,13 @@ export default function ResourceForm({ onSuccess }: { onSuccess: () => void }) {
                         <FormItem>
                             <FormLabel>Title</FormLabel>
                             <FormControl>
-                                <Input placeholder="Resource Title" {...field} />
+                                <Input placeholder="Resource title" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
+
                 <div className="grid grid-cols-2 gap-4">
                     <FormField
                         control={form.control}
@@ -131,11 +143,15 @@ export default function ResourceForm({ onSuccess }: { onSuccess: () => void }) {
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Branch" />
+                                            <SelectValue placeholder="Select branch" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {branches.map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}
+                                        {branchOptions.map((branch) => (
+                                            <SelectItem key={branch} value={branch}>
+                                                {branch}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -151,11 +167,66 @@ export default function ResourceForm({ onSuccess }: { onSuccess: () => void }) {
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Semester" />
+                                            <SelectValue placeholder="Select semester" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {semesters.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                                        {semesterOptions.map((semester) => (
+                                            <SelectItem key={semester} value={semester}>
+                                                {semester}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="year"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Year</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select year" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {yearOptions.map((year) => (
+                                            <SelectItem key={year} value={year}>
+                                                {year}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="category"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Category</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select category" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {categoryOptions.map((category) => (
+                                            <SelectItem key={category} value={category}>
+                                                {category}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -185,7 +256,7 @@ export default function ResourceForm({ onSuccess }: { onSuccess: () => void }) {
                         <FormItem>
                             <FormLabel>Author</FormLabel>
                             <FormControl>
-                                <Input placeholder="Professor Name / Source" {...field} />
+                                <Input placeholder="Professor name or source" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -199,14 +270,20 @@ export default function ResourceForm({ onSuccess }: { onSuccess: () => void }) {
                         <FormItem>
                             <FormLabel>Description</FormLabel>
                             <FormControl>
-                                <Input placeholder="Brief description..." {...field} />
+                                <Textarea placeholder="Brief description..." className="min-h-24" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
 
-                <Button type="submit" className="w-full">Add Resource</Button>
+                {form.formState.errors.root && (
+                    <p className="text-sm text-destructive">{form.formState.errors.root.message}</p>
+                )}
+
+                <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                    {form.formState.isSubmitting ? 'Saving...' : 'Add Resource'}
+                </Button>
             </form>
         </Form>
     );
