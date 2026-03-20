@@ -1,12 +1,17 @@
 import { motion, AnimatePresence, type Variants } from "framer-motion";
+import type { ElementType } from "react";
 import {
-    Monitor,
-    Globe,
-    Cog,
     Building2,
-    Zap,
     Check,
+    Cog,
+    Globe,
+    Monitor,
+    Zap,
 } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { BRANCHES, SEMESTERS } from "@/data/study-data";
 import { cn } from "@/lib/utils";
 
@@ -20,7 +25,7 @@ interface BranchSemesterSelectionProps {
 const BRANCH_META: Record<
     string,
     {
-        icon: React.ElementType;
+        icon: ElementType;
         label: string;
         desc: string;
     }
@@ -28,27 +33,27 @@ const BRANCH_META: Record<
     Computer: {
         icon: Monitor,
         label: "Computer Engg.",
-        desc: "Software, DSA, OS & Networking",
+        desc: "Software, DSA, OS and networking fundamentals.",
     },
     IT: {
         icon: Globe,
         label: "Information Tech.",
-        desc: "Web, Databases & Cloud Systems",
+        desc: "Web, databases, security and cloud systems.",
     },
     Mechanical: {
         icon: Cog,
         label: "Mechanical Engg.",
-        desc: "Thermodynamics, CAD & Mechanics",
+        desc: "Thermodynamics, CAD and machine design topics.",
     },
     Civil: {
         icon: Building2,
         label: "Civil Engg.",
-        desc: "Structures, Surveying & Materials",
+        desc: "Structures, surveying and construction materials.",
     },
     Electrical: {
         icon: Zap,
         label: "Electrical Engg.",
-        desc: "Circuits, Machines & Power Systems",
+        desc: "Circuits, machines and power system studies.",
     },
 };
 
@@ -74,59 +79,62 @@ export function BranchSemesterSelection({
     const selectedMeta = selectedBranch ? BRANCH_META[selectedBranch] : null;
 
     return (
-        <div className="w-full max-w-4xl mx-auto py-8 lg:py-12 space-y-12">
-            {/* ── Branch Selection ─────────────────────────────────────── */}
-            <motion.div
-                variants={staggerContainer}
-                initial="hidden"
-                animate="visible"
-                className="space-y-4"
-            >
-                <div className="flex flex-col gap-1.5 px-0.5">
-                    <h2 className="text-lg font-semibold tracking-tight text-foreground">
-                        Select your branch
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                        Choose your engineering discipline to access relevant study materials.
-                    </p>
-                </div>
+        <div className="mx-auto w-full max-w-5xl space-y-6 px-5 py-6 lg:px-6 lg:py-8">
+            <Card className="border-border/50 bg-background/80 shadow-none">
+                <CardHeader className="space-y-3">
+                    <Badge variant="outline" className="w-fit rounded-full border-border/60 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                        Step 1
+                    </Badge>
+                    <div className="space-y-1.5">
+                        <CardTitle className="text-lg tracking-tight">Select your branch</CardTitle>
+                        <CardDescription className="text-sm leading-6">
+                            Choose your engineering discipline to access relevant study materials.
+                        </CardDescription>
+                    </div>
+                </CardHeader>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {BRANCHES.map((branch) => {
-                        const meta = BRANCH_META[branch];
-                        if (!meta) return null;
+                <CardContent>
+                    <motion.div
+                        variants={staggerContainer}
+                        initial="hidden"
+                        animate="visible"
+                        className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3"
+                    >
+                        {BRANCHES.map((branch) => {
+                            const meta = BRANCH_META[branch];
+                            if (!meta) return null;
 
-                        const Icon = meta.icon;
-                        const isActive = selectedBranch === branch;
+                            const Icon = meta.icon;
+                            const isActive = selectedBranch === branch;
 
-                        return (
-                            <motion.button
-                                key={branch}
-                                variants={fadeUpVariants}
-                                onClick={() => onBranchSelect(branch)}
-                                aria-pressed={isActive}
-                                className={cn(
-                                    "group relative flex items-start gap-4 p-4 rounded-xl border text-left transition-all duration-200 outline-none w-full",
-                                    "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
-                                    isActive
-                                        ? "border-primary/50 bg-primary/[0.03] ring-1 ring-primary/20 shadow-sm"
-                                        : "border-border/60 bg-transparent hover:bg-accent/40 hover:border-border"
-                                )}
-                            >
-                                <div
+                            return (
+                                <motion.button
+                                    key={branch}
+                                    variants={fadeUpVariants}
+                                    onClick={() => onBranchSelect(branch)}
+                                    aria-pressed={isActive}
                                     className={cn(
-                                        "shrink-0 flex items-center justify-center w-10 h-10 rounded-[10px] border transition-colors duration-200 mt-0.5",
+                                        "group relative flex w-full items-start gap-4 rounded-2xl border p-4 text-left outline-none transition-all duration-200",
+                                        "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
                                         isActive
-                                            ? "bg-background border-primary/20 text-primary"
-                                            : "bg-background border-border/50 text-muted-foreground group-hover:text-foreground group-hover:border-border"
+                                            ? "border-primary/50 bg-primary/[0.03] ring-1 ring-primary/20 shadow-sm"
+                                            : "border-border/60 bg-background hover:border-border hover:bg-accent/30"
                                     )}
                                 >
-                                    <Icon className="w-[18px] h-[18px]" strokeWidth={2} />
-                                </div>
+                                    <div
+                                        className={cn(
+                                            "mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] border transition-colors duration-200",
+                                            isActive
+                                                ? "border-primary/20 bg-background text-primary"
+                                                : "border-border/50 bg-background text-muted-foreground group-hover:border-border group-hover:text-foreground"
+                                        )}
+                                    >
+                                        <Icon className="h-[18px] w-[18px]" strokeWidth={2} />
+                                    </div>
 
-                                    <div className="flex-1 min-w-0">
+                                    <div className="min-w-0 flex-1">
                                         <div className="flex items-center justify-between gap-2">
-                                            <p className={cn("text-[15px] font-medium truncate transition-colors", isActive ? "text-primary" : "text-foreground")}>
+                                            <p className={cn("truncate text-[15px] font-medium transition-colors", isActive ? "text-primary" : "text-foreground")}>
                                                 {meta.label}
                                             </p>
                                             {isActive && (
@@ -135,21 +143,21 @@ export function BranchSemesterSelection({
                                                     animate={{ scale: 1, opacity: 1 }}
                                                     className="shrink-0"
                                                 >
-                                                    <Check className="w-[18px] h-[18px] text-primary" />
+                                                    <Check className="h-[18px] w-[18px] text-primary" />
                                                 </motion.div>
                                             )}
                                         </div>
-                                        <p className="text-[13px] text-muted-foreground leading-snug mt-1 line-clamp-2">
+                                        <p className="mt-1 line-clamp-2 text-[13px] leading-snug text-muted-foreground">
                                             {meta.desc}
                                         </p>
                                     </div>
                                 </motion.button>
                             );
                         })}
-                    </div>
-            </motion.div>
+                    </motion.div>
+                </CardContent>
+            </Card>
 
-            {/* ── Semester Selection ───────────────────────────────── */}
             <AnimatePresence mode="popLayout">
                 {selectedBranch && selectedMeta && (
                     <motion.div
@@ -159,51 +167,60 @@ export function BranchSemesterSelection({
                         exit={{ opacity: 0, height: 0, transition: { duration: 0.2, ease: "easeIn" } }}
                         className="overflow-hidden"
                     >
-                        <div className="pt-2 space-y-5">
-                            <div className="h-px w-full bg-border/40" />
+                        <Card className="border-border/50 bg-background/80 shadow-none">
+                            <CardHeader className="space-y-3">
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <Badge variant="outline" className="rounded-full border-border/60 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                                        Step 2
+                                    </Badge>
+                                    <Badge variant="secondary" className="rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                                        {selectedMeta.label}
+                                    </Badge>
+                                </div>
+                                <div className="space-y-1.5">
+                                    <CardTitle className="text-lg tracking-tight">Select semester</CardTitle>
+                                    <CardDescription className="text-sm leading-6">
+                                        What semester are you currently studying in?
+                                    </CardDescription>
+                                </div>
+                                <Separator className="bg-border/50" />
+                            </CardHeader>
 
-                            <div className="flex flex-col gap-1.5 px-0.5">
-                                <h2 className="text-lg font-semibold tracking-tight text-foreground">
-                                    Select semester
-                                </h2>
-                                <p className="text-sm text-muted-foreground">
-                                    What semester are you currently studying in?
-                                </p>
-                            </div>
-
-                            <motion.div
-                                variants={staggerContainer}
-                                initial="hidden"
-                                animate="visible"
-                                className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 gap-2"
-                            >
-                                {SEMESTERS.map((sem) => {
-                                    const isActive = selectedSemester === sem.toString();
-                                    return (
-                                        <motion.button
-                                            variants={fadeUpVariants}
-                                            key={sem}
-                                            onClick={() => onSemesterSelect(sem.toString())}
-                                            aria-pressed={isActive}
-                                            className={cn(
-                                                "relative flex flex-col items-center justify-center p-3 h-14 rounded-xl border transition-all duration-200 outline-none",
-                                                "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
-                                                isActive
-                                                    ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                                                    : "border-border/60 bg-transparent hover:bg-accent/60 hover:border-border text-foreground"
-                                            )}
-                                        >
-                                            <span className={cn("text-[10px] uppercase tracking-wider font-semibold", isActive ? "text-primary-foreground/90" : "text-muted-foreground")}>
-                                                Sem
-                                            </span>
-                                            <span className="text-[15px] font-bold mt-0.5">
-                                                {sem}
-                                            </span>
-                                        </motion.button>
-                                    );
-                                })}
-                            </motion.div>
-                        </div>
+                            <CardContent>
+                                <motion.div
+                                    variants={staggerContainer}
+                                    initial="hidden"
+                                    animate="visible"
+                                    className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-8"
+                                >
+                                    {SEMESTERS.map((sem) => {
+                                        const isActive = selectedSemester === sem.toString();
+                                        return (
+                                            <motion.button
+                                                variants={fadeUpVariants}
+                                                key={sem}
+                                                onClick={() => onSemesterSelect(sem.toString())}
+                                                aria-pressed={isActive}
+                                                className={cn(
+                                                    "relative flex h-14 flex-col items-center justify-center rounded-xl border p-3 outline-none transition-all duration-200",
+                                                    "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+                                                    isActive
+                                                        ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                                                        : "border-border/60 bg-background text-foreground hover:border-border hover:bg-accent/60"
+                                                )}
+                                            >
+                                                <span className={cn("text-[10px] font-semibold uppercase tracking-wider", isActive ? "text-primary-foreground/90" : "text-muted-foreground")}>
+                                                    Sem
+                                                </span>
+                                                <span className="mt-0.5 text-[15px] font-bold">
+                                                    {sem}
+                                                </span>
+                                            </motion.button>
+                                        );
+                                    })}
+                                </motion.div>
+                            </CardContent>
+                        </Card>
                     </motion.div>
                 )}
             </AnimatePresence>

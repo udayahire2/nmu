@@ -23,11 +23,11 @@ import {
     Home,
     LayoutDashboard,
     LogOut,
-    Menu,
     Shield,
     User,
     X
 } from "lucide-react"
+import Menu from '../../svgs/menu'
 import { Link, useLocation } from "react-router-dom"
 
 export function NavbarMobileCalm() {
@@ -70,7 +70,7 @@ export function NavbarMobileCalm() {
                     className="size-10 rounded-full lg:hidden"
                     aria-label="Open mobile navigation"
                 >
-                    <Menu className="size-5" strokeWidth={2} />
+                    <Menu/>
                 </Button>
             </DialogTrigger>
 
@@ -87,12 +87,7 @@ export function NavbarMobileCalm() {
                             </Button>
                         </DialogClose>
                     </div>
-                    <div className="space-y-1 px-1 pt-2">
-                        <DialogTitle className="text-base">Navigation</DialogTitle>
-                        <DialogDescription className="text-sm">
-                            Minimal access to the main sections.
-                        </DialogDescription>
-                    </div>
+                    
                 </DialogHeader>
 
                 <Separator />
@@ -163,7 +158,7 @@ export function NavbarMobileCalm() {
 
                                 <div className="grid grid-cols-2 gap-2">
                                     <DialogClose asChild>
-                                        <Button asChild variant="outline" className="rounded-xl">
+                                        <Button asChild variant="outline" >
                                             <Link to="/profile">
                                                 <User className="size-4" strokeWidth={2} />
                                                 Profile
@@ -173,7 +168,7 @@ export function NavbarMobileCalm() {
                                     <DialogClose asChild>
                                         <Button
                                             variant="outline"
-                                            className="rounded-xl"
+                                          
                                             onClick={logout}
                                         >
                                             <LogOut className="size-4" strokeWidth={2} />
@@ -195,12 +190,12 @@ export function NavbarMobileCalm() {
 
                                 <div className="grid grid-cols-2 gap-2">
                                     <DialogClose asChild>
-                                        <Button asChild className="rounded-xl">
+                                        <Button asChild >
                                             <Link to="/signup">Get Started</Link>
                                         </Button>
                                     </DialogClose>
                                     <DialogClose asChild>
-                                        <Button asChild variant="outline" className="rounded-xl">
+                                        <Button asChild variant="outline" >
                                             <Link to="/login">Sign In</Link>
                                         </Button>
                                     </DialogClose>

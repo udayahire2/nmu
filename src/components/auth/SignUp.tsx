@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { ArrowRight, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -20,10 +22,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 export const title = "Login Card";
 
+type UserRole = "student" | "faculty";
+
+interface RegisterPayload {
+  name: string;
+  email: string;
+  password: string;
+  role: UserRole;
+  branch?: string;
+  year?: string;
+  designation?: string;
+  department?: string;
+  collegeName?: string;
+  subjects?: string[];
+}
+
 const SignUp = () => {
-  const [role, setRole] = useState<"student" | "faculty">("student");
+  const [role, setRole] = useState<UserRole>("student");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,7 +64,7 @@ const SignUp = () => {
     try {
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
 
-      const payload: any = { name, email, password, role };
+      const payload: RegisterPayload = { name, email, password, role };
 
       if (role === 'student') {
         payload.branch = branch;
@@ -75,28 +93,34 @@ const SignUp = () => {
       } else {
         alert(data.message || data.error || 'Registration failed');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Registration Error:', error);
-      alert(`Registration failed: ${error.message || 'Unknown error'}`);
+      alert(`Registration failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Create Account</CardTitle>
-        <CardDescription>
-          Register as a Student or Faculty member
-        </CardDescription>
+    <Card className="w-full max-w-md rounded-3xl border-border/60 bg-card/95 shadow-xl shadow-black/5 backdrop-blur-xl">
+      <CardHeader className="space-y-4 pb-5">
+        <Badge variant="outline" className="w-fit rounded-full border-border/60 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          Create Account
+        </Badge>
+        <div className="space-y-2">
+          <CardTitle className="text-2xl">Get Started</CardTitle>
+          <CardDescription className="leading-6">
+            Register as a student or faculty member and personalize your workspace.
+          </CardDescription>
+        </div>
       </CardHeader>
+      <Separator className="bg-border/60" />
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-5 pt-6">
           <div className="space-y-2">
             <Label htmlFor="role">I am a...</Label>
-            <Select onValueChange={(val) => setRole(val as "student" | "faculty")} value={role} required>
-              <SelectTrigger id="role" className="w-full">
+            <Select onValueChange={(val) => setRole(val as UserRole)} value={role} required>
+              <SelectTrigger id="role" className="h-11 w-full rounded-xl border-border/60 bg-background">
                 <SelectValue placeholder="Select Role" />
               </SelectTrigger>
               <SelectContent>
@@ -114,6 +138,7 @@ const SignUp = () => {
               required
               value={name}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+              className="h-11 rounded-xl border-border/60 bg-background"
             />
           </div>
 
@@ -126,6 +151,7 @@ const SignUp = () => {
               type="email"
               required
               value={email}
+              className="h-11 rounded-xl border-border/60 bg-background"
             />
           </div>
 
@@ -137,6 +163,7 @@ const SignUp = () => {
               type="password"
               required
               value={password}
+              className="h-11 rounded-xl border-border/60 bg-background"
             />
           </div>
 
@@ -145,7 +172,7 @@ const SignUp = () => {
               <div className="space-y-2">
                 <Label htmlFor="branch">Branch Name</Label>
                 <Select onValueChange={setBranch} value={branch} required>
-                  <SelectTrigger id="branch" className="w-full">
+                  <SelectTrigger id="branch" className="h-11 w-full rounded-xl border-border/60 bg-background">
                     <SelectValue placeholder="Select Branch" />
                   </SelectTrigger>
                   <SelectContent>
@@ -161,7 +188,7 @@ const SignUp = () => {
               <div className="space-y-2">
                 <Label htmlFor="year">Current Year</Label>
                 <Select onValueChange={setYear} value={year} required>
-                  <SelectTrigger id="year" className="w-full">
+                  <SelectTrigger id="year" className="h-11 w-full rounded-xl border-border/60 bg-background">
                     <SelectValue placeholder="Select Year" />
                   </SelectTrigger>
                   <SelectContent>
@@ -185,6 +212,7 @@ const SignUp = () => {
                   required
                   value={designation}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDesignation(e.target.value)}
+                  className="h-11 rounded-xl border-border/60 bg-background"
                 />
               </div>
               <div className="space-y-2">
@@ -195,6 +223,7 @@ const SignUp = () => {
                   required
                   value={department}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDepartment(e.target.value)}
+                  className="h-11 rounded-xl border-border/60 bg-background"
                 />
               </div>
               <div className="space-y-2">
@@ -205,6 +234,7 @@ const SignUp = () => {
                   required
                   value={collegeName}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCollegeName(e.target.value)}
+                  className="h-11 rounded-xl border-border/60 bg-background"
                 />
               </div>
               <div className="space-y-2">
@@ -215,22 +245,33 @@ const SignUp = () => {
                   required
                   value={subjects}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSubjects(e.target.value)}
+                  className="h-11 rounded-xl border-border/60 bg-background"
                 />
               </div>
             </>
           )}
 
-          <Button className="w-full" type="submit" disabled={loading}>
-            {loading ? 'Registering...' : 'Register'}
+          <Button className="h-11 w-full rounded-xl" type="submit" disabled={loading}>
+            {loading ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                Registering...
+              </>
+            ) : (
+              <>
+                Register
+                <ArrowRight className="size-4" />
+              </>
+            )}
           </Button>
         </CardContent>
       </form>
       <CardFooter className="flex justify-center">
         <p className="text-muted-foreground text-sm">
           Already have an account?{" "}
-          <a className="underline" href="/login">
+          <Link to="/login" className="font-medium text-foreground transition-colors hover:text-primary">
             Login
-          </a>
+          </Link>
         </p>
       </CardFooter>
     </Card>

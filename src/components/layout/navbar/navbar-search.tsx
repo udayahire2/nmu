@@ -24,7 +24,7 @@ export function NavbarSearch() {
     }, [])
 
     return (
-        <div className="hidden md:flex flex-1 max-w-md mx-6 lg:mx-10 relative" ref={searchRef}>
+        <div className="hidden md:flex w-[260px] lg:w-[320px] xl:w-[360px] relative" ref={searchRef}>
             <div className="relative w-full group">
                 <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-3.75 w-3.75 text-muted-foreground/60 transition-colors group-focus-within:text-foreground" strokeWidth={2.5} aria-hidden="true" />
                 <input

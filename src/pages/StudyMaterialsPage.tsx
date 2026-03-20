@@ -1,12 +1,89 @@
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { BranchSemesterSelection } from '@/components/study/BranchSemesterSelection';
 import { SubjectGrid } from '@/components/study/SubjectGrid';
 import { SubjectDashboard } from '@/components/study/SubjectDashboard';
 import { TopicViewer } from '@/components/study/TopicViewer';
-import { ChevronRight, Home } from "lucide-react";
-import { getSubjects, getSubject } from '@/data/study-data';
+import { BookOpen, ChevronRight, Home, Layers3 } from "lucide-react";
+import { getSubjects, getSubject, type Subject, type Topic } from '@/data/study-data';
 import { cn } from "@/lib/utils";
+
+interface StudyMaterialsBreadcrumbsProps {
+    branch?: string;
+    semester?: string;
+    activeSubject?: Subject;
+    activeTopic?: Topic;
+    onNavigate: (path: string) => void;
+}
+
+function StudyMaterialsBreadcrumbs({
+    branch,
+    semester,
+    activeSubject,
+    activeTopic,
+    onNavigate,
+}: StudyMaterialsBreadcrumbsProps) {
+    return (
+        <nav className="mx-auto flex w-full max-w-5xl items-center gap-1.5 overflow-x-auto whitespace-nowrap rounded-2xl border border-border/50 bg-card/70 px-3 py-2 text-[13px] font-medium text-muted-foreground/80 shadow-sm backdrop-blur-sm [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <button
+                onClick={() => onNavigate('/resources')}
+                className="inline-flex size-8 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label="Study materials home"
+            >
+                <Home className="h-3.5 w-3.5" />
+            </button>
+
+            {branch && (
+                <>
+                    <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-40" strokeWidth={2} />
+                    <button
+                        onClick={() => onNavigate('/resources')}
+                        className="rounded-md px-2 py-1 transition-colors hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                        {branch}
+                    </button>
+                </>
+            )}
+
+            {branch && semester && (
+                <>
+                    <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-40" strokeWidth={2} />
+                    <button
+                        onClick={() => onNavigate(`/resources/${branch}/${semester}`)}
+                        className="rounded-md px-2 py-1 transition-colors hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                        Semester {semester}
+                    </button>
+                </>
+            )}
+
+            {activeSubject && (
+                <>
+                    <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-40" strokeWidth={2} />
+                    <button
+                        onClick={() => onNavigate(`/resources/${branch}/${semester}/${activeSubject.id}`)}
+                        className="rounded-md px-2 py-1 transition-colors hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                        {activeSubject.code}
+                    </button>
+                </>
+            )}
+
+            {activeTopic && (
+                <>
+                    <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-40" strokeWidth={2} />
+                    <span className="shrink-0 rounded-md bg-muted/50 px-2 py-1 text-foreground">
+                        {activeTopic.title.length > 28 ? `${activeTopic.title.substring(0, 28)}...` : activeTopic.title}
+                    </span>
+                </>
+            )}
+        </nav>
+    );
+}
 
 export default function StudyMaterialsPage() {
     const { branch, semester, subjectId, topicId } = useParams();
@@ -49,95 +126,105 @@ export default function StudyMaterialsPage() {
         return undefined;
     }, [activeSubject, topicId]);
 
-    // Breadcrumbs Helper
-    const Breadcrumbs = () => (
-        <nav className="flex items-center gap-1.5 text-[13px] text-muted-foreground/80 font-medium mb-12 overflow-x-auto whitespace-nowrap pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden w-full max-w-4xl mx-auto">
-            <button 
-                onClick={() => navigate('/resources')}
-                className="hover:text-foreground transition-colors flex items-center justify-center h-6 w-6 rounded-md hover:bg-muted/50"
-                aria-label="Home"
-            >
-                <Home className="h-3.5 w-3.5" />
-            </button>
-            {branch && (
-                <>
-                    <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-40 mx-0.5" strokeWidth={2} />
-                    <button 
-                        onClick={() => navigate('/resources')} 
-                        className="hover:text-foreground transition-colors shrink-0 outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                        {branch}
-                    </button>
-                </>
-            )}
-            {branch && semester && (
-                <>
-                    <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-40 mx-0.5" strokeWidth={2} />
-                    <button 
-                        onClick={() => navigate(`/resources/${branch}/${semester}`)} 
-                        className="hover:text-foreground transition-colors shrink-0 outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                        Semester {semester}
-                    </button>
-                </>
-            )}
-            {activeSubject && (
-                <>
-                    <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-40 mx-0.5" strokeWidth={2} />
-                    <button 
-                        onClick={() => navigate(`/resources/${branch}/${semester}/${activeSubject.id}`)} 
-                        className="hover:text-foreground transition-colors shrink-0 outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                        {activeSubject.code}
-                    </button>
-                </>
-            )}
-            {activeTopic && (
-                <>
-                    <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-40 mx-0.5" strokeWidth={2} />
-                    <span className="text-foreground shrink-0 select-none">
-                        {activeTopic.title.length > 28 ? activeTopic.title.substring(0, 28) + '...' : activeTopic.title}
-                    </span>
-                </>
-            )}
-        </nav>
-    );
-
     return (
-        <div className="min-h-screen bg-background pt-24 pb-32">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-background pb-32 pt-24">
+            <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
 
                 {/* Hide breadcrumbs on root since the UI speaks for itself */}
-                {!isRoot && <Breadcrumbs />}
+                {!isRoot && (
+                    <div className="mb-10">
+                        <StudyMaterialsBreadcrumbs
+                            branch={branch}
+                            semester={semester}
+                            activeSubject={activeSubject}
+                            activeTopic={activeTopic}
+                            onNavigate={navigate}
+                        />
+                    </div>
+                )}
 
                 {isRoot && (
-                    <div className="max-w-4xl mx-auto space-y-16">
-                        {/* Page hero */}
-                        <div className="space-y-5 text-center flex flex-col items-center">
-                            <span className="inline-flex items-center rounded-full border border-border/50 bg-muted/20 px-3 py-1 text-xs font-semibold tracking-wide text-foreground/80 backdrop-blur-sm shadow-sm ring-1 ring-inset ring-border/10">
-                                Engineering Content
-                            </span>
-                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground max-w-3xl leading-[1.1] text-balance">
-                                All your study materials
-                                <span className={cn(
-                                    "block mt-1 bg-gradient-to-br from-foreground to-foreground/50 bg-clip-text text-transparent"
-                                )}>
-                                    in one place.
-                                </span>
-                            </h1>
-                            <p className="text-base sm:text-lg text-muted-foreground/80 max-w-xl mx-auto leading-relaxed mt-2 text-balance font-medium">
-                                Navigate your curriculum instantly. Faculty-approved notes, video tutorials, and past year papers structured for speed.
-                            </p>
+                    <div className="mx-auto max-w-5xl space-y-10">
+                        <Card className="overflow-hidden border-border/50 bg-card/80 shadow-sm backdrop-blur-sm">
+                            <CardHeader className="space-y-5 pb-6">
+                                <Badge
+                                    variant="outline"
+                                    className="w-fit rounded-full border-border/60 bg-background/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground"
+                                >
+                                    Engineering Content
+                                </Badge>
+
+                                <div className="space-y-4">
+                                    <CardTitle className="max-w-3xl text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+                                        All your study materials
+                                        <span className={cn(
+                                            "mt-1 block bg-gradient-to-br from-foreground to-foreground/55 bg-clip-text text-transparent"
+                                        )}>
+                                            in one place.
+                                        </span>
+                                    </CardTitle>
+
+                                    <CardDescription className="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
+                                        Navigate your curriculum instantly. Faculty-approved notes, video tutorials, and past year papers structured for speed.
+                                    </CardDescription>
+                                </div>
+                            </CardHeader>
+
+                            <CardContent className="space-y-6">
+                                <div className="grid gap-3 sm:grid-cols-3">
+                                    <div className="rounded-2xl border border-border/50 bg-background/70 p-4">
+                                        <div className="mb-3 inline-flex rounded-xl bg-primary/10 p-2 text-primary">
+                                            <BookOpen className="size-4" />
+                                        </div>
+                                        <p className="text-sm font-medium text-foreground">Structured by branch</p>
+                                        <p className="mt-1 text-sm leading-6 text-muted-foreground">Jump directly into your department-specific resources.</p>
+                                    </div>
+
+                                    <div className="rounded-2xl border border-border/50 bg-background/70 p-4">
+                                        <div className="mb-3 inline-flex rounded-xl bg-primary/10 p-2 text-primary">
+                                            <Layers3 className="size-4" />
+                                        </div>
+                                        <p className="text-sm font-medium text-foreground">Unit-wise flow</p>
+                                        <p className="mt-1 text-sm leading-6 text-muted-foreground">Open subjects, browse units and study topic by topic.</p>
+                                    </div>
+
+                                    <div className="rounded-2xl border border-border/50 bg-background/70 p-4">
+                                        <div className="mb-3 inline-flex rounded-xl bg-primary/10 p-2 text-primary">
+                                            <ChevronRight className="size-4" />
+                                        </div>
+                                        <p className="text-sm font-medium text-foreground">Exam-ready access</p>
+                                        <p className="mt-1 text-sm leading-6 text-muted-foreground">Move quickly from overview to notes, videos and archives.</p>
+                                    </div>
+                                </div>
+
+                                <Separator className="bg-border/50" />
+
+                                <div className="flex flex-wrap items-center justify-between gap-3">
+                                    <p className="text-sm text-muted-foreground">
+                                        Start by choosing your branch and semester.
+                                    </p>
+                                    <Button
+                                        variant="outline"
+                                        className="rounded-xl border-border/60"
+                                        onClick={() => {
+                                            setTempBranch(null);
+                                            navigate('/resources');
+                                        }}
+                                    >
+                                        Reset Selection
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <div className="rounded-3xl border border-border/50 bg-card/50 p-1 shadow-sm backdrop-blur-sm">
+                            <BranchSemesterSelection
+                                selectedBranch={tempBranch}
+                                selectedSemester={null}
+                                onBranchSelect={handleBranchSelect}
+                                onSemesterSelect={handleSemesterSelect}
+                            />
                         </div>
-
-                        <div className="w-full h-px bg-border/40" />
-
-                        <BranchSemesterSelection
-                            selectedBranch={tempBranch}
-                            selectedSemester={null}
-                            onBranchSelect={handleBranchSelect}
-                            onSemesterSelect={handleSemesterSelect}
-                        />
                     </div>
                 )}
 

@@ -2,7 +2,9 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import type { Subject } from "@/data/study-data";
 import { ChevronRight, Bookmark } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface SubjectGridProps {
     subjects: Subject[];
@@ -13,8 +15,8 @@ interface SubjectGridProps {
 export function SubjectGrid({ subjects, branch, semester }: SubjectGridProps) {
     if (subjects.length === 0) {
         return (
-            <div className="max-w-4xl mx-auto py-12 text-center">
-                <div className="bg-muted/10 rounded-2xl p-10 border border-dashed border-border/40">
+            <div className="mx-auto max-w-5xl py-12 text-center">
+                <div className="rounded-3xl border border-dashed border-border/40 bg-card/60 p-10 shadow-sm">
                     <Bookmark className="h-10 w-10 text-muted-foreground/30 mx-auto mb-4" strokeWidth={1} />
                     <h3 className="text-lg font-medium tracking-tight mb-2">No subjects found</h3>
                     <p className="text-sm text-muted-foreground max-w-md mx-auto mb-6 text-balance">
@@ -32,18 +34,20 @@ export function SubjectGrid({ subjects, branch, semester }: SubjectGridProps) {
     }
 
     return (
-        <div className="max-w-4xl mx-auto py-8 lg:py-12">
-            <div className="flex items-center justify-between mb-8 px-1">
-                <div className="flex flex-col gap-1">
-                    <h2 className="text-xl font-semibold tracking-tight text-foreground">Subjects</h2>
-                    <p className="text-sm text-muted-foreground">Select a subject to view its curriculum.</p>
-                </div>
-                <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider bg-muted/30 px-2 py-1 rounded-md border border-border/40">
-                    {subjects.length} Total
-                </span>
-            </div>
+        <div className="mx-auto max-w-5xl py-8 lg:py-12">
+            <Card className="mb-8 border-border/50 bg-card/60 shadow-none">
+                <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="space-y-1">
+                        <CardTitle className="text-xl tracking-tight">Subjects</CardTitle>
+                        <p className="text-sm text-muted-foreground">Select a subject to view its curriculum.</p>
+                    </div>
+                    <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                        {subjects.length} Total
+                    </Badge>
+                </CardHeader>
+            </Card>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:gap-4">
                 {subjects.map((subject, i) => (
                     <motion.div
                         key={subject.id}
@@ -57,32 +61,36 @@ export function SubjectGrid({ subjects, branch, semester }: SubjectGridProps) {
                     >
                         <Link
                             to={`${subject.id}`}
-                            className="group flex flex-col justify-between p-5 h-full rounded-2xl border border-border/40 bg-card hover:bg-accent/20 hover:border-border/80 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+                            className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
                             aria-label={`View ${subject.name} syllabus`}
                         >
-                            <div className="flex items-start justify-between gap-4">
-                                <div className="h-10 w-10 rounded-xl bg-background flex items-center justify-center text-muted-foreground shrink-0 border border-border/40 shadow-sm group-hover:text-primary transition-colors">
-                                    <Bookmark className="h-4 w-4" strokeWidth={1.5} />
-                                </div>
-                                <span className="font-mono bg-muted/40 px-2 py-1 rounded-md border border-border/30 text-[11px] font-medium text-muted-foreground/90">
-                                    {subject.code}
-                                </span>
-                            </div>
-                            
-                            <div className="mt-6 flex-1">
-                                <h3 className="text-[17px] font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
-                                    {subject.name}
-                                </h3>
-                            </div>
+                            <Card className="h-full rounded-2xl border-border/40 bg-card transition-all duration-300 hover:border-border/80 hover:bg-accent/10 hover:shadow-sm">
+                                <CardContent className="flex h-full flex-col justify-between p-5">
+                                    <div className="flex items-start justify-between gap-4">
+                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/40 bg-background text-muted-foreground shadow-sm transition-colors group-hover:text-primary">
+                                            <Bookmark className="h-4 w-4" strokeWidth={1.5} />
+                                        </div>
+                                        <span className="rounded-md border border-border/30 bg-muted/40 px-2 py-1 font-mono text-[11px] font-medium text-muted-foreground/90">
+                                            {subject.code}
+                                        </span>
+                                    </div>
 
-                            <div className="mt-6 pt-4 border-t border-border/30 flex items-center justify-between">
-                                <div className="text-xs font-medium text-muted-foreground">
-                                    {subject.units.length} Units available
-                                </div>
-                                <div className="flex items-center gap-1.5 text-xs font-semibold text-primary/80 group-hover:text-primary transition-colors">
-                                    Explore <ChevronRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
-                                </div>
-                            </div>
+                                    <div className="mt-6 flex-1">
+                                        <h3 className="line-clamp-2 text-[17px] font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
+                                            {subject.name}
+                                        </h3>
+                                    </div>
+
+                                    <div className="mt-6 flex items-center justify-between border-t border-border/30 pt-4">
+                                        <div className="text-xs font-medium text-muted-foreground">
+                                            {subject.units.length} Units available
+                                        </div>
+                                        <div className="flex items-center gap-1.5 text-xs font-semibold text-primary/80 transition-colors group-hover:text-primary">
+                                            Explore <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
                         </Link>
                     </motion.div>
                 ))}

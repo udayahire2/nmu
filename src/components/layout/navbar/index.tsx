@@ -16,26 +16,28 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full border-b transition-colors",
-        scrolled ? "bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60" : "bg-background"
+        "sticky top-0 z-50 w-full transition-all duration-200",
+        scrolled
+          ? "border-b-0 bg-background/80 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60"
+          : "border-b-0 bg-background/95"
       )}
     >
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         
         {/* Left */}
-        <div className="flex items-center gap-6">
-          <Link to="/" className="flex items-center">
+        <div className="flex min-w-0 items-center gap-5 lg:gap-8">
+          <Link to="/" className="shrink-0">
             <Logo />
           </Link>
 
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <NavbarLinks />
           </div>
         </div>
 
         {/* Right */}
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:block">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <div className="hidden md:block">
             <NavbarSearch />
           </div>
 

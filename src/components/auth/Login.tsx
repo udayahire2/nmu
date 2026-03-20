@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -13,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 
 export const title = "Login Card";
 
@@ -62,15 +65,21 @@ const Login = () => {
   };
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Login</CardTitle>
-        <CardDescription>
-          Enter your email below to login to your account
-        </CardDescription>
+    <Card className="w-full max-w-md rounded-3xl border-border/60 bg-card/95 shadow-xl shadow-black/5 backdrop-blur-xl">
+      <CardHeader className="space-y-4 pb-5">
+        <Badge variant="outline" className="w-fit rounded-full border-border/60 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          Welcome Back
+        </Badge>
+        <div className="space-y-2">
+          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardDescription className="leading-6">
+            Enter your email and password to open your academic workspace.
+          </CardDescription>
+        </div>
       </CardHeader>
+      <Separator className="bg-border/60" />
       <form onSubmit={handleLogin}>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-5 pt-6">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -80,14 +89,15 @@ const Login = () => {
               type="email"
               required
               value={email}
+              className="h-11 rounded-xl border-border/60 bg-background"
             />
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="password">Password</Label>
-              <a className="text-sm hover:underline" href="#">
+              <Link to="/login" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
                 Forgot your password?
-              </a>
+              </Link>
             </div>
             <Input
               id="password"
@@ -95,19 +105,30 @@ const Login = () => {
               type="password"
               required
               value={password}
+              className="h-11 rounded-xl border-border/60 bg-background"
             />
           </div>
-          <Button className="w-full" type="submit" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+          <Button className="h-11 w-full rounded-xl" type="submit" disabled={loading}>
+            {loading ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                Logging in...
+              </>
+            ) : (
+              <>
+                Login
+                <ArrowRight className="size-4" />
+              </>
+            )}
           </Button>
         </CardContent>
       </form>
       <CardFooter className="flex justify-center">
         <p className="text-muted-foreground text-sm">
           Don't have an account?{" "}
-          <a className="underline" href="/signup">
+          <Link to="/signup" className="font-medium text-foreground transition-colors hover:text-primary">
             Sign up
-          </a>
+          </Link>
         </p>
       </CardFooter>
     </Card>

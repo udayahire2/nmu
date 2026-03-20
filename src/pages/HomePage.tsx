@@ -14,7 +14,7 @@ export default function HomePage() {
   // Prevent hydration mismatch - render safe defaults during SSR
   if (!isClient) {
     return (
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="mx-auto min-h-screen w-full max-w-6xl bg-background text-foreground">
         <Hero />
         <FeatureGrid />
         <HowItWorksSection />
@@ -23,7 +23,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-background text-foreground flex flex-col relative">
+    <main className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col bg-background text-foreground">
       <Hero />
       {/* Marketing sections - SEO critical, never unmount */}
       <FeatureGrid />
