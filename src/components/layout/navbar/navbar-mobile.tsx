@@ -37,7 +37,6 @@ export function NavbarMobile() {
 
                 <div className="flex flex-col h-full bg-background/50">
                     <div className="p-5 space-y-8 overflow-y-auto flex-1">
-                        {/* Mobile Search - Pill Design */}
                         <div className="relative group">
                             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                                 <Search className="h-4 w-4 text-muted-foreground/60 transition-colors group-focus-within:text-foreground" strokeWidth={2.5} />
@@ -49,7 +48,6 @@ export function NavbarMobile() {
                             />
                         </div>
 
-                        {/* Mobile Navigation Links */}
                         <nav className="flex flex-col gap-1.5">
                             <div className="text-[11px] font-bold text-muted-foreground/50 tracking-widest uppercase px-3 mb-2">Navigation</div>
                             {[
@@ -78,11 +76,9 @@ export function NavbarMobile() {
                         </nav>
                     </div>
 
-                    {/* Footer Actions */}
                     <div className="p-5 border-t border-border/50 mt-auto bg-background/80 backdrop-blur-md">
                         {user ? (
                             <div className="space-y-4">
-                                {/* User Info Card */}
                                 <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-muted/40 border border-border/40">
                                     <Avatar className="h-12 w-12 ring-1 ring-border/50">
                                         <AvatarImage src={user.avatar} alt={user.name} />
@@ -96,7 +92,6 @@ export function NavbarMobile() {
                                     </div>
                                 </div>
 
-                                {/* Action Buttons */}
                                 <div className="grid grid-cols-2 gap-3">
                                     <Link to="/profile" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xl">
                                         <Button variant="outline" className="w-full h-11 rounded-xl border-border/60 hover:bg-secondary transition-colors font-semibold">
@@ -116,13 +111,11 @@ export function NavbarMobile() {
                             </div>
                         ) : (
                             <div className="space-y-5 py-2">
-                                {/* Welcome Message */}
                                 <div className="text-center">
                                     <p className="text-[17px] font-semibold tracking-tight text-foreground">Welcome to the Platform</p>
                                     <p className="text-sm font-medium text-muted-foreground mt-1">Sign in to access your materials</p>
                                 </div>
 
-                                {/* Auth Buttons */}
                                 <div className="space-y-3">
                                     <Link to="/signup" className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
                                         <Button className="w-full h-12 rounded-full font-semibold text-[15px] shadow-none hover:ring-4 hover:ring-foreground/10 transition-all">

@@ -26,11 +26,11 @@ export function NavbarSearch() {
     return (
         <div className="hidden md:flex flex-1 max-w-md mx-6 lg:mx-10 relative" ref={searchRef}>
             <div className="relative w-full group">
-                <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-[15px] w-[15px] text-muted-foreground/60 transition-colors group-focus-within:text-foreground" strokeWidth={2.5} aria-hidden="true" />
+                <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-3.75 w-3.75 text-muted-foreground/60 transition-colors group-focus-within:text-foreground" strokeWidth={2.5} aria-hidden="true" />
                 <input
                     type="search"
                     placeholder="Search materials, courses, topics..."
-                    className="w-full pl-10 pr-12 py-2 text-[14px] font-medium placeholder:text-muted-foreground/50 bg-muted/40 border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-ring/20 focus:bg-muted/60 transition-all shadow-none"
+                    className="w-full pl-10 pr-12 py-2 text-[14px] font-medium placeholder:text-muted-foreground/50 bg-muted/40 border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-ring/20 focus:bg-muted/60 transition-all shadow-none"
                     onFocus={() => setSearchOpen(true)}
                     aria-label="Search site content"
                 />
