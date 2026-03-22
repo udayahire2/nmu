@@ -5,7 +5,7 @@ const steps = [
     title: "Create your account",
     description: "Sign up and verify your email to get access.",
     icon: UserPlus,
-  },
+  },  
   {
     title: "Set your profile",
     description: "Choose your branch and semester.",
@@ -26,12 +26,11 @@ const steps = [
 export function HowItWorksSection() {
   return (
     <section className="mx-auto max-w-4xl px-4 py-20 sm:px-6">
-      
       {/* Header */}
       <div className="mb-10 text-center ">
-        <h2 className="text-6xl font-semibold tracking-tight sm:text-3xl">
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-3xl">
           Get started in minutes
-        </h2>
+        </h1>
         <p className="mt-2 text-sm text-muted-foreground sm:text-base">
           Follow these simple steps to begin your learning journey.
         </p>
@@ -41,26 +40,21 @@ export function HowItWorksSection() {
       <div className="space-y-6 flex">
         {steps.map((step, index) => (
           <div key={index} className="flex items-start gap-4">
-            
             {/* Number */}
-            <div className="flex h-8 w-8 items-center w-fit h-fit p-1 justify-center rounded border text-sm font-medium">
+            <div className="flex h-fit w-fit items-center p-1 justify-center rounded border text-sm font-medium">
               {index + 1}
             </div>
 
             {/* Content */}
             <div>
-              <h3 className="text-sm font-medium">
-                {step.title}
-              </h3>
+              <h3 className="text-sm font-medium">{step.title}</h3>
               <p className="mt-1 text-sm text-muted-foreground">
                 {step.description}
               </p>
             </div>
-
           </div>
         ))}
       </div>
-
     </section>
   );
 }

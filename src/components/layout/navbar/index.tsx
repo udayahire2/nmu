@@ -16,13 +16,13 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-200",
+        "sticky top-0 z-20 w-full transition-all duration-200",
         scrolled
-          ? "border-b-0 bg-background/80 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60"
+          ? "border-b-0  shadow-sm bg-background "
           : "border-b-0 bg-background/95"
       )}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-1">
         
         {/* Left */}
         <div className="flex min-w-0 items-center gap-5 lg:gap-8">

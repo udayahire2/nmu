@@ -5,9 +5,9 @@ import { ArrowRight } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="flex items-center justify-center px-4 py-24 sm:px-6 md:py-32">
+    <section className="flex items-center justify-center px-4 py-24 sm:px-6 md:py-18">
       <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-        
+      
         {/* Heading */}
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
           Academic resources,
