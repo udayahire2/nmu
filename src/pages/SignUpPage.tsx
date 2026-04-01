@@ -5,18 +5,14 @@ export default function SignUpPage() {
     return (
         <AuthShell
             badge="New Account"
-            title="Create a cleaner academic workspace for every role."
-            description="Set up your account once and the platform can organize materials, syllabus and role-specific access around your profile."
+            title="Create your account"
+            description="Start with the basic details and open your study space."
             highlights={[
-                "Students get branch and year based navigation from day one.",
-                "Faculty onboarding supports department and subject ownership.",
-                "Verification keeps approvals and protected sections cleaner.",
-                "The same design system carries across the full product flow."
+                "Simple onboarding flow",
+                "Clean form with only needed fields"
             ]}
         >
-            <div className="w-full space-y-8">
-                <SignUp />
-            </div>
+            <SignUp />
         </AuthShell>
     );
 }

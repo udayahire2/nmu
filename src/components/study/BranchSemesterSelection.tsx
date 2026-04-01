@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BRANCHES, SEMESTERS } from "@/data/study-data";
 import { cn } from "@/lib/utils";
@@ -79,21 +78,23 @@ export function BranchSemesterSelection({
     const selectedMeta = selectedBranch ? BRANCH_META[selectedBranch] : null;
 
     return (
-        <div className="mx-auto w-full max-w-5xl space-y-6 px-5 py-6 lg:px-6 lg:py-8">
-            <Card className="border-border/50 bg-background/80 shadow-none">
-                <CardHeader className="space-y-3">
+        <div className="mx-auto w-full max-w-5xl space-y-6">
+            <section className="space-y-5 rounded-2xl border border-border/60 bg-background/70 p-4 sm:p-5">
+                <div className="space-y-3">
                     <Badge variant="outline" className="w-fit rounded-full border-border/60 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                         Step 1
                     </Badge>
                     <div className="space-y-1.5">
-                        <CardTitle className="text-lg tracking-tight">Select your branch</CardTitle>
-                        <CardDescription className="text-sm leading-6">
-                            Choose your engineering discipline to access relevant study materials.
-                        </CardDescription>
+                        <h2 className="text-lg font-semibold tracking-tight text-foreground">Select your branch</h2>
+                        <p className="text-sm leading-6 text-muted-foreground">
+                            Start with your branch to see only relevant subjects.
+                        </p>
                     </div>
-                </CardHeader>
+                </div>
 
-                <CardContent>
+                <Separator className="bg-border/60" />
+
+                <div>
                     <motion.div
                         variants={staggerContainer}
                         initial="hidden"
@@ -117,7 +118,7 @@ export function BranchSemesterSelection({
                                         "group relative flex w-full items-start gap-4 rounded-2xl border p-4 text-left outline-none transition-all duration-200",
                                         "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
                                         isActive
-                                            ? "border-primary/50 bg-primary/[0.03] ring-1 ring-primary/20 shadow-sm"
+                                            ? "border-primary/40 bg-primary/[0.04]"
                                             : "border-border/60 bg-background hover:border-border hover:bg-accent/30"
                                     )}
                                 >
@@ -155,8 +156,8 @@ export function BranchSemesterSelection({
                             );
                         })}
                     </motion.div>
-                </CardContent>
-            </Card>
+                </div>
+            </section>
 
             <AnimatePresence mode="popLayout">
                 {selectedBranch && selectedMeta && (
@@ -167,8 +168,8 @@ export function BranchSemesterSelection({
                         exit={{ opacity: 0, height: 0, transition: { duration: 0.2, ease: "easeIn" } }}
                         className="overflow-hidden"
                     >
-                        <Card className="border-border/50 bg-background/80 shadow-none">
-                            <CardHeader className="space-y-3">
+                        <section className="space-y-5 rounded-2xl border border-border/60 bg-background/70 p-4 sm:p-5">
+                            <div className="space-y-3">
                                 <div className="flex flex-wrap items-center gap-2">
                                     <Badge variant="outline" className="rounded-full border-border/60 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                                         Step 2
@@ -178,15 +179,15 @@ export function BranchSemesterSelection({
                                     </Badge>
                                 </div>
                                 <div className="space-y-1.5">
-                                    <CardTitle className="text-lg tracking-tight">Select semester</CardTitle>
-                                    <CardDescription className="text-sm leading-6">
-                                        What semester are you currently studying in?
-                                    </CardDescription>
+                                    <h2 className="text-lg font-semibold tracking-tight text-foreground">Select semester</h2>
+                                    <p className="text-sm leading-6 text-muted-foreground">
+                                        Choose the semester you want to study right now.
+                                    </p>
                                 </div>
                                 <Separator className="bg-border/50" />
-                            </CardHeader>
+                            </div>
 
-                            <CardContent>
+                            <div>
                                 <motion.div
                                     variants={staggerContainer}
                                     initial="hidden"
@@ -205,7 +206,7 @@ export function BranchSemesterSelection({
                                                     "relative flex h-14 flex-col items-center justify-center rounded-xl border p-3 outline-none transition-all duration-200",
                                                     "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
                                                     isActive
-                                                        ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                                                        ? "border-primary bg-primary text-primary-foreground"
                                                         : "border-border/60 bg-background text-foreground hover:border-border hover:bg-accent/60"
                                                 )}
                                             >
@@ -219,8 +220,8 @@ export function BranchSemesterSelection({
                                         );
                                     })}
                                 </motion.div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </section>
                     </motion.div>
                 )}
             </AnimatePresence>

@@ -1,319 +1,290 @@
-import { useEffect, useMemo, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import {
-    AlertCircle,
-    Book,
-    ChevronRight,
-    Download,
-    ExternalLink,
-    FileText,
-    Filter,
-    Loader2,
-    RefreshCw,
-    Search,
-} from 'lucide-react';
+import { useEffect, useMemo, useState } from "react";
+import { AlertCircle, ExternalLink, FileText, Loader2, RefreshCw, Search } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import MarkdownPreview from '@/components/ui/markdown-preview';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import MarkdownPreview from "@/components/ui/markdown-preview";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { fetchSyllabus, type SyllabusItem } from '@/services/syllabus-service';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { fetchSyllabus, type SyllabusItem } from "@/services/syllabus-service";
 
 export default function SyllabusPage() {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [selectedBranch, setSelectedBranch] = useState('All');
-    const [selectedSemester, setSelectedSemester] = useState('All');
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [syllabus, setSyllabus] = useState<SyllabusItem[]>([]);
-    const [viewItem, setViewItem] = useState<SyllabusItem | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") ?? "");
+  const [selectedBranch, setSelectedBranch] = useState("All");
+  const [selectedSemester, setSelectedSemester] = useState("All");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [syllabus, setSyllabus] = useState<SyllabusItem[]>([]);
+  const [viewItem, setViewItem] = useState<SyllabusItem | null>(null);
 
-    const loadSyllabus = async () => {
-        setLoading(true);
-        setError(null);
+  const loadSyllabus = async () => {
+    setLoading(true);
+    setError(null);
 
-        try {
-            const data = await fetchSyllabus();
-            setSyllabus(data);
-        } catch (loadError) {
-            console.error(loadError);
-            setError('Failed to load syllabus.');
-        } finally {
-            setLoading(false);
-        }
-    };
+    try {
+      const data = await fetchSyllabus();
+      setSyllabus(data);
+    } catch (loadError) {
+      console.error(loadError);
+      setError("Failed to load syllabus.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    useEffect(() => {
-        const frame = window.requestAnimationFrame(() => {
-            void loadSyllabus();
-        });
+  useEffect(() => {
+    void loadSyllabus();
+  }, []);
 
-        return () => window.cancelAnimationFrame(frame);
-    }, []);
+  useEffect(() => {
+    setSearchQuery(searchParams.get("search") ?? "");
+  }, [searchParams]);
 
-    const branchOptions = useMemo(
-        () => ['All', ...Array.from(new Set(syllabus.map((item) => item.branch))).sort()],
-        [syllabus]
-    );
+  const branchOptions = useMemo(
+    () => ["All", ...Array.from(new Set(syllabus.map((item) => item.branch))).sort()],
+    [syllabus],
+  );
 
-    const semesterOptions = useMemo(
-        () => ['All', ...Array.from(new Set(syllabus.map((item) => item.semester))).sort((a, b) => Number(a) - Number(b))],
-        [syllabus]
-    );
+  const semesterOptions = useMemo(
+    () => [
+      "All",
+      ...Array.from(new Set(syllabus.map((item) => item.semester))).sort((a, b) => Number(a) - Number(b)),
+    ],
+    [syllabus],
+  );
 
-    const filteredSyllabus = syllabus.filter((item) => {
-        const query = searchQuery.toLowerCase();
-        const matchesSearch =
-            item.title.toLowerCase().includes(query) ||
-            item.code.toLowerCase().includes(query);
-        const matchesBranch = selectedBranch === 'All' || item.branch === selectedBranch;
-        const matchesSemester = selectedSemester === 'All' || item.semester === selectedSemester;
+  const filteredSyllabus = syllabus.filter((item) => {
+    const query = searchQuery.trim().toLowerCase();
+    const matchesSearch =
+      !query ||
+      item.title.toLowerCase().includes(query) ||
+      item.code.toLowerCase().includes(query);
+    const matchesBranch = selectedBranch === "All" || item.branch === selectedBranch;
+    const matchesSemester = selectedSemester === "All" || item.semester === selectedSemester;
 
-        return matchesSearch && matchesBranch && matchesSemester;
-    });
+    return matchesSearch && matchesBranch && matchesSemester;
+  });
 
-    return (
-        <div className="relative min-h-screen space-y-8 bg-transparent pb-20">
-            <div className="fixed inset-0 -z-10 h-full w-full bg-background">
-                <div className="absolute left-1/4 top-0 h-[600px] w-[600px] animate-pulse rounded-full bg-primary/5 blur-[120px] opacity-40" />
-                <div className="absolute bottom-0 right-1/4 h-[500px] w-[500px] rounded-full bg-indigo-500/10 blur-[100px] opacity-30" />
-            </div>
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
 
-            <div className="relative z-10 overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: 'easeOut' }}
-                    className="mx-auto max-w-6xl"
-                >
-                    <Card className="border-border/50 bg-card/75 shadow-sm backdrop-blur-sm">
-                        <CardHeader className="space-y-5 text-center sm:text-left">
-                            <Badge
-                                variant="outline"
-                                className="mx-auto flex items-center gap-1.5 rounded-full border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-primary shadow-sm sm:mx-0"
-                            >
-                                <Book className="h-3 w-3" />
-                                Curriculum & Course Content
-                            </Badge>
+    const next = new URLSearchParams(searchParams);
+    if (value.trim()) {
+      next.set("search", value);
+    } else {
+      next.delete("search");
+    }
+    setSearchParams(next, { replace: true });
+  };
 
-                            <div className="space-y-3">
-                                <CardTitle className="text-4xl font-semibold tracking-tight text-foreground md:text-6xl">
-                                    University <span className="relative inline-block text-primary">Syllabus</span>
-                                </CardTitle>
-                                <CardDescription className="mx-auto max-w-2xl text-base leading-7 text-muted-foreground sm:mx-0 sm:text-lg">
-                                    Explore detailed syllabus, credits, and course structures for all semesters and branches.
-                                </CardDescription>
-                            </div>
-                        </CardHeader>
-                    </Card>
-                </motion.div>
-            </div>
+  const clearFilters = () => {
+    setSelectedBranch("All");
+    setSelectedSemester("All");
+    handleSearchChange("");
+  };
 
-            <div className="sticky top-[5rem] z-40 px-4 sm:px-6 lg:px-8">
-                <div className="mx-auto max-w-6xl rounded-3xl border border-border/50 bg-background/85 p-3 shadow-sm backdrop-blur-xl transition-all duration-200">
-                    <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-                        <div className="group relative w-full md:max-w-md">
-                            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                <Search className="h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
-                            </div>
-                            <Input
-                                placeholder="Search by subject name or code..."
-                                className="h-10 rounded-xl border-transparent bg-secondary/50 pl-10 transition-all hover:bg-secondary/70 focus:border-primary/30 focus:bg-background"
-                                value={searchQuery}
-                                onChange={(event) => setSearchQuery(event.target.value)}
-                            />
-                        </div>
+  const hasActiveFilters =
+    searchQuery.trim().length > 0 || selectedBranch !== "All" || selectedSemester !== "All";
 
-                        <div className="flex w-full gap-2 md:w-auto">
-                            <Select value={selectedBranch} onValueChange={setSelectedBranch}>
-                                <SelectTrigger className="h-10 w-full rounded-xl border-border/60 bg-background md:w-[200px]">
-                                    <div className="flex items-center gap-2">
-                                        <Filter className="h-3.5 w-3.5 text-muted-foreground" />
-                                        <SelectValue placeholder="Select branch" />
-                                    </div>
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {branchOptions.map((branch) => (
-                                        <SelectItem key={branch} value={branch}>
-                                            {branch === 'All' ? 'All Branches' : branch}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-
-                            <Select value={selectedSemester} onValueChange={setSelectedSemester}>
-                                <SelectTrigger className="h-10 w-full rounded-xl border-border/60 bg-background md:w-[180px]">
-                                    <SelectValue placeholder="Select semester" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {semesterOptions.map((semester) => (
-                                        <SelectItem key={semester} value={semester}>
-                                            {semester === 'All' ? 'All Semesters' : `Semester ${semester}`}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="mx-auto min-h-[500px] max-w-6xl px-4 md:px-6">
-                {loading && (
-                    <div className="flex h-64 flex-col items-center justify-center gap-4">
-                        <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                        <p className="animate-pulse text-sm font-medium text-muted-foreground">Loading syllabus...</p>
-                    </div>
-                )}
-
-                {!loading && error && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-24 text-center">
-                        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
-                            <AlertCircle className="h-7 w-7 text-destructive" />
-                        </div>
-                        <h3 className="text-lg font-medium">Unable to load syllabus</h3>
-                        <p className="mt-1 text-sm text-muted-foreground">{error}</p>
-                        <Button variant="outline" onClick={loadSyllabus} className="mt-4 gap-2">
-                            <RefreshCw className="h-4 w-4" />
-                            Try Again
-                        </Button>
-                    </motion.div>
-                )}
-
-                {!loading && !error && (
-                    <AnimatePresence mode="popLayout">
-                        {filteredSyllabus.length > 0 ? (
-                            <div className="grid gap-4">
-                                {filteredSyllabus.map((item, index) => (
-                                    <motion.div
-                                        layout
-                                        key={item._id || item.code}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, scale: 0.95 }}
-                                        transition={{ duration: 0.3, delay: index * 0.04 }}
-                                    >
-                                        <Card className="group border-border/40 bg-card/60 backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:bg-card hover:shadow-md">
-                                            <div className="flex flex-col justify-between gap-4 p-4 md:flex-row md:items-center md:p-6">
-                                                <div className="flex-1 space-y-1">
-                                                    <div className="mb-2 flex items-center gap-2">
-                                                        <Badge variant="secondary" className="border-primary/20 bg-primary/10 font-mono text-[10px] uppercase text-primary">
-                                                            {item.code}
-                                                        </Badge>
-                                                        <Badge variant="outline" className="text-[10px] text-muted-foreground">
-                                                            {item.type}
-                                                        </Badge>
-                                                        <span className="text-xs text-muted-foreground">{item.credits} Credits</span>
-                                                    </div>
-                                                    <h3 className="text-lg font-semibold text-foreground transition-colors group-hover:text-primary">
-                                                        {item.title}
-                                                    </h3>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        {item.branch} / Semester {item.semester}
-                                                    </p>
-                                                </div>
-
-                                                <div className="mt-2 flex items-center gap-3 md:mt-0">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        className="h-9 gap-2 text-muted-foreground hover:text-foreground"
-                                                        onClick={() => setViewItem(item)}
-                                                    >
-                                                        View Details
-                                                        <ChevronRight className="h-4 w-4" />
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        className="h-9 shadow-sm"
-                                                        onClick={() => setViewItem(item)}
-                                                    >
-                                                        <Download className="mr-2 h-4 w-4" />
-                                                        {item.type === 'markdown' ? 'Open Content' : 'Open File'}
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </Card>
-                                    </motion.div>
-                                ))}
-                            </div>
-                        ) : (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-24 text-center">
-                                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted/50">
-                                    <Search className="h-6 w-6 text-muted-foreground" />
-                                </div>
-                                <h3 className="text-lg font-medium">No subjects found</h3>
-                                <p className="mt-1 text-sm text-muted-foreground">Try adjusting your search or filters.</p>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                )}
-            </div>
-
-            <Dialog open={!!viewItem} onOpenChange={(open) => !open && setViewItem(null)}>
-                <DialogContent className="max-w-3xl border-border/50 bg-background/95 backdrop-blur-xl">
-                    <DialogHeader>
-                        <DialogTitle>{viewItem?.title}</DialogTitle>
-                    </DialogHeader>
-
-                    {viewItem && (
-                        <div className="space-y-4 py-4">
-                            <Separator className="bg-border/50" />
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-1 rounded-lg bg-secondary/50 p-3">
-                                    <span className="text-xs uppercase tracking-wider text-muted-foreground">Course Code</span>
-                                    <p className="font-semibold">{viewItem.code}</p>
-                                </div>
-                                <div className="space-y-1 rounded-lg bg-secondary/50 p-3">
-                                    <span className="text-xs uppercase tracking-wider text-muted-foreground">Credits</span>
-                                    <p className="font-semibold">{viewItem.credits}</p>
-                                </div>
-                                <div className="space-y-1 rounded-lg bg-secondary/50 p-3">
-                                    <span className="text-xs uppercase tracking-wider text-muted-foreground">Branch</span>
-                                    <p className="font-semibold">{viewItem.branch}</p>
-                                </div>
-                                <div className="space-y-1 rounded-lg bg-secondary/50 p-3">
-                                    <span className="text-xs uppercase tracking-wider text-muted-foreground">Semester</span>
-                                    <p className="font-semibold">Semester {viewItem.semester}</p>
-                                </div>
-                            </div>
-
-                            {viewItem.type === 'markdown' ? (
-                                <div className="max-h-[60vh] overflow-hidden rounded-lg border border-border/50">
-                                    <MarkdownPreview content={viewItem.contentUrl} className="max-h-[60vh]" />
-                                </div>
-                            ) : (
-                                <div className="flex flex-col items-center justify-center space-y-3 rounded-lg border border-dashed border-border bg-muted/10 p-6 text-center">
-                                    <div className="rounded-full bg-primary/10 p-3 text-primary">
-                                        <FileText className="h-6 w-6" />
-                                    </div>
-                                    <div className="space-y-1">
-                                        <p className="font-medium">Syllabus Document</p>
-                                        <p className="text-xs text-muted-foreground">Open the uploaded syllabus file in a new tab.</p>
-                                    </div>
-                                    <Button asChild>
-                                        <a href={viewItem.contentUrl} target="_blank" rel="noreferrer">
-                                            <ExternalLink className="mr-2 h-4 w-4" />
-                                            Open Syllabus
-                                        </a>
-                                    </Button>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </DialogContent>
-            </Dialog>
+  return (
+    <div className="space-y-6 pb-14 pt-6 sm:space-y-8 sm:pt-8">
+      <div className="space-y-4 border-b border-border/70 pb-5">
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+            Syllabus
+          </Badge>
+          <Badge variant="secondary" className="rounded-full px-3 py-1 text-[11px]">
+            Student reference
+          </Badge>
         </div>
-    );
+
+        <div className="space-y-2">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            Search syllabus quickly
+          </h1>
+          <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+            Search by subject or code, then open the correct syllabus in one step.
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-4 rounded-2xl border border-border/70 bg-background/70 p-4 sm:p-5">
+        <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px_190px_auto]">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search by subject or code"
+              value={searchQuery}
+              onChange={(event) => handleSearchChange(event.target.value)}
+              className="h-11 rounded-2xl pl-9"
+            />
+          </div>
+
+          <Select value={selectedBranch} onValueChange={setSelectedBranch}>
+            <SelectTrigger className="h-11 rounded-2xl">
+              <SelectValue placeholder="Select branch" />
+            </SelectTrigger>
+            <SelectContent>
+              {branchOptions.map((branch) => (
+                <SelectItem key={branch} value={branch}>
+                  {branch === "All" ? "All branches" : branch}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={selectedSemester} onValueChange={setSelectedSemester}>
+            <SelectTrigger className="h-11 rounded-2xl">
+              <SelectValue placeholder="Select semester" />
+            </SelectTrigger>
+            <SelectContent>
+              {semesterOptions.map((semester) => (
+                <SelectItem key={semester} value={semester}>
+                  {semester === "All" ? "All semesters" : `Semester ${semester}`}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {hasActiveFilters ? (
+            <Button variant="outline" className="h-11 rounded-2xl" onClick={clearFilters}>
+              Clear
+            </Button>
+          ) : (
+            <div className="hidden lg:block" />
+          )}
+        </div>
+
+        <div className="text-sm text-muted-foreground">
+          {loading ? "Loading syllabus..." : `${filteredSyllabus.length} result${filteredSyllabus.length === 1 ? "" : "s"} found`}
+        </div>
+      </div>
+
+      {loading && (
+        <div className="flex flex-col items-center gap-3 rounded-2xl border border-border/70 bg-background/70 p-12 text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">Loading syllabus...</p>
+        </div>
+      )}
+
+      {!loading && error && (
+        <div className="flex flex-col items-center gap-4 rounded-2xl border border-border/70 bg-background/70 p-12 text-center">
+          <AlertCircle className="h-8 w-8 text-destructive" />
+          <div className="space-y-1">
+            <h2 className="text-lg font-semibold text-foreground">Unable to load syllabus</h2>
+            <p className="text-sm text-muted-foreground">{error}</p>
+          </div>
+          <Button variant="outline" className="rounded-full" onClick={loadSyllabus}>
+            <RefreshCw className="h-4 w-4" />
+            Try again
+          </Button>
+        </div>
+      )}
+
+      {!loading && !error && (
+        <div className="overflow-hidden rounded-2xl border border-border/70 bg-background/70">
+          {filteredSyllabus.length > 0 ? (
+            filteredSyllabus.map((item) => (
+              <div
+                key={item._id || item.code}
+                className="flex flex-col gap-4 border-b border-border/70 p-5 last:border-b-0 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="min-w-0 space-y-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline" className="rounded-full font-mono text-[11px]">
+                      {item.code}
+                    </Badge>
+                    <Badge variant="secondary" className="rounded-full text-[11px]">
+                      {item.type}
+                    </Badge>
+                    <span className="text-sm text-muted-foreground">{item.credits} credits</span>
+                  </div>
+
+                  <div className="space-y-1">
+                    <h2 className="text-lg font-semibold tracking-tight text-foreground">{item.title}</h2>
+                    <p className="text-sm text-muted-foreground">
+                      {item.branch} | Semester {item.semester}
+                    </p>
+                  </div>
+                </div>
+
+                <Button className="rounded-full" onClick={() => setViewItem(item)}>
+                  {item.type === "markdown" ? "Open content" : "Open file"}
+                </Button>
+              </div>
+            ))
+          ) : (
+            <div className="flex flex-col items-center gap-3 p-12 text-center">
+              <Search className="h-8 w-8 text-muted-foreground/40" />
+              <div className="space-y-1">
+                <h2 className="text-lg font-semibold text-foreground">No syllabus items found</h2>
+                <p className="text-sm text-muted-foreground">Try a different subject name, code, or filter.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      <Dialog open={!!viewItem} onOpenChange={(open) => !open && setViewItem(null)}>
+        <DialogContent className="max-w-3xl rounded-3xl border-border/70 bg-background/95">
+          <DialogHeader>
+            <DialogTitle>{viewItem?.title}</DialogTitle>
+          </DialogHeader>
+
+          {viewItem && (
+            <div className="space-y-4 py-2">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <InfoCard label="Course code" value={viewItem.code} />
+                <InfoCard label="Credits" value={String(viewItem.credits)} />
+                <InfoCard label="Branch" value={viewItem.branch} />
+                <InfoCard label="Semester" value={`Semester ${viewItem.semester}`} />
+              </div>
+
+              <Separator />
+
+              {viewItem.type === "markdown" ? (
+                <MarkdownPreview
+                  content={viewItem.contentUrl}
+                  className="max-h-[60vh] rounded-2xl border border-border/60 bg-background/75 p-4"
+                />
+              ) : (
+                <div className="flex flex-col items-center gap-3 rounded-2xl border border-border/70 bg-background/70 p-8 text-center">
+                  <FileText className="h-8 w-8 text-primary" />
+                  <div className="space-y-1">
+                    <h3 className="text-lg font-semibold text-foreground">Open syllabus document</h3>
+                    <p className="text-sm text-muted-foreground">This syllabus item is stored as a file.</p>
+                  </div>
+                  <Button asChild className="rounded-full">
+                    <a href={viewItem.contentUrl} target="_blank" rel="noreferrer">
+                      <ExternalLink className="h-4 w-4" />
+                      Open file
+                    </a>
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+function InfoCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-border/70 bg-background/70 p-4">
+      <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-foreground">{value}</p>
+    </div>
+  );
 }

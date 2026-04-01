@@ -1,9 +1,10 @@
 "use client";
 
 import { Link, useLocation } from "react-router-dom";
-import { cn } from "@/lib/utils";
+
 import { NAV_LINKS } from "@/config/nav-config";
 import { useLocalAuth } from "@/hooks/use-local-auth";
+import { cn } from "@/lib/utils";
 
 export function NavbarLinks() {
   const location = useLocation();
@@ -21,7 +22,6 @@ export function NavbarLinks() {
 
   const normalizePath = (path: string) => {
     if (path === "/") return path;
-
     return path.replace(/\/+$/, "");
   };
 
@@ -37,7 +37,7 @@ export function NavbarLinks() {
   };
 
   return (
-    <nav className="hidden lg:flex items-center gap-5 xl:gap-6">
+    <nav className="hidden items-center gap-1 lg:flex">
       {links.map((link) => {
         const active = isActive(link.path);
 
@@ -47,10 +47,10 @@ export function NavbarLinks() {
             to={link.path}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "text-sm transition-colors",
+              "rounded-xl px-3 py-2 text-sm font-medium transition-colors",
               active
-                ? "text-foreground font-medium"
-                : "text-muted-foreground/80 hover:text-foreground"
+                ? "bg-secondary text-foreground"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             {link.label}

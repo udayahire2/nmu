@@ -1,37 +1,35 @@
-import { Outlet, useLocation } from "react-router-dom"
-import { Navbar } from "./Navbar"
-import { Footer } from "./Footer"
+import { Outlet, useLocation } from "react-router-dom";
 
+import { Footer } from "./Footer";
+import { Navbar } from "./Navbar";
 
 export default function Layout({ children }: { children?: React.ReactNode }) {
-    const location = useLocation();
-    const isResourcesPage = location.pathname.startsWith('/resources');
+  const location = useLocation();
+  const isResourcesPage = location.pathname.startsWith("/resources");
 
-    const layoutContent = (
-        <div className="flex min-h-screen flex-col relative bg-background scroll-smooth">
-            {/* Accessibility Skip Link */}
-            <a
-                href="#main-content"
-                className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md font-medium transition-colors"
-            >
-                Skip to main content
-            </a>
+  return (
+    <div className="relative flex min-h-screen flex-col bg-transparent">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
+      >
+        Skip to main content
+      </a>
 
-            {/* Global Grid Pattern - Optimized for Performance & Visibility */}
-            <div className="fixed inset-0 -z-10 h-screen w-full bg-[linear-gradient(to_right,hsl(var(--border)/0.15)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.15)_1px,transparent_1px)] bg-size-[48px_48px] mask-[radial-gradient(ellipse_80%_60%_at_50%_0%,#000_60%,transparent_100%)] pointer-events-none select-none" />
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-white/60 to-transparent dark:from-white/5" />
+        <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(to_right,hsl(var(--border)/0.22)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.22)_1px,transparent_1px)] bg-[size:28px_28px] opacity-35 [mask-image:linear-gradient(to_bottom,black,transparent_88%)]" />
+      </div>
 
-            <Navbar />
+      <Navbar />
 
-            {/* Main Content with Responsive Container */}
-            <div className="w-full max-w-screen-2xl mx-auto flex-1 flex flex-col">
-                <main id="main-content" className="flex-1 w-full relative">
-                    {children || <Outlet />}
-                </main>
-            </div>
+      <div className="mx-auto flex w-full max-w-screen-xl flex-1 flex-col px-4 sm:px-6 lg:px-8">
+        <main id="main-content" className="relative flex-1">
+          {children || <Outlet />}
+        </main>
+      </div>
 
-            {!isResourcesPage && <Footer />}
-        </div>
-    );
-
-    return layoutContent;
+      {!isResourcesPage && <Footer />}
+    </div>
+  );
 }

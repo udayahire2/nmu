@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { CheckCircle2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/ui/logo";
@@ -8,7 +7,7 @@ interface AuthShellProps {
   badge: string;
   title: string;
   description: string;
-  highlights: string[];
+  highlights?: string[];
   children: ReactNode;
 }
 
@@ -16,56 +15,50 @@ export function AuthShell({
   badge,
   title,
   description,
-  highlights,
+  highlights = [],
   children,
 }: AuthShellProps) {
   return (
-    <section className="relative overflow-hidden bg-background">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(120,119,198,0.10),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.10),transparent_28%)]" />
+    <section className="min-h-[calc(100vh-4rem)] bg-background">
+      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col justify-center px-4 py-10 sm:px-6">
+        <div className="mb-8 space-y-5 text-center">
+          <div className="flex justify-center">
+            <Logo />
+          </div>
 
-      <div className="relative mx-auto grid min-h-[calc(100vh-4rem)] max-w-6xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,420px)] lg:items-center lg:gap-12 lg:px-8 lg:py-16">
-        <div className="hidden lg:flex flex-col gap-8 pr-6">
-          <div className="space-y-6">
+          <div className="space-y-3">
             <Badge
               variant="outline"
-              className="rounded-full border-border/60 bg-background/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground"
+              className="rounded-full border-border/60 bg-background px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground"
             >
               {badge}
             </Badge>
 
-            <div className="space-y-5">
-              <Logo />
-              <div className="space-y-3">
-                <h1 className="max-w-xl text-4xl font-semibold tracking-tight text-foreground xl:text-5xl">
-                  {title}
-                </h1>
-                <p className="max-w-lg text-base leading-7 text-muted-foreground">
-                  {description}
-                </p>
-              </div>
+            <div className="space-y-2">
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+                {title}
+              </h1>
+              <p className="text-sm leading-6 text-muted-foreground sm:text-base">
+                {description}
+              </p>
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            {highlights.map((highlight) => (
-              <div
-                key={highlight}
-                className="flex items-start gap-3 rounded-2xl border border-border/50 bg-card/70 p-4 shadow-sm backdrop-blur-sm"
-              >
-                <div className="mt-0.5 rounded-full bg-primary/10 p-1.5 text-primary">
-                  <CheckCircle2 className="size-4" />
-                </div>
-                <p className="text-sm font-medium leading-6 text-foreground/90">
+          {highlights.length > 0 && (
+            <div className="flex flex-wrap justify-center gap-2">
+              {highlights.slice(0, 2).map((highlight) => (
+                <span
+                  key={highlight}
+                  className="rounded-full border border-border/60 bg-card/70 px-3 py-1.5 text-xs text-muted-foreground"
+                >
                   {highlight}
-                </p>
-              </div>
-            ))}
-          </div>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
-        <div className="flex items-center justify-center">
-          <div className="w-full max-w-md">{children}</div>
-        </div>
+        <div className="w-full">{children}</div>
       </div>
     </section>
   );

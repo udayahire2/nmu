@@ -1,9 +1,9 @@
 import type { ComponentType, SVGProps } from "react";
-import Link from "fumadocs-core/link";
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import {
   ArchiveDocumentIcon,
-  ArrowUpRightIcon,
   CollaborationOrbitIcon,
   CurriculumLayersIcon,
   VerifiedStudyIcon,
@@ -11,7 +11,7 @@ import {
 
 export type FeatureIcon = ComponentType<SVGProps<SVGSVGElement>>;
 
-export interface FeatureItem {
+interface FeatureItem {
   id: string;
   title: string;
   description: string;
@@ -22,111 +22,69 @@ export interface FeatureItem {
 const FEATURE_ITEMS: FeatureItem[] = [
   {
     id: "verified-materials",
-    title: "Verified Study Materials",
-    description: "Access high-quality lecture notes and video tutorials, carefully reviewed and approved by faculty members.",
-    href: "/materials",
+    title: "Study materials by semester",
+    description: "Open the right subject quickly.",
+    href: "/resources",
     icon: VerifiedStudyIcon,
   },
   {
     id: "branch-curriculum",
-    title: "Branch-Specific Curriculum",
-    description: "Personalized syllabus tracking tailored exactly to your academic year and engineering branch.",
-    href: "/curriculum",
+    title: "Simple syllabus search",
+    description: "Search by subject or code.",
+    href: "/syllabus",
     icon: CurriculumLayersIcon,
   },
   {
     id: "archives",
-    title: "Previous Year Archives",
-    description: "Comprehensive repository of organized exam papers and PYQs to supercharge your test preparation.",
-    href: "/archives",
+    title: "Previous paper access",
+    description: "Keep revision practical.",
+    href: "/resources",
     icon: ArchiveDocumentIcon,
   },
   {
     id: "collaboration",
-    title: "Seamless Collaboration",
-    description: "A centralized, moderated ecosystem connecting students, faculty, and administrators for better learning.",
-    href: "/collaboration",
+    title: "Cleaner student flow",
+    description: "Less noise, faster reading.",
+    href: "/resources",
     icon: CollaborationOrbitIcon,
   },
 ];
 
-interface FeatureGridProps {
-  compact?: boolean;
-}
-
-export function FeatureGrid({ compact = false }: FeatureGridProps) {
-  if (compact) {
-    return <CompactFeatureList />;
-  }
-  return <StandardFeatureGrid />;
-}
-
-function CompactFeatureList() {
+export function FeatureGrid() {
   return (
-    <section
-      className="container mx-auto px-4 py-4"
-      aria-label="Key Platform Features"
-    >
-      <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8">
-        {FEATURE_ITEMS.map((feature) => (
-          <div
-            key={feature.id}
-            className="flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground/80 transition-colors hover:text-foreground"
-          >
-            <feature.icon
-              className="h-4 w-4 opacity-70"
-              aria-hidden="true"
-            />
-            <span>{feature.title}</span>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function StandardFeatureGrid() {
-  return (
-    <section className="mx-auto max-w-5xl px-4 py-20 sm:px-6">
-      
-      {/* Header */}
-      <div className="mx-auto mb-12 max-w-2xl text-center">
-        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          Everything you need to succeed
+    <section className="py-8 sm:py-10">
+      <div className="mb-4 space-y-2">
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          Start here
+        </p>
+        <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+          Use only the pages you need
         </h2>
-        <p className="mt-3 text-sm text-muted-foreground sm:text-base">
-          A structured platform with the essential tools to manage your academic journey.
+        <p className="max-w-xl text-sm leading-6 text-muted-foreground">
+          Each section is kept short so students can scan quickly.
         </p>
       </div>
 
-      {/* Grid */}
-      <div className="grid gap-8 sm:grid-cols-2">
+      <div className="divide-y divide-border/70 rounded-2xl border border-border/70 bg-background/70">
         {FEATURE_ITEMS.map((feature) => (
-          <FeatureCard key={feature.id} feature={feature} />
+          <Link
+            key={feature.id}
+            to={feature.href}
+            className="flex items-center justify-between gap-4 px-4 py-4 transition-colors hover:bg-secondary/30 sm:px-5"
+          >
+            <div className="flex min-w-0 items-start gap-3">
+              <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-secondary text-primary">
+                <feature.icon className="h-4 w-4" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-sm font-semibold text-foreground">{feature.title}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{feature.description}</p>
+              </div>
+            </div>
+            <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+          </Link>
         ))}
       </div>
     </section>
-  );
-}
-
-function FeatureCard({ feature }: { feature: FeatureItem }) {
-  return (
-    <Link
-      href={feature.href}
-      className="flex flex-col gap-3 rounded-xl p-4 transition-colors hover:bg-muted/40"
-    >
-      {/* Icon */}
-      <feature.icon className="h-5 w-5 text-muted-foreground" />
-
-      {/* Content */}
-      <div>
-        <h3 className="text-base font-medium">
-          {feature.title}
-        </h3>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {feature.description}
-        </p>
-      </div>
-    </Link>
   );
 }

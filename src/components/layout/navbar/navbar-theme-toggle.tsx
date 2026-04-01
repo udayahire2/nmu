@@ -11,7 +11,7 @@ export function NavbarThemeToggle() {
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="h-10 w-10 shrink-0 rounded-full hover:bg-secondary/80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 transition-colors group"
+            className="h-10 w-10 shrink-0 rounded-xl border border-border/70 bg-card/80 hover:bg-secondary/80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 transition-colors group"
             aria-label="Toggle theme"
         >
             <motion.div

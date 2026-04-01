@@ -1,59 +1,57 @@
-import { UserPlus, BookOpen, CheckCircle2, GraduationCap } from "lucide-react";
+import { BookOpen, CheckCircle2, FileText } from "lucide-react";
 
 const steps = [
   {
-    title: "Create your account",
-    description: "Sign up and verify your email to get access.",
-    icon: UserPlus,
-  },  
-  {
-    title: "Set your profile",
-    description: "Choose your branch and semester.",
+    title: "Choose branch and semester",
+    description: "Start from the correct academic path.",
     icon: BookOpen,
   },
   {
-    title: "Access resources",
-    description: "Browse notes, videos, and past papers.",
-    icon: CheckCircle2,
+    title: "Open the right subject",
+    description: "See only the material you need.",
+    icon: FileText,
   },
   {
-    title: "Learn and improve",
-    description: "Study with structured materials and prepare for exams.",
-    icon: GraduationCap,
+    title: "Study from one topic page",
+    description: "Read notes, lecture, and key points together.",
+    icon: CheckCircle2,
   },
 ];
 
 export function HowItWorksSection() {
   return (
-    <section className="mx-auto max-w-4xl px-4 py-20 sm:px-6">
-      {/* Header */}
-      <div className="mb-10 text-center ">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-3xl">
-          Get started in minutes
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-          Follow these simple steps to begin your learning journey.
+    <section className="py-8 sm:py-10">
+      <div className="mb-4 space-y-2">
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          Study flow
+        </p>
+        <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+          Three simple steps
+        </h2>
+        <p className="max-w-xl text-sm leading-6 text-muted-foreground">
+          Shorter flow, less distraction.
         </p>
       </div>
 
-      {/* Steps */}
-      <div className="space-y-6 flex">
-        {steps.map((step, index) => (
-          <div key={index} className="flex items-start gap-4">
-            {/* Number */}
-            <div className="flex h-fit w-fit items-center p-1 justify-center rounded border text-sm font-medium">
-              {index + 1}
-            </div>
+      <div className="space-y-3">
+        {steps.map((step, index) => {
+          const Icon = step.icon;
 
-            {/* Content */}
-            <div>
-              <h3 className="text-sm font-medium">{step.title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {step.description}
-              </p>
+          return (
+            <div key={step.title} className="flex items-start gap-4 rounded-2xl border border-border/70 bg-background/70 px-4 py-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary text-primary">
+                <Icon className="h-4 w-4" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-muted-foreground">0{index + 1}</span>
+                  <h3 className="text-sm font-semibold text-foreground">{step.title}</h3>
+                </div>
+                <p className="mt-1 text-sm text-muted-foreground">{step.description}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

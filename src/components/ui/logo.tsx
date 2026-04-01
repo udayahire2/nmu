@@ -9,7 +9,7 @@ export function Logo({ className, showText = true, ...props }: LogoProps) {
     return (
         <div className={cn("flex items-center gap-3", className)} {...props}>
             {/* Logo Icon */}
-            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center">
+            <div className="relative flex h-9 w-9 shrink-0 items-center justify-center">
                 <svg
                     width="100%"
                     height="100%"
@@ -26,10 +26,10 @@ export function Logo({ className, showText = true, ...props }: LogoProps) {
             {/* Text Lockup */}
             {showText && (
                 <div className="flex flex-col justify-center -space-y-0.5">
-                    <span className="font-extrabold text-xl leading-none tracking-tight text-foreground">
+                    <span className="font-extrabold text-[18px] leading-none tracking-tight text-foreground sm:text-xl">
                         NMU
                     </span>
-                    <span className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                    <span className="text-[10px] font-medium tracking-[0.08em] text-muted-foreground uppercase sm:text-[11px]">
                         StudyHub
                     </span>
                 </div>

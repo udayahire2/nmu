@@ -1,87 +1,64 @@
-import { Github, Twitter, Linkedin } from "lucide-react"
-import { Logo } from "@/components/ui/logo"
-import { Link } from "react-router-dom"
+import { BookOpen, FileText, UserCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
-const socialLinks = [
-    { icon: Github, href: "#", label: "GitHub" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-]
+import { Logo } from "@/components/ui/logo";
 
-const resourceLinks = [
-    { label: "Syllabus", to: "/syllabus" },
-    { label: "Question Papers", to: "/resources" },
-    { label: "Notes", to: "/resources" },
-]
+const studyLinks = [
+  { label: "Study Materials", to: "/resources", icon: BookOpen },
+  { label: "Syllabus", to: "/syllabus", icon: FileText },
+  { label: "Profile", to: "/profile", icon: UserCircle },
+];
 
 export function Footer() {
-    return (
-        <footer className="w-full border-t border-border bg-background pt-14 pb-8">
-            <div className="mx-auto w-full max-w-6xl px-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 mb-12">
-                    {/* Brand */}
-                    <div className="flex flex-col gap-4 sm:col-span-2">
-                        <Logo />
-                        <p className="text-muted-foreground text-sm leading-relaxed max-w-xs">
-                            Dedicated to providing clear, organized, and reliable study resources for university students.
-                        </p>
-                        <div className="flex items-center gap-2 mt-1">
-                            {socialLinks.map(({ icon: Icon, href, label }) => (
-                                <a
-                                    key={label}
-                                    href={href}
-                                    aria-label={label}
-                                    className="inline-flex items-center justify-center size-9 rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors duration-150"
-                                >
-                                    <Icon className="size-4" />
-                                </a>
-                            ))}
-                        </div>
-                    </div>
+  return (
+    <footer className="mt-16 w-full border-t border-border/70 bg-card/60 py-10 backdrop-blur-sm">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+        <div className="grid gap-8 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,1fr)]">
+          <div className="flex flex-col gap-4">
+            <Logo />
+            <p className="max-w-md text-sm leading-6 text-muted-foreground">
+              A lighter study space for students who want notes, syllabus details, and previous papers without extra clutter.
+            </p>
+            <p className="text-sm text-muted-foreground">Built for quick study sessions on phone and laptop.</p>
+          </div>
 
-                    {/* Resources */}
-                    <nav aria-label="Resources">
-                        <h3 className="text-xs font-bold uppercase tracking-widest text-foreground mb-4">
-                            Resources
-                        </h3>
-                        <ul className="space-y-2.5">
-                            {resourceLinks.map(({ label, to }) => (
-                                <li key={label}>
-                                    <Link
-                                        to={to}
-                                        className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150"
-                                    >
-                                        {label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </nav>
+          <nav aria-label="Study links">
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-foreground">
+              Study
+            </h3>
+            <ul className="space-y-3">
+              {studyLinks.map(({ label, to, icon: Icon }) => (
+                <li key={label}>
+                  <Link
+                    to={to}
+                    className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-                    {/* Contact */}
-                    <nav aria-label="Contact">
-                        <h3 className="text-xs font-bold uppercase tracking-widest text-foreground mb-4">
-                            Contact
-                        </h3>
-                        <ul className="space-y-2.5">
-                            <li>
-                                <a
-                                    href="mailto:contribute@example.com"
-                                    className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150"
-                                >
-                                    Contribute
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-
-                {/* Bottom bar */}
-                <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
-                    <p>© 2026 NMU Study Hub. Open Source.</p>
-                    <p>Designed by Uday Ahire</p>
-                </div>
+          <div>
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-foreground">
+              Help
+            </h3>
+            <div className="space-y-3 text-sm text-muted-foreground">
+              <p>Choose the subject, open the topic, and start reading in a clean layout.</p>
+              <a href="mailto:contribute@example.com" className="inline-flex text-foreground underline underline-offset-4">
+                Contact support
+              </a>
             </div>
-        </footer>
-    )
+          </div>
+        </div>
+
+        <div className="mt-8 flex flex-col gap-2 border-t border-border/70 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <p>(c) 2026 NMU Study Hub</p>
+          <p>Simple, calm, student-first learning UI</p>
+        </div>
+      </div>
+    </footer>
+  );
 }
