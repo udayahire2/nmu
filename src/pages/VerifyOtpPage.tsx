@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { AuthShell } from "@/components/auth/auth-shell";
+import { buildApiUrl, getErrorMessage, parseApiData } from "@/services/api";
 
 export default function VerifyOtpPage() {
     const [searchParams] = useSearchParams();
@@ -35,8 +36,7 @@ export default function VerifyOtpPage() {
         setLoading(true);
 
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
-            const res = await fetch(`${API_URL}/auth/verify-otp`, {
+            const res = await fetch(buildApiUrl('/auth/verify-otp'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -45,22 +45,24 @@ export default function VerifyOtpPage() {
             });
 
             const data = await res.json();
+            const currentUser = parseApiData<Record<string, unknown> | null>(data, null) ?? data.user;
+            const token = typeof data.token === 'string' ? data.token : data.data?.token;
 
-            if (data.success) {
+            if (res.ok && data.success && token && currentUser) {
                 // Store token
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('user', JSON.stringify(data.user));
+                localStorage.setItem('token', token);
+                localStorage.setItem('user', JSON.stringify(currentUser));
                 // Reload or redirect to trigger auth state update
                 // Redirect based on role
-                if (data.user.role === 'admin') {
+                if (currentUser.role === 'admin') {
                     window.location.href = '/admin/dashboard';
-                } else if (data.user.role === 'faculty') {
+                } else if (currentUser.role === 'faculty') {
                     window.location.href = '/dashboard/faculty';
                 } else {
                     window.location.href = '/';
                 }
             } else {
-                alert(data.message || 'Verification failed');
+                alert(getErrorMessage(data, 'Verification failed'));
             }
         } catch (error) {
             console.error(error);

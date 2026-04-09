@@ -1,4 +1,4 @@
-import { buildApiUrl, getAuthHeaders } from './api';
+import { buildApiUrl, getAuthHeaders, getErrorMessage, parseApiData } from './api';
 
 const API_URL = buildApiUrl('/admin');
 
@@ -21,9 +21,12 @@ export const fetchDashboardStats = async (): Promise<DashboardStats | null> => {
         const response = await fetch(`${API_URL}/stats`, {
             headers: getAuthHeaders(),
         });
-        if (!response.ok) throw new Error('Failed to fetch stats');
         const data = await response.json();
-        return data.stats ?? null;
+        if (!response.ok || data.success === false) {
+            throw new Error(getErrorMessage(data, 'Failed to fetch stats'));
+        }
+
+        return parseApiData<DashboardStats | null>(data, null);
     } catch (error) {
         console.error('Error fetching dashboard stats:', error);
         return null;
@@ -35,9 +38,12 @@ export const fetchProfile = async (): Promise<AdminProfile | null> => {
         const response = await fetch(`${API_URL}/profile`, {
             headers: getAuthHeaders(),
         });
-        if (!response.ok) throw new Error('Failed to fetch profile');
         const data = await response.json();
-        return data.profile ?? null;
+        if (!response.ok || data.success === false) {
+            throw new Error(getErrorMessage(data, 'Failed to fetch profile'));
+        }
+
+        return parseApiData<AdminProfile | null>(data, null);
     } catch (error) {
         console.error('Error fetching profile:', error);
         return null;
@@ -54,9 +60,13 @@ export const updateProfile = async (data: Partial<AdminProfile>): Promise<AdminP
             },
             body: JSON.stringify(data),
         });
-        if (!response.ok) throw new Error('Failed to update profile');
+        if (!response.ok) {
+            const payload = await response.json();
+            throw new Error(getErrorMessage(payload, 'Failed to update profile'));
+        }
+
         const payload = await response.json();
-        return payload.profile ?? null;
+        return parseApiData<AdminProfile | null>(payload, null);
     } catch (error) {
         console.error('Error updating profile:', error);
         return null;

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";
+import { buildApiUrl, getErrorMessage } from "@/services/api";
 
 const FacultyApprovals = () => {
     const [faculty, setFaculty] = useState<any[]>([]);
@@ -9,9 +10,8 @@ const FacultyApprovals = () => {
 
     const fetchPendingFaculty = async () => {
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
             const token = localStorage.getItem('token');
-            const res = await fetch(`${API_URL}/admin/faculty/pending`, {
+            const res = await fetch(buildApiUrl('/admin/faculty/pending'), {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -29,9 +29,8 @@ const FacultyApprovals = () => {
 
     const handleAction = async (id: string, action: 'approve' | 'reject') => {
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
             const token = localStorage.getItem('token');
-            const res = await fetch(`${API_URL}/admin/faculty/${id}/${action}`, {
+            const res = await fetch(buildApiUrl(`/admin/faculty/${id}/${action}`), {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -42,7 +41,7 @@ const FacultyApprovals = () => {
                 // Refresh list
                 setFaculty(prev => prev.filter(f => f._id !== id));
             } else {
-                alert(data.message);
+                alert(getErrorMessage(data, `Failed to ${action} faculty`));
             }
         } catch (error) {
             console.error(`Failed to ${action} faculty`, error);

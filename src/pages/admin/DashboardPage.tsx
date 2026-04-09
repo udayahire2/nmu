@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { DUMMY_STATS } from "@/lib/dummy-data";
 import { fetchPendingMaterials, fetchApprovedMaterials, updateMaterialStatus, type StudyMaterial } from "@/services/study-service";
+import { buildApiUrl, parseApiData } from "@/services/api";
 
 export default function DashboardPage() {
     const [stats, setStats] = useState<any>(null);
@@ -27,15 +28,14 @@ export default function DashboardPage() {
                 const token = localStorage.getItem('token');
                 if (!token) return;
 
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
-                const res = await fetch(`${API_URL}/admin/stats`, {
+                const res = await fetch(buildApiUrl('/admin/stats'), {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 const data = await res.json();
                 if (data.success) {
-                    setStats(data.stats);
+                    setStats(parseApiData(data, null));
                 }
             } catch (error) {
                 console.error("Failed to fetch stats", error);

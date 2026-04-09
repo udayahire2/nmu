@@ -1,4 +1,4 @@
-import { buildApiUrl, getAuthHeaders } from './api';
+import { buildApiUrl, getAuthHeaders, getErrorMessage, parseApiData } from './api';
 
 const API_URL = buildApiUrl('/syllabus');
 
@@ -19,8 +19,12 @@ export interface SyllabusItem {
 export const fetchSyllabus = async (): Promise<SyllabusItem[]> => {
     try {
         const response = await fetch(API_URL);
-        if (!response.ok) throw new Error('Failed to fetch syllabus');
-        return await response.json();
+        const payload = await response.json();
+        if (!response.ok || payload.success === false) {
+            throw new Error(getErrorMessage(payload, 'Failed to fetch syllabus'));
+        }
+
+        return parseApiData<SyllabusItem[]>(payload, []);
     } catch (error) {
         console.error('Error fetching syllabus:', error);
         return [];
@@ -39,8 +43,12 @@ export const createSyllabus = async (
             },
             body: JSON.stringify(data),
         });
-        if (!response.ok) throw new Error('Failed to create syllabus');
-        return await response.json();
+        const payload = await response.json();
+        if (!response.ok || payload.success === false) {
+            throw new Error(getErrorMessage(payload, 'Failed to create syllabus'));
+        }
+
+        return parseApiData<SyllabusItem | null>(payload, null);
     } catch (error) {
         console.error('Error creating syllabus:', error);
         return null;
@@ -53,7 +61,12 @@ export const deleteSyllabus = async (id: string): Promise<boolean> => {
             method: 'DELETE',
             headers: getAuthHeaders(),
         });
-        return response.ok;
+        if (response.status === 204) {
+            return true;
+        }
+
+        const payload = await response.json();
+        return response.ok && payload.success !== false;
     } catch (error) {
         console.error('Error deleting syllabus:', error);
         return false;

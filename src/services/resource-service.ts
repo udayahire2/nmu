@@ -1,4 +1,4 @@
-import { buildApiUrl, getAuthHeaders } from './api';
+import { buildApiUrl, getAuthHeaders, getErrorMessage, parseApiData } from './api';
 
 const API_URL = buildApiUrl('/resources');
 
@@ -23,11 +23,16 @@ export type CreateResourcePayload = Omit<ResourceItem, '_id' | 'createdAt'>;
 
 export const fetchResources = async (): Promise<ResourceItem[]> => {
     try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error('Failed to fetch resources');
+        const response = await fetch(API_URL, {
+            headers: getAuthHeaders(),
+        });
+        const payload = await response.json();
 
-        const data = await response.json();
-        return data.data ?? [];
+        if (!response.ok || payload.success === false) {
+            throw new Error(getErrorMessage(payload, 'Failed to fetch resources'));
+        }
+
+        return parseApiData<ResourceItem[]>(payload, []);
     } catch (error) {
         console.error('Error fetching resources:', error);
         return [];
@@ -47,10 +52,12 @@ export const createResource = async (
             body: JSON.stringify(payload),
         });
 
-        if (!response.ok) throw new Error('Failed to create resource');
-
         const data = await response.json();
-        return data.data ?? null;
+        if (!response.ok || data.success === false) {
+            throw new Error(getErrorMessage(data, 'Failed to create resource'));
+        }
+
+        return parseApiData<ResourceItem | null>(data, null);
     } catch (error) {
         console.error('Error creating resource:', error);
         return null;
@@ -64,7 +71,12 @@ export const deleteResource = async (id: string): Promise<boolean> => {
             headers: getAuthHeaders(),
         });
 
-        return response.ok;
+        if (response.status === 204) {
+            return true;
+        }
+
+        const payload = await response.json();
+        return response.ok && payload.success !== false;
     } catch (error) {
         console.error('Error deleting resource:', error);
         return false;

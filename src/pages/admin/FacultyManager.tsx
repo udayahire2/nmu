@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Check, X, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { buildApiUrl, getErrorMessage } from "@/services/api";
 
 interface Faculty {
     _id: string;
@@ -24,12 +25,11 @@ export default function FacultyManager() {
 
     const fetchFaculty = async () => {
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
             const token = localStorage.getItem('token');
 
             const [pendingRes, allRes] = await Promise.all([
-                fetch(`${API_URL}/admin/faculty/pending`, { headers: { Authorization: `Bearer ${token}` } }),
-                fetch(`${API_URL}/admin/faculty/all`, { headers: { Authorization: `Bearer ${token}` } })
+                fetch(buildApiUrl('/admin/faculty/pending'), { headers: { Authorization: `Bearer ${token}` } }),
+                fetch(buildApiUrl('/admin/faculty/all'), { headers: { Authorization: `Bearer ${token}` } })
             ]);
 
             const pendingData = await pendingRes.json();
@@ -52,10 +52,9 @@ export default function FacultyManager() {
 
     const handleAction = async (id: string, action: 'approve' | 'reject') => {
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
             const token = localStorage.getItem('token');
 
-            const res = await fetch(`${API_URL}/admin/faculty/${id}/${action}`, {
+            const res = await fetch(buildApiUrl(`/admin/faculty/${id}/${action}`), {
                 method: 'PATCH',
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -64,7 +63,7 @@ export default function FacultyManager() {
             if (data.success) {
                 fetchFaculty(); // Refresh lists
             } else {
-                alert(data.message || 'Action failed');
+                alert(getErrorMessage(data, 'Action failed'));
             }
         } catch (error) {
             console.error(error);

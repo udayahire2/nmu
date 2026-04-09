@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetchPendingMaterials, fetchApprovedMaterials, updateMaterialStatus, type StudyMaterial } from '@/services/study-service';
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { buildAssetUrl } from '@/services/api';
 
 export default function ContentApprovalPage() {
     const [pendingRequests, setPendingRequests] = useState<StudyMaterial[]>([]);
@@ -319,7 +320,7 @@ export default function ContentApprovalPage() {
                                     {viewingRequest?.title}
                                 </DialogTitle>
                                 <p className="text-xs text-muted-foreground">
-                                    {viewingRequest?.subject} • {viewingRequest?.author}
+                                    {viewingRequest?.subject} | {viewingRequest?.author}
                                 </p>
                             </div>
                         </div>
@@ -336,7 +337,7 @@ export default function ContentApprovalPage() {
                             />
                         ) : viewingRequest?.type.toLowerCase() === 'pdf' ? (
                             <iframe
-                                src={viewingRequest.url || (viewingRequest.filePath ? `http://localhost:5001${viewingRequest.filePath}` : '')}
+                                src={viewingRequest.url || (viewingRequest.filePath ? buildAssetUrl(viewingRequest.filePath) : '')}
                                 className="w-full h-[80vh]"
                                 title={viewingRequest.title}
                             />

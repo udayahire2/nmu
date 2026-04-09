@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { buildApiUrl, parseApiData } from "@/services/api"
 
 export interface User {
     name: string
@@ -29,8 +30,7 @@ export function useLocalAuth() {
                 // Optimistically set user from local storage
                 setUser(JSON.parse(storedUser));
 
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
-                const res = await fetch(`${API_URL}/auth/me`, {
+                const res = await fetch(buildApiUrl('/auth/me'), {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -38,9 +38,10 @@ export function useLocalAuth() {
 
                 if (res.ok) {
                     const data = await res.json();
-                    if (data.success && data.user) {
-                        setUser(data.user);
-                        localStorage.setItem('user', JSON.stringify(data.user));
+                    const currentUser = parseApiData<User | null>(data, null) ?? (data.user as User | null);
+                    if (data.success && currentUser) {
+                        setUser(currentUser);
+                        localStorage.setItem('user', JSON.stringify(currentUser));
                     }
                 } else {
                     // Token invalid or expired

@@ -44,7 +44,11 @@ const item = {
 // ─────────────────────────────────────────────
 // SubjectList
 // ─────────────────────────────────────────────
-export function SubjectList({ selectedSemester }) {
+interface SubjectListProps {
+  selectedSemester: number;
+}
+
+export function SubjectList({ selectedSemester }: SubjectListProps) {
   const subjects = mockSubjects.filter((s) => s.semester === selectedSemester);
 
   return (

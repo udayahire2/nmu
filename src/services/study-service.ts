@@ -1,4 +1,4 @@
-import { buildApiUrl, getAuthHeaders } from './api';
+import { buildApiUrl, getAuthHeaders, getErrorMessage, parseApiData } from './api';
 
 const API_URL = buildApiUrl('/study-materials');
 
@@ -17,8 +17,12 @@ export interface StudyMaterial {
 export const fetchApprovedMaterials = async (): Promise<StudyMaterial[]> => {
     try {
         const response = await fetch(`${API_URL}/approved`);
-        if (!response.ok) throw new Error('Failed to fetch materials');
-        return await response.json();
+        const payload = await response.json();
+        if (!response.ok || payload.success === false) {
+            throw new Error(getErrorMessage(payload, 'Failed to fetch materials'));
+        }
+
+        return parseApiData<StudyMaterial[]>(payload, []);
     } catch (error) {
         console.error('Error fetching approved materials:', error);
         return [];
@@ -30,8 +34,12 @@ export const fetchPendingMaterials = async (): Promise<StudyMaterial[]> => {
         const response = await fetch(`${API_URL}/pending`, {
             headers: getAuthHeaders(),
         });
-        if (!response.ok) throw new Error('Failed to fetch pending materials');
-        return await response.json();
+        const payload = await response.json();
+        if (!response.ok || payload.success === false) {
+            throw new Error(getErrorMessage(payload, 'Failed to fetch pending materials'));
+        }
+
+        return parseApiData<StudyMaterial[]>(payload, []);
     } catch (error) {
         console.error('Error fetching pending materials:', error);
         return [];
@@ -45,8 +53,12 @@ export const uploadMaterial = async (formData: FormData): Promise<StudyMaterial 
             headers: getAuthHeaders(),
             body: formData,
         });
-        if (!response.ok) throw new Error('Failed to upload material');
-        return await response.json();
+        const payload = await response.json();
+        if (!response.ok || payload.success === false) {
+            throw new Error(getErrorMessage(payload, 'Failed to upload material'));
+        }
+
+        return parseApiData<StudyMaterial | null>(payload, null);
     } catch (error) {
         console.error('Error uploading material:', error);
         return null;
@@ -66,8 +78,12 @@ export const updateMaterialStatus = async (
             },
             body: JSON.stringify({ status }),
         });
-        if (!response.ok) throw new Error('Failed to update status');
-        return await response.json();
+        const payload = await response.json();
+        if (!response.ok || payload.success === false) {
+            throw new Error(getErrorMessage(payload, 'Failed to update status'));
+        }
+
+        return parseApiData<StudyMaterial | null>(payload, null);
     } catch (error) {
         console.error('Error updating material status:', error);
         return null;

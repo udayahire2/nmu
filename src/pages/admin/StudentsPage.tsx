@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Search, Trash2, Mail, Loader2, ShieldCheck } from "lucide-react";
+import { buildApiUrl, getErrorMessage, parseApiData } from "@/services/api";
 
 export default function StudentsPage() {
     const [users, setUsers] = useState<any[]>([]);
@@ -32,13 +33,13 @@ export default function StudentsPage() {
     const fetchUsers = async () => {
         try {
             const token = localStorage.getItem('token');
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
-            const res = await fetch(`${API_URL}/admin/users`, {
+            const res = await fetch(buildApiUrl('/admin/users'), {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
-            if (data.success) {
-                setUsers(data.users);
+            const usersList = parseApiData<any[]>(data, []);
+            if (res.ok && data.success) {
+                setUsers(usersList);
             }
         } catch (error) {
             console.error(error);
@@ -55,11 +56,14 @@ export default function StudentsPage() {
         if (!deleteId) return;
         try {
             const token = localStorage.getItem('token');
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
-            await fetch(`${API_URL}/admin/users/${deleteId}`, {
+            const res = await fetch(buildApiUrl(`/admin/users/${deleteId}`), {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
+            if (!res.ok) {
+                const payload = await res.json();
+                throw new Error(getErrorMessage(payload, 'Failed to delete user'));
+            }
             setUsers(users.filter(u => u._id !== deleteId));
         } catch (error) {
             console.error(error);

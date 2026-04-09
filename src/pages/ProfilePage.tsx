@@ -33,6 +33,7 @@ import {
     ChevronRight,
     Loader2
 } from "lucide-react";
+import { buildApiUrl, getErrorMessage, parseApiData } from "@/services/api";
 
 export default function ProfilePage() {
     const [user, setUser] = useState<any>(null);
@@ -66,11 +67,14 @@ export default function ProfilePage() {
         setLoading(true);
 
         const token = localStorage.getItem('token');
-        if (!token) return;
+        if (!token) {
+            setLoading(false);
+            navigate('/login');
+            return;
+        }
 
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1';
-            const res = await fetch(`${API_URL}/auth/updatedetails`, {
+            const res = await fetch(buildApiUrl('/auth/updatedetails'), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -80,16 +84,17 @@ export default function ProfilePage() {
             });
 
             const data = await res.json();
+            const updatedPayload = parseApiData<Record<string, unknown> | null>(data, null) ?? data.user;
 
-            if (data.success) {
-                const updatedUser = { ...user, ...data.user };
+            if (res.ok && data.success && updatedPayload) {
+                const updatedUser = { ...user, ...updatedPayload };
                 localStorage.setItem('user', JSON.stringify(updatedUser));
                 setUser(updatedUser);
                 setIsEditing(false);
                 // Use a smoother update instead of full reload
                 setUser(updatedUser);
             } else {
-                alert(data.message || 'Update failed');
+                alert(getErrorMessage(data, 'Update failed'));
             }
         } catch (error) {
             console.error(error);
