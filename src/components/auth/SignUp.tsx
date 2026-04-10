@@ -21,7 +21,7 @@ import {
 } from "@/components/auth/auth-form";
 import { buildApiUrl, getErrorMessage } from "@/services/api";
 
-export const title = "Login Card";
+export const title = "Sign Up";
 
 type UserRole = "student" | "faculty";
 
@@ -38,7 +38,7 @@ interface RegisterPayload {
   subjects?: string[];
 }
 
-const selectClassName = "h-11 w-full rounded-xl border-border/60 bg-background";
+const selectClassName = "h-11 w-full rounded-md border-border/40 bg-transparent";
 
 const SignUp = () => {
   const [role, setRole] = useState<UserRole>("student");
@@ -103,7 +103,7 @@ const SignUp = () => {
       footer={
         <p className="text-sm text-muted-foreground">
           Already have an account?{" "}
-          <Link to="/login" className="font-medium text-foreground transition-colors hover:text-primary">
+          <Link to="/login" className="font-medium text-foreground transition-colors hover:text-muted-foreground">
             Sign in
           </Link>
         </p>
@@ -231,16 +231,16 @@ const SignUp = () => {
           </>
         )}
 
-        <Button className="h-11 w-full rounded-xl" type="submit" disabled={loading}>
+        <Button className="h-11 w-full rounded-md" type="submit" disabled={loading}>
           {loading ? (
             <>
-              <Loader2 className="size-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
               Creating account...
             </>
           ) : (
             <>
               Create account
-              <ArrowRight className="size-4" />
+              <ArrowRight className="h-4 w-4" />
             </>
           )}
         </Button>

@@ -20,15 +20,15 @@ interface AuthCardProps {
 
 export function AuthCard({ title, description, children, footer }: AuthCardProps) {
   return (
-    <Card className="w-full rounded-3xl border-border/60 bg-card/95 shadow-sm">
-      <CardHeader className="space-y-2 pb-2 text-center">
-        <CardTitle className="text-2xl">{title}</CardTitle>
+    <Card className="w-full rounded-md border-border/40 bg-background">
+      <CardHeader className="space-y-2 pb-4 text-center">
+        <CardTitle className="text-2xl font-semibold">{title}</CardTitle>
         <p className="text-sm leading-6 text-muted-foreground">{description}</p>
       </CardHeader>
 
-      <CardContent className="pt-4">{children}</CardContent>
+      <CardContent className="pt-2">{children}</CardContent>
 
-      {footer ? <CardFooter className="justify-center pt-1">{footer}</CardFooter> : null}
+      {footer ? <CardFooter className="justify-center pt-4">{footer}</CardFooter> : null}
     </Card>
   );
 }
@@ -59,7 +59,7 @@ export function AuthField({ id, label, children, className }: AuthFieldProps) {
 }
 
 export function AuthInput(props: React.ComponentProps<typeof Input>) {
-  return <Input {...props} className={cn("h-11 rounded-xl border-border/60 bg-background", props.className)} />;
+  return <Input {...props} className={cn("h-11 rounded-md border-border/40 bg-transparent", props.className)} />;
 }
 
 interface AuthGridProps {
