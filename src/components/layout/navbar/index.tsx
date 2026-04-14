@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, Search, Sun, Moon, LogOut, User, BookOpen } from "lucide-react";
-
+import { Search, Sun, Moon, LogOut, User, BookOpen } from "lucide-react";
+import Menu from "@/svgs/menu";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +27,7 @@ function NavbarSearch() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const normalizedQuery = query.trim();
 
     if (!normalizedQuery) {
@@ -38,14 +39,14 @@ function NavbarSearch() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative w-[240px]">
+    <form onSubmit={handleSubmit} className="relative w-60">
       <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search..."
-        className="h-9 rounded-md border-border/40 bg-transparent pl-8 pr-2 text-sm focus-visible:ring-1 focus-visible:ring-ring"
+        className="h-9 rounded-md  bg-transparent pl-8 pr-2 text-sm focus-visible:ring-1 focus-visible:ring-ring"
         aria-label="Search subjects and materials"
       />
     </form>
@@ -72,8 +73,7 @@ function DesktopNavLinks() {
       return location.pathname === "/";
     }
     return (
-      location.pathname === path ||
-      location.pathname.startsWith(`${path}/`)
+      location.pathname === path || location.pathname.startsWith(`${path}/`)
     );
   };
 
@@ -90,7 +90,7 @@ function DesktopNavLinks() {
               "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
               active
                 ? "bg-muted text-foreground"
-                : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
             )}
             aria-current={active ? "page" : undefined}
           >
@@ -111,13 +111,13 @@ function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="h-9 w-9 rounded-md border border-border/40 bg-transparent hover:bg-muted/50"
+      className="h-9 w-9 rounded-md bg-transparent hover:bg-muted/50"
       aria-label="Toggle theme"
     >
       {theme === "dark" ? (
-        <Sun className="h-4 w-4 text-muted-foreground" />
+        <Sun className="h-4 w-4 text-foreground" />
       ) : (
-        <Moon className="h-4 w-4 text-muted-foreground" />
+        <Moon className="h-4 w-4 text-foreground" />
       )}
     </Button>
   );
@@ -125,25 +125,19 @@ function ThemeToggle() {
 
 // User Menu Component (Desktop)
 function UserMenuDesktop() {
-  const { user, logout, getInitials } = useLocalAuth();
+  const { user } = useLocalAuth();
   const navigate = useNavigate();
 
   if (!user) {
     return (
       <div className="hidden items-center gap-2 md:flex">
         <Link to="/login">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="rounded-md px-3 text-sm"
-          >
+          <Button variant="ghost" size="sm">
             Sign in
           </Button>
         </Link>
         <Link to="/signup">
-          <Button size="sm" className="rounded-md px-3 text-sm">
-            Get started
-          </Button>
+          <Button size="sm">Get started</Button>
         </Link>
       </div>
     );
@@ -185,8 +179,7 @@ function PopoverMobileMenu() {
       return location.pathname === "/";
     }
     return (
-      location.pathname === path ||
-      location.pathname.startsWith(`${path}/`)
+      location.pathname === path || location.pathname.startsWith(`${path}/`)
     );
   };
 
@@ -196,14 +189,10 @@ function PopoverMobileMenu() {
         <Button
           variant="ghost"
           size="icon"
-          className="h-9 w-9 rounded-md border border-border/40 bg-transparent hover:bg-muted/50 lg:hidden"
+          className="h-9 w-9 rounded-md  bg-transparent hover:bg-muted/50 lg:hidden"
           aria-label="Open navigation menu"
         >
-          {/* <Menu className="h-4 w-4" /> */}
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
-</svg>
-
+          <Menu/>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -218,10 +207,7 @@ function PopoverMobileMenu() {
             <DropdownMenuItem
               key={link.path}
               asChild
-              className={cn(
-                "rounded-md cursor-pointer",
-                active && "bg-muted"
-              )}
+              className={cn("rounded-md cursor-pointer", active && "bg-muted")}
             >
               <Link
                 to={link.path}
@@ -229,7 +215,7 @@ function PopoverMobileMenu() {
                   "flex w-full items-center rounded-md px-3 py-2 text-sm",
                   active
                     ? "bg-muted text-foreground font-medium"
-                    : "text-muted-foreground"
+                    : "text-muted-foreground",
                 )}
               >
                 {link.label}
@@ -267,7 +253,10 @@ function PopoverMobileMenu() {
               className="rounded-md cursor-pointer"
               onClick={() => navigate("/profile")}
             >
-              <Link to="/profile" className="flex items-center rounded-md px-3 py-2 text-sm text-muted-foreground">
+              <Link
+                to="/profile"
+                className="flex items-center rounded-md px-3 py-2 text-sm text-muted-foreground"
+              >
                 <User className="mr-2 h-4 w-4" />
                 Profile
               </Link>
@@ -278,7 +267,10 @@ function PopoverMobileMenu() {
               className="rounded-md cursor-pointer"
               onClick={() => navigate("/resources")}
             >
-              <Link to="/resources" className="flex items-center rounded-md px-3 py-2 text-sm text-muted-foreground">
+              <Link
+                to="/resources"
+                className="flex items-center rounded-md px-3 py-2 text-sm text-muted-foreground"
+              >
                 <BookOpen className="mr-2 h-4 w-4" />
                 Study Materials
               </Link>
@@ -295,13 +287,19 @@ function PopoverMobileMenu() {
         ) : (
           <>
             <DropdownMenuItem asChild className="rounded-md cursor-pointer">
-              <Link to="/login" className="flex items-center rounded-md px-3 py-2 text-sm text-muted-foreground">
+              <Link
+                to="/login"
+                className="flex items-center rounded-md px-3 py-2 text-sm text-muted-foreground"
+              >
                 Sign in
               </Link>
             </DropdownMenuItem>
 
             <DropdownMenuItem asChild className="rounded-md cursor-pointer">
-              <Link to="/signup" className="flex items-center rounded-md px-3 py-2 text-sm font-medium">
+              <Link
+                to="/signup"
+                className="flex items-center rounded-md px-3 py-2 text-sm font-medium"
+              >
                 Get started
               </Link>
             </DropdownMenuItem>
@@ -335,7 +333,7 @@ function PopoverMobileMenu() {
 // Main Navbar Component
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-30 w-full border-b border-border/40 bg-background/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-30 w-full border-b border-border/40 bg-background/95   backdrop-blur-sm">
       <div className="mx-auto flex h-14 max-w-screen-2xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Logo & Desktop Nav */}
         <div className="flex min-w-0 items-center gap-6 lg:gap-8">

@@ -16,14 +16,9 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
         Skip to main content
       </a>
 
-      <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-white/60 to-transparent dark:from-white/5" />
-        <div className="absolute inset-x-0 top-0 h-full bg-[linear-gradient(to_right,hsl(var(--border)/0.22)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.22)_1px,transparent_1px)] bg-[size:28px_28px] opacity-35 [mask-image:linear-gradient(to_bottom,black,transparent_88%)]" />
-      </div>
-
       <Navbar />
 
-      <div className="mx-auto flex w-full max-w-screen-xl flex-1 flex-col px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 sm:px-6 lg:px-8">
         <main id="main-content" className="relative flex-1">
           {children || <Outlet />}
         </main>

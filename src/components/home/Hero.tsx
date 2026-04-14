@@ -1,7 +1,6 @@
 import { ArrowRight, CheckCircle2, FileText, BookOpen, FileQuestion } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 const features = [
@@ -42,10 +41,10 @@ export function Hero() {
 
             {/* CTA Buttons – minimal outline style */}
             <div className="flex flex-wrap gap-3">
-              <Button asChild size="default" className="rounded-md px-5">
+              <Button asChild size="default" className="rounded-md px-4">
                 <Link to="/resources">
                   Explore resources
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild variant="ghost" size="default" className="rounded-md px-5">
@@ -70,7 +69,7 @@ export function Hero() {
             <div className="space-y-3 rounded-lg border border-border/40 p-5">
               {steps.map((step) => (
                 <div key={step} className="flex items-center gap-3 text-sm">
-                  <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-muted-foreground" />
                   <span>{step}</span>
                 </div>
               ))}

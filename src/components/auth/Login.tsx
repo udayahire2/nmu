@@ -12,8 +12,6 @@ import {
   Form,
   FormControl,
   FormField,
-  FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -21,7 +19,6 @@ import {
   AuthCard,
   AuthField,
   AuthForm,
-  AuthInput,
 } from "@/components/auth/auth-form";
 import { buildApiUrl, getErrorMessage, parseApiData } from "@/services/api";
 
