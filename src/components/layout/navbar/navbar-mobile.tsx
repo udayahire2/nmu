@@ -16,7 +16,7 @@ export function NavbarMobile() {
 
     return (
         <Sheet>
-            <SheetTrigger asChild>
+            <SheetTrigger>
                 <Button
                     variant="ghost"
                     size="icon"

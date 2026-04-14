@@ -1,8 +1,9 @@
 "use client";
 
-import { Slot } from "@radix-ui/react-slot";
+import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
-import * as React from "react";
+import type * as React from "react";
 import { cn } from "@/lib/utils";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -47,55 +48,49 @@ export const buttonVariants = cva(
   },
 );
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+export interface ButtonProps extends useRender.ComponentProps<"button"> {
   variant?: VariantProps<typeof buttonVariants>["variant"];
   size?: VariantProps<typeof buttonVariants>["size"];
-  asChild?: boolean;
   loading?: boolean;
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      variant,
-      size,
-      asChild = false,
-      children,
-      loading = false,
-      disabled: disabledProp,
-      ...props
-    },
-    ref,
-  ): React.ReactElement => {
-  const Comp = asChild ? Slot : "button";
+export function Button({
+  className,
+  variant,
+  size,
+  render,
+  children,
+  loading = false,
+  disabled: disabledProp,
+  ...props
+}: ButtonProps): React.ReactElement {
   const isDisabled: boolean = Boolean(loading || disabledProp);
   const typeValue: React.ButtonHTMLAttributes<HTMLButtonElement>["type"] =
-    asChild ? undefined : "button";
+    render ? undefined : "button";
 
-  return (
-    <Comp
-      aria-disabled={loading || undefined}
-      className={cn(buttonVariants({ className, size, variant }))}
-      data-loading={loading ? "" : undefined}
-      data-slot="button"
-      disabled={isDisabled}
-      ref={ref}
-      type={typeValue}
-      {...props}
-    >
-      {children}
-      {loading && (
-        <Spinner
-          className="pointer-events-none absolute"
-          data-slot="button-loading-indicator"
-        />
-      )}
-    </Comp>
-  );
-  },
-);
+  const defaultProps = {
+    children: (
+      <>
+        {children}
+        {loading && (
+          <Spinner
+            className="pointer-events-none absolute"
+            data-slot="button-loading-indicator"
+          />
+        )}
+      </>
+    ),
+    className: cn(buttonVariants({ className, size, variant })),
+    "aria-disabled": loading || undefined,
+    "data-loading": loading ? "" : undefined,
+    "data-slot": "button",
+    disabled: isDisabled,
+    type: typeValue,
+  };
 
-Button.displayName = "Button";
+  return useRender({
+    defaultTagName: "button",
+    props: mergeProps<"button">(defaultProps, props),
+    render,
+  });
+}
