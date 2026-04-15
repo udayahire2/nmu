@@ -1,89 +1,58 @@
-import { motion, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" },
-  },
-};
-
-const staggerContainer: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
 export function Hero() {
   return (
-    <section className="relative overflow-hidden py-20 md:py-28 lg:py-32">
-      {/* Subtle background glow for depth — minimal and dark-theme friendly */}
+    <section className="relative overflow-hidden pt-24 pb-16 md:pt-32 md:pb-20 lg:pt-20 lg:pb-20">
 
-      <div className="container mx-auto max-w-3xl px-4 text-center">
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className="space-y-6"
-        >
-          {/* Badge */}
-          <motion.div variants={fadeUp}>
+
+      <div className="container mx-auto  my-0 max-w-3xl px-4 text-center">
+        <div className="space-y-4">
+          {/* Badge – now more visible */}
+          <div>
             <Badge
               variant="secondary"
-              className="rounded-full px-4 py-1 text-sm font-medium"
+              className="py-2 px-2"
             >
               NMU Study Hub
             </Badge>
-          </motion.div>
+          </div>
 
-          {/* Heading with gradient highlight */}
-          <motion.h1
-            variants={fadeUp}
-            className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
-          >
+          {/* Heading – period moved outside gradient for clarity */}
+          <h1 className="text-3xl  tracking-tight sm:text-5xl md:text-5xl lg:text-6xl">
             Find your exact{" "}
-            <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary to-primary/40 bg-clip-text text-transparent">
               exam notes in seconds
             </span>
             .
-          </motion.h1>
+          </h1>
 
-          {/* Subtext */}
-          <motion.p
-            variants={fadeUp}
-            className="mx-auto max-w-2xl text-lg text-muted-foreground md:text-xl"
-          >
+          {/* Subtext – softer and better line height */}
+          <p className="mx-auto max-w-2xl text-lg font-normal leading-relaxed text-muted-foreground/90 md:text-xl">
             No random PDFs. No endless searching. Just clean, structured study
             material for your branch and semester.
-          </motion.p>
+          </p>
 
-          {/* CTA Buttons */}
-          <motion.div
-            variants={fadeUp}
-            className="flex flex-col justify-center gap-4 pt-4 sm:flex-row"
-          >
-            <Button size="lg" className="rounded-full px-8">
+          {/* CTA Buttons – primary gets more weight */}
+          <div className="flex flex-col justify-center gap-4 pt-2 sm:flex-row">
+            <Button
+              size="lg"
+            >
               Start studying
             </Button>
-            <Button size="lg" variant="outline" className="rounded-full px-8">
+            <Button
+              size="lg"
+              variant="outline"
+            >
               Browse subjects
             </Button>
-          </motion.div>
+          </div>
 
-          {/* Trust line */}
-          <motion.p
-            variants={fadeUp}
-            className="pt-6 text-sm text-muted-foreground/70"
-          >
-            Used by students to quickly access notes, syllabus, and previous
-            papers.
-          </motion.p>
-        </motion.div>
+          {/* Trust line – smaller, more receded */}
+          <p className="pt-4 text-xs text-muted-foreground/50 sm:text-sm">
+            Used by students to quickly access notes, syllabus, and previous papers.
+          </p>
+        </div>
       </div>
     </section>
   );
