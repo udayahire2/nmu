@@ -115,27 +115,30 @@ export function BranchSemesterSelection({
                                     onClick={() => onBranchSelect(branch)}
                                     aria-pressed={isActive}
                                     className={cn(
-                                        "group relative flex w-full items-start gap-4 rounded-2xl border p-4 text-left outline-none transition-all duration-200",
-                                        "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+                                        "group relative flex w-full items-start gap-4 rounded-2xl border p-4 text-left outline-none transition-all duration-300 overflow-hidden",
+                                        "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-1 focus-visible:ring-offset-background",
                                         isActive
-                                            ? "border-primary/40 bg-primary/[0.04]"
-                                            : "border-border/60 bg-background hover:border-border hover:bg-accent/30"
+                                            ? "border-primary/50 bg-primary/5 shadow-[0_0_20px_-5px_rgba(var(--primary),0.2)] scale-[1.01]"
+                                            : "border-border/60 bg-background/50 hover:border-primary/30 hover:bg-muted hover:shadow-sm"
                                     )}
                                 >
+                                    {isActive && (
+                                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-50" />
+                                    )}
                                     <div
                                         className={cn(
-                                            "mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] border transition-colors duration-200",
+                                            "relative z-10 mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] border transition-colors duration-300",
                                             isActive
-                                                ? "border-primary/20 bg-background text-primary"
-                                                : "border-border/50 bg-background text-muted-foreground group-hover:border-border group-hover:text-foreground"
+                                                ? "border-primary/30 bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                                                : "border-border/50 bg-background text-muted-foreground group-hover:border-primary/20 group-hover:bg-primary/5 group-hover:text-primary"
                                         )}
                                     >
                                         <Icon className="h-[18px] w-[18px]" strokeWidth={2} />
                                     </div>
 
-                                    <div className="min-w-0 flex-1">
+                                    <div className="relative z-10 min-w-0 flex-1">
                                         <div className="flex items-center justify-between gap-2">
-                                            <p className={cn("truncate text-[15px] font-medium transition-colors", isActive ? "text-primary" : "text-foreground")}>
+                                            <p className={cn("truncate text-[15px] font-semibold transition-colors", isActive ? "text-primary" : "text-foreground group-hover:text-foreground")}>
                                                 {meta.label}
                                             </p>
                                             {isActive && (
@@ -203,17 +206,25 @@ export function BranchSemesterSelection({
                                                 onClick={() => onSemesterSelect(sem.toString())}
                                                 aria-pressed={isActive}
                                                 className={cn(
-                                                    "relative flex h-14 flex-col items-center justify-center rounded-xl border p-3 outline-none transition-all duration-200",
-                                                    "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+                                                    "relative flex h-14 flex-col items-center justify-center rounded-xl p-3 outline-none transition-all duration-300 overflow-hidden",
+                                                    "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-1 focus-visible:ring-offset-background",
                                                     isActive
-                                                        ? "border-primary bg-primary text-primary-foreground"
-                                                        : "border-border/60 bg-background text-foreground hover:border-border hover:bg-accent/60"
+                                                        ? "border-transparent text-primary-foreground shadow-lg shadow-primary/25 scale-[1.02]"
+                                                        : "border border-border/60 bg-background/50 text-foreground hover:border-primary/30 hover:bg-muted"
                                                 )}
                                             >
-                                                <span className={cn("text-[10px] font-semibold uppercase tracking-wider", isActive ? "text-primary-foreground/90" : "text-muted-foreground")}>
+                                                {isActive && (
+                                                    <motion.div
+                                                        layoutId="activeSem"
+                                                        className="absolute inset-0 bg-gradient-to-br from-primary to-primary/80"
+                                                        initial={false}
+                                                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                                    />
+                                                )}
+                                                <span className={cn("relative z-10 text-[10px] font-semibold uppercase tracking-wider", isActive ? "text-primary-foreground/90" : "text-muted-foreground")}>
                                                     Sem
                                                 </span>
-                                                <span className="mt-0.5 text-[15px] font-bold">
+                                                <span className={cn("relative z-10 mt-0.5 text-[15px] font-bold", isActive ? "text-white" : "text-foreground")}>
                                                     {sem}
                                                 </span>
                                             </motion.button>

@@ -123,6 +123,27 @@ export function AlertDialogFooter({
   );
 }
 
+export function AlertDialogAction(
+  props: React.ComponentProps<"button">
+) {
+  return (
+    <button
+      className="bg-primary text-white px-4 py-2 rounded-md"
+      {...props}
+    />
+  )
+}
+
+export function AlertDialogCancel(
+  props: React.ComponentProps<typeof AlertDialogClose>
+) {
+  return (
+    <AlertDialogClose
+      className="border px-4 py-2 rounded-md"
+      {...props}
+    />
+  )
+}
 export function AlertDialogTitle({
   className,
   ...props

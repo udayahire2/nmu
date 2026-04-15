@@ -2,7 +2,7 @@
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 @import "@fontsource-variable/inter";
-@import "geist";
+
 @plugin "tailwindcss-animate";
 @plugin "@tailwindcss/typography";
 

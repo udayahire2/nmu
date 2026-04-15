@@ -7,6 +7,12 @@ import Menu from "@/svgs/menu";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SearchIcon } from "lucide-react";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,17 +45,18 @@ function NavbarSearch() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative w-60">
-      <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-      <Input
-        type="search"
-        value={query}
+    <InputGroup>
+      <InputGroupAddon>
+        <SearchIcon aria-hidden="true" />
+      </InputGroupAddon>
+      <InputGroupInput
+        aria-label="Search"
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search..."
-        className="h-9 rounded-md  bg-transparent pl-8 pr-2 text-sm focus-visible:ring-1 focus-visible:ring-ring"
-        aria-label="Search subjects and materials"
+        value={query}
+        placeholder="Search"
+        type="search"
       />
-    </form>
+    </InputGroup>
   );
 }
 
@@ -192,7 +199,7 @@ function PopoverMobileMenu() {
           className="h-9 w-9 rounded-md  bg-transparent hover:bg-muted/50 lg:hidden"
           aria-label="Open navigation menu"
         >
-          <Menu/>
+          <Menu />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
