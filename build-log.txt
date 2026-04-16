@@ -1,0 +1,81 @@
+src/components/kibo-ui/video-player.tsx(292,13): error TS2322: Type '(value: number[]) => void' is not assignable to type '(value: number | readonly number[], eventDetails: SliderRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'number | readonly number[]' is not assignable to type 'number[]'.
+      Type 'number' is not assignable to type 'number[]'.
+src/components/kibo-ui/video-player.tsx(305,13): error TS2322: Type '(value: number[]) => void' is not assignable to type '(value: number | readonly number[], eventDetails: SliderRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'number | readonly number[]' is not assignable to type 'number[]'.
+      Type 'number' is not assignable to type 'number[]'.
+src/components/layout/navbar/navbar-mobile-calm.tsx(65,22): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & Props<unknown>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & Props<unknown>'.
+src/components/layout/navbar/navbar-mobile-calm.tsx(83,26): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & DialogCloseProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & DialogCloseProps'.
+src/components/layout/navbar/navbar-mobile-calm.tsx(112,34): error TS2322: Type '{ children: Element; asChild: true; key: string; }' is not assignable to type 'IntrinsicAttributes & DialogCloseProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & DialogCloseProps'.
+src/components/layout/navbar/navbar-mobile-calm.tsx(151,30): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & DialogCloseProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & DialogCloseProps'.
+src/components/layout/navbar/navbar-mobile-calm.tsx(152,27): error TS2322: Type '{ children: Element; asChild: true; variant: "outline"; className: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps'.
+src/components/layout/navbar/navbar-mobile-calm.tsx(156,30): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & DialogCloseProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & DialogCloseProps'.
+src/components/layout/navbar/navbar-mobile-calm.tsx(157,27): error TS2322: Type '{ children: Element; asChild: true; variant: "outline"; className: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps'.
+src/components/layout/navbar/navbar-mobile-calm.tsx(183,32): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & DialogCloseProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & DialogCloseProps'.
+src/components/layout/navbar/navbar-mobile-calm.tsx(184,29): error TS2322: Type '{ children: Element; asChild: true; variant: "outline"; }' is not assignable to type 'IntrinsicAttributes & ButtonProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps'.
+src/components/layout/navbar/navbar-mobile-calm.tsx(191,32): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & DialogCloseProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & DialogCloseProps'.
+src/components/layout/navbar/navbar-mobile-calm.tsx(209,32): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & DialogCloseProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & DialogCloseProps'.
+src/components/layout/navbar/navbar-mobile-calm.tsx(210,29): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps'.
+src/components/layout/navbar/navbar-mobile-calm.tsx(214,32): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & DialogCloseProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & DialogCloseProps'.
+src/components/layout/navbar/navbar-mobile-calm.tsx(215,29): error TS2322: Type '{ children: Element; asChild: true; variant: "outline"; }' is not assignable to type 'IntrinsicAttributes & ButtonProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps'.
+src/components/study-materials/StudyMaterialFilter.tsx(13,1): error TS6133: 'cn' is declared but its value is never read.
+src/components/study-materials/StudyMaterialFilter.tsx(62,42): error TS2322: Type '(value: string) => void' is not assignable to type '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string | null' is not assignable to type 'string'.
+      Type 'null' is not assignable to type 'string'.
+src/components/study-materials/StudyMaterialFilter.tsx(83,44): error TS2322: Type '(value: string) => void' is not assignable to type '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string | null' is not assignable to type 'string'.
+      Type 'null' is not assignable to type 'string'.
+src/components/study-materials/StudyMaterialFilter.tsx(124,23): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & DialogCloseProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & DialogCloseProps'.
+src/components/study/SubjectDashboard.tsx(94,24): error TS2322: Type '{ children: Element[]; type: string; collapsible: true; className: string; }' is not assignable to type 'IntrinsicAttributes & Props<any>'.
+  Property 'type' does not exist on type 'IntrinsicAttributes & Props<any>'.
+src/components/study/SubjectGrid.tsx(25,17): error TS2322: Type '{ children: Element; asChild: true; variant: "outline"; className: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps'.
+src/components/study/SubjectGrid.tsx(42,19): error TS2322: Type '{ children: Element; asChild: true; variant: "outline"; className: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps'.
+src/components/ui/markdown-preview.tsx(200,21): error TS2322: Type '{ children: Element[]; ref: RefObject<HTMLDivElement | null>; className: string; showCloseButton: false; onPointerDownOutside: (e: any) => any; onInteractOutside: (e: any) => void; }' is not assignable to type 'IntrinsicAttributes & DialogPopupProps & { showCloseButton?: boolean | undefined; bottomStickOnMobile?: boolean | undefined; closeProps?: DialogCloseProps | undefined; portalProps?: DialogPortalProps | undefined; }'.
+  Property 'onPointerDownOutside' does not exist on type 'IntrinsicAttributes & DialogPopupProps & { showCloseButton?: boolean | undefined; bottomStickOnMobile?: boolean | undefined; closeProps?: DialogCloseProps | undefined; portalProps?: DialogPortalProps | undefined; }'.
+src/components/ui/markdown-preview.tsx(200,44): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/components/ui/markdown-preview.tsx(201,41): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/pages/admin/ResourceManagerPage.tsx(80,36): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & Props<unknown>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & Props<unknown>'.
+src/pages/admin/SyllabusManagerPage.tsx(72,36): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & Props<unknown>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & Props<unknown>'.
+src/pages/dashboard/FacultyDashboard.tsx(33,33): error TS2322: Type '{ children: Element; asChild: true; className: string; }' is not assignable to type 'IntrinsicAttributes & ButtonProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps'.
+src/pages/ProfilePage.tsx(259,68): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+      Type 'null' is not assignable to type 'SetStateAction<string>'.
+src/pages/ProfilePage.tsx(275,66): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+      Type 'null' is not assignable to type 'SetStateAction<string>'.
+src/pages/SyllabusPage.tsx(154,44): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+      Type 'null' is not assignable to type 'SetStateAction<string>'.
+src/pages/SyllabusPage.tsx(167,46): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null, eventDetails: SelectRootChangeEventDetails) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+      Type 'null' is not assignable to type 'SetStateAction<string>'.
+src/pages/SyllabusPage.tsx(298,29): error TS2322: Type '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps'.
