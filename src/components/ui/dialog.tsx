@@ -17,16 +17,20 @@ export const Dialog: typeof DialogPrimitive.Root = DialogPrimitive.Root;
 export const DialogPortal: typeof DialogPrimitive.Portal =
   DialogPrimitive.Portal;
 
+import { Slot } from "@radix-ui/react-slot";
+
 export function DialogTrigger(
-  props: DialogPrimitive.Trigger.Props,
+  props: DialogPrimitive.Trigger.Props & { asChild?: boolean },
 ): React.ReactElement {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
+  const { asChild, ...rest } = props;
+  return <DialogPrimitive.Trigger data-slot="dialog-trigger" render={asChild ? <Slot /> : undefined} {...rest} />;
 }
 
 export function DialogClose(
-  props: DialogPrimitive.Close.Props,
+  props: DialogPrimitive.Close.Props & { asChild?: boolean },
 ): React.ReactElement {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
+  const { asChild, ...rest } = props;
+  return <DialogPrimitive.Close data-slot="dialog-close" render={asChild ? <Slot /> : undefined} {...rest} />;
 }
 
 export function DialogBackdrop({
