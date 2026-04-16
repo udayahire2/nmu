@@ -256,7 +256,7 @@ export default function ProfilePage() {
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="branch" className="text-sm">Academic Branch</Label>
-                                            <Select value={branch} onValueChange={setBranch} required>
+                                            <Select value={branch} onValueChange={(val) => val && setBranch(val)} required>
                                                 <SelectTrigger id="branch" className="h-10 w-full border-border/70 bg-background px-3 py-2 text-sm ring-offset-background focus:ring-primary/20 focus:border-primary/50">
                                                     <SelectValue placeholder="Select Branch" />
                                                 </SelectTrigger>
@@ -272,7 +272,7 @@ export default function ProfilePage() {
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="year" className="text-sm">Current Year</Label>
-                                            <Select value={year} onValueChange={setYear} required>
+                                            <Select value={year} onValueChange={(val) => val && setYear(val)} required>
                                                 <SelectTrigger id="year" className="h-10 w-full border-border/70 bg-background px-3 py-2 text-sm ring-offset-background focus:ring-primary/20 focus:border-primary/50">
                                                     <SelectValue placeholder="Select Year" />
                                                 </SelectTrigger>

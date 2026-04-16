@@ -91,7 +91,7 @@ export function SubjectDashboard({ subject }: SubjectDashboardProps) {
               </p>
             </div>
 
-            <Accordion type="single" collapsible className="w-full">
+            <Accordion className="w-full">
               {subject.units.map((unit) => (
                 <AccordionItem key={unit.id} value={unit.id} className="border-b border-border/20 px-4 last:border-b-0 sm:px-5">
                   <AccordionTrigger className="py-3 text-left hover:no-underline">

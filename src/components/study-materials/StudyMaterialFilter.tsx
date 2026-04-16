@@ -48,23 +48,24 @@ export function StudyMaterialFilter({
   onClearFilters,
 }: StudyMaterialFilterProps) {
   return (
-    <div className="flex h-full flex-col px-4">
-      {/* Filters */}
-      <div className="flex-1 space-y-6 py-4">
-        {/* Branch */}
-        <div className="space-y-2">
-          <Label className="flex items-center gap-2 text-sm font-normal text-muted-foreground">
-            <GitBranch className="h-4 w-4" />
+    <div className="flex h-full flex-col px-1 pb-2">
+      {/* Filter Options */}
+      <div className="flex-1 space-y-8 py-5">
+        
+        {/* Branch Section */}
+        <div className="space-y-3">
+          <Label className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+            <GitBranch className="h-3.5 w-3.5" />
             Branch
           </Label>
-          <Select value={selectedBranch} onValueChange={setSelectedBranch}>
-            <SelectTrigger className="h-10 w-full rounded-md border-border/40 bg-transparent">
-              <SelectValue placeholder="Select branch" />
+          <Select value={selectedBranch} onValueChange={(val) => val && setSelectedBranch(val)}>
+            <SelectTrigger className="h-10 w-full rounded-[8px] border border-border/80 bg-background shadow-sm transition-colors duration-200 hover:bg-muted/30 focus:ring-1 focus:ring-primary/20">
+              <SelectValue placeholder="Select branch" className="text-[13px]" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="All">All Branches</SelectItem>
+            <SelectContent className="rounded-[8px] border-border/80 shadow-md">
+              <SelectItem value="All" className="text-[13px] rounded-[6px]">All Branches</SelectItem>
               {BRANCHES.map((branch) => (
-                <SelectItem key={branch} value={branch}>
+                <SelectItem key={branch} value={branch} className="text-[13px] rounded-[6px] py-2">
                   {branch}
                 </SelectItem>
               ))}
@@ -72,20 +73,20 @@ export function StudyMaterialFilter({
           </Select>
         </div>
 
-        {/* Semester */}
-        <div className="space-y-2">
-          <Label className="flex items-center gap-2 text-sm font-normal text-muted-foreground">
-            <GraduationCap className="h-4 w-4" />
+        {/* Semester Section */}
+        <div className="space-y-3">
+          <Label className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+            <GraduationCap className="h-3.5 w-3.5" />
             Semester
           </Label>
-          <Select value={selectedSemester} onValueChange={setSelectedSemester}>
-            <SelectTrigger className="h-10 w-full rounded-md border-border/40 bg-transparent">
-              <SelectValue placeholder="Select semester" />
+          <Select value={selectedSemester} onValueChange={(val) => val && setSelectedSemester(val)}>
+            <SelectTrigger className="h-10 w-full rounded-[8px] border border-border/80 bg-background shadow-sm transition-colors duration-200 hover:bg-muted/30 focus:ring-1 focus:ring-primary/20">
+              <SelectValue placeholder="Select semester" className="text-[13px]" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="All">All Semesters</SelectItem>
+            <SelectContent className="rounded-[8px] border-border/80 shadow-md">
+              <SelectItem value="All" className="text-[13px] rounded-[6px]">All Semesters</SelectItem>
               {SEMESTERS.map((sem) => (
-                <SelectItem key={sem} value={sem}>
+                <SelectItem key={sem} value={sem} className="text-[13px] rounded-[6px] py-2">
                   {sem}
                 </SelectItem>
               ))}
@@ -94,28 +95,39 @@ export function StudyMaterialFilter({
         </div>
       </div>
 
-      {/* Footer with actions */}
-      <div className="mt-auto space-y-3 border-t border-border/40 pb-4 pt-5">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">Active filters</span>
-          <Badge variant="outline" className="rounded-md border-border/40 text-xs font-normal">
+      {/* Action Footer - Minimalist Layout */}
+      <div className="mt-auto space-y-5 border-t border-border/60 pt-5">
+        
+        {/* Active Filters Row */}
+        <div className="flex items-center justify-between">
+          <span className="text-[13px] font-medium text-muted-foreground">Active filters</span>
+          <Badge 
+            variant="secondary" 
+            className="h-5 min-w-[20px] items-center justify-center rounded-[6px] bg-muted/60 px-1.5 text-[11px] font-medium text-foreground transition-colors"
+          >
             {activeFiltersCount}
           </Badge>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
+        {/* Buttons */}
+        <div className="grid grid-cols-2 gap-3">
           <Button
-            variant="ghost"
+            variant="outline"
             onClick={onClearFilters}
             disabled={activeFiltersCount === 0}
-            className="h-9 rounded-md border border-border/40 text-sm font-normal"
+            className="h-9 w-full rounded-[8px] border-border/80 text-[13px] font-medium tracking-tight transition-colors hover:bg-muted/60"
           >
-            <RotateCcw className="mr-1 h-3.5 w-3.5" />
+            <RotateCcw className="mr-1.5 h-3.5 w-3.5 text-muted-foreground opacity-80" />
             Reset
           </Button>
-          <SheetClose asChild>
-            <Button className="h-9 rounded-md text-sm font-normal">Apply</Button>
-          </SheetClose>
+          <SheetClose render={
+            <Button 
+              variant="default"
+              className="h-9 w-full rounded-[8px] text-[13px] font-medium tracking-tight shadow-sm"
+            >
+              Apply Filter
+            </Button>
+          } />
         </div>
       </div>
     </div>
