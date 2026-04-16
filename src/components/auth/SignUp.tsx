@@ -156,7 +156,7 @@ const SignUp = () => {
         {role === "student" && (
           <AuthGrid>
             <AuthField id="branch" label="Branch">
-              <Select onValueChange={setBranch} value={branch} required>
+              <Select onValueChange={(val) => val && setBranch(val)} value={branch} required>
                 <SelectTrigger id="branch" className={selectClassName}>
                   <SelectValue placeholder="Select branch" />
                 </SelectTrigger>
@@ -172,7 +172,7 @@ const SignUp = () => {
             </AuthField>
 
             <AuthField id="year" label="Year">
-              <Select onValueChange={setYear} value={year} required>
+              <Select onValueChange={(val) => val && setYear(val)} value={year} required>
                 <SelectTrigger id="year" className={selectClassName}>
                   <SelectValue placeholder="Select year" />
                 </SelectTrigger>

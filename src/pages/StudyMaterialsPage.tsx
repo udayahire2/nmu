@@ -7,7 +7,6 @@ import { SubjectDashboard } from "@/components/study/SubjectDashboard";
 import { SubjectGrid } from "@/components/study/SubjectGrid";
 import { TopicViewer } from "@/components/study/TopicViewer";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { getSubject, getSubjects } from "@/data/study-data";
 
 export default function StudyMaterialsPage() {
@@ -38,97 +37,114 @@ export default function StudyMaterialsPage() {
       : undefined;
 
   return (
-    <div className="space-y-6 pb-14 pt-6 sm:space-y-8 sm:pt-8">
-      <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-b from-background to-secondary/10 px-6 py-8 sm:p-10">
-        {/* Background Decorative Blob */}
-        <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/10 blur-[80px]" />
-
-        <div className="relative z-10 flex flex-col gap-6">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary shadow-sm backdrop-blur-md">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
+    <div className="mx-auto w-full max-w-[1080px] space-y-10 px-4 py-8 sm:px-6 md:py-12">
+      
+      {/* Minimalistic Header Section */}
+      <div className="flex flex-col gap-5">
+        
+        {/* Notion-style Clean Breadcrumbs */}
+        <nav className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap text-[13px] font-medium text-muted-foreground pb-1">
+          <Link 
+            to="/resources" 
+            className="flex items-center gap-1.5 rounded-[6px] px-2 py-1 transition-colors hover:bg-muted/60 hover:text-foreground"
+          >
+            <Home className="h-3.5 w-3.5 opacity-80" />
+            <span className="hidden sm:inline">Home</span>
+          </Link>
+          
+          {branch && (
+            <>
+              <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-40" />
+              <button 
+                onClick={() => navigate("/resources")}
+                className="rounded-[6px] px-2 py-1 transition-colors hover:bg-muted/60 hover:text-foreground"
+              >
+                {branch}
+              </button>
+            </>
+          )}
+          
+          {branch && semester && (
+            <>
+              <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-40" />
+              <button
+                onClick={() => navigate(`/resources/${branch}/${semester}`)}
+                className="rounded-[6px] px-2 py-1 transition-colors hover:bg-muted/60 hover:text-foreground"
+              >
+                Sem {semester}
+              </button>
+            </>
+          )}
+          
+          {activeSubject && (
+            <>
+              <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-40" />
+              <span className="rounded-[6px] px-2 py-1 text-foreground bg-secondary/50">
+                {activeSubject.code}
               </span>
-              Study Station
-            </span>
-            {branch && <Badge variant="secondary" className="rounded-full px-4 py-1 text-xs font-medium shadow-sm transition-transform hover:scale-105">{branch}</Badge>}
-            {semester && <Badge variant="secondary" className="rounded-full px-4 py-1 text-xs font-medium shadow-sm transition-transform hover:scale-105">Sem {semester}</Badge>}
-            {activeSubject && <Badge className="rounded-full px-4 py-1 text-xs font-medium bg-primary text-primary-foreground shadow-sm transition-transform hover:scale-105">{activeSubject.code}</Badge>}
-          </div>
+            </>
+          )}
+        </nav>
 
-          <div className="space-y-3">
-            <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-6xl">
-              {isRoot
-                ? "Find Your Materials."
-                : activeTopic
-                  ? activeTopic.title
-                  : activeSubject
-                    ? activeSubject.name
-                    : `Semester ${semester} Subjects`}
-            </h1>
-            <p className="max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              {isRoot ? "Start by selecting your branch and semester. Your customized study material is just a click away." : "Streamlined and organized to save you time. Dive into your resources below."}
+        {/* Title & Metadata Setup */}
+        <div className="flex flex-col gap-3">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            {isRoot
+              ? "Find Your Materials"
+              : activeTopic
+                ? activeTopic.title
+                : activeSubject
+                  ? activeSubject.name
+                  : `Semester ${semester} Subjects`}
+          </h1>
+          
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <p className="text-[14px] leading-relaxed text-muted-foreground max-w-2xl">
+              {isRoot 
+                ? "Start by selecting your branch and semester. Your customized study material is just a click away." 
+                 : "Streamlined and organized to save you time. Dive into your resources below."}
             </p>
+            
+            {/* Minimal Property Badges */}
+            {!isRoot && (
+              <div className="flex flex-wrap items-center gap-2">
+                {branch && (
+                  <Badge variant="secondary" className="rounded-[6px] bg-muted/60 px-2 py-0.5 text-[11px] font-medium tracking-wide text-foreground">
+                    {branch}
+                  </Badge>
+                )}
+                {semester && (
+                  <Badge variant="secondary" className="rounded-[6px] bg-muted/60 px-2 py-0.5 text-[11px] font-medium tracking-wide text-foreground">
+                    Sem {semester}
+                  </Badge>
+                )}
+              </div>
+            )}
           </div>
-
-          {/* Premium Breadcrumbs */}
-          <nav className="mt-4 flex items-center gap-2 overflow-x-auto whitespace-nowrap rounded-2xl border border-border/50 bg-background/80 p-2 shadow-sm backdrop-blur-md">
-            <Link 
-              to="/resources" 
-              aria-label="Go to study materials home" 
-              className="inline-flex h-8 items-center justify-center gap-2 rounded-xl px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground"
-            >
-              <Home className="h-4 w-4" />
-              <span className="hidden sm:inline">Home</span>
-            </Link>
-            {branch && (
-              <>
-                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/50" />
-                <Button variant="ghost" size="sm" className="h-8 rounded-xl px-3 font-medium text-foreground hover:bg-secondary/60" onClick={() => navigate("/resources")}>
-                  {branch}
-                </Button>
-              </>
-            )}
-            {branch && semester && (
-              <>
-                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/50" />
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 rounded-xl px-3 font-medium text-foreground hover:bg-secondary/60"
-                  onClick={() => navigate(`/resources/${branch}/${semester}`)}
-                >
-                  Sem {semester}
-                </Button>
-              </>
-            )}
-            {activeSubject && (
-              <>
-                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/50" />
-                <span className="inline-flex h-8 items-center rounded-xl bg-primary/10 px-4 text-sm font-semibold text-primary">
-                  {activeSubject.code}
-                </span>
-              </>
-            )}
-          </nav>
         </div>
       </div>
 
-      {isRoot && (
-        <BranchSemesterSelection
-          selectedBranch={tempBranch}
-          selectedSemester={null}
-          onBranchSelect={handleBranchSelect}
-          onSemesterSelect={handleSemesterSelect}
-        />
-      )}
+      {/* Structural Divider */}
+      <div className="h-px w-full bg-border/40" />
 
-      {isSubjectList && <SubjectGrid subjects={subjects} branch={branch!} semester={semester!} />}
+      {/* Routing Views Container */}
+      <div className="min-h-[400px] w-full">
+        {isRoot && (
+          <BranchSemesterSelection
+            selectedBranch={tempBranch}
+            selectedSemester={null}
+            onBranchSelect={handleBranchSelect}
+            onSemesterSelect={handleSemesterSelect}
+          />
+        )}
 
-      {isSubjectDashboard && activeSubject && <SubjectDashboard subject={activeSubject} />}
+        {isSubjectList && <SubjectGrid subjects={subjects} branch={branch!} semester={semester!} />}
 
-      {isTopicView && activeTopic && <TopicViewer topic={activeTopic} />}
+        {isSubjectDashboard && activeSubject && <SubjectDashboard subject={activeSubject} />}
+
+        {isTopicView && activeTopic && <TopicViewer topic={activeTopic} />}
+      </div>
+      
     </div>
   );
 }

@@ -1,67 +1,76 @@
-import { Button } from "@/components/ui/button";
+import { BookOpen, CheckCircle2, FileText } from "lucide-react";
 
+const steps = [
+  {
+    id: "01",
+    title: "Choose branch",
+    description: "Select your branch and semester. See only what matters.",
+    icon: BookOpen,
+  },
+  {
+    id: "02",
+    title: "Open subject",
+    description: "Access curated material specifically for your curriculum.",
+    icon: FileText,
+  },
+  {
+    id: "03",
+    title: "Start studying",
+    description: "Find notes, lectures, and key points in one unified place.",
+    icon: CheckCircle2,
+  },
+];
 
-
-export function Hero() {
+export function HowItWorksSection() {
   return (
-    <section className="relative overflow-hidden pt-24 pb-16 md:pt-32 md:pb-20 lg:pt-28 lg:pb-24">
-      {/* Subtle background glow – keeps depth without distraction */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background via-background to-background/95" />
-      <div className="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[100px]" />
-
-      <div className="container mx-auto max-w-3xl px-4 text-center">
-        <div
-          
-          className="space-y-6"
-        >
-          {/* Badge – matches the "How it works" badge style */}
-          <div >
-            <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary shadow-sm">
-              NMU Study Hub
-            </div>
-          </div>
-
-          {/* Heading – period moved outside gradient for cleaner reading */}
-          <h1
-            
-            className="text-3xl font-bold tracking-tight sm:text-5xl md:text-5xl lg:text-6xl"
-          >
-            Find your exact{" "}
-            <span className="bg-gradient-to-r from-primary to-primary/40 bg-clip-text text-transparent">
-              exam notes in seconds
-            </span>
-            .
-          </h1>
-
-          {/* Subtext */}
-          <p
-            
-            className="mx-auto max-w-2xl text-lg font-normal leading-relaxed text-muted-foreground/90 md:text-xl"
-          >
-            No random PDFs. No endless searching. Just clean, structured study
-            material for your branch and semester.
+    <section className="py-24 bg-background">
+      <div className="container px-4 md:px-6 mx-auto max-w-5xl">
+        
+        {/* Header */}
+        <div className="mb-16 md:mb-20 text-center max-w-2xl mx-auto">
+          <p className="text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-3">
+            How it works
           </p>
-
-          {/* CTA Buttons */}
-          <div
-            
-            className="flex flex-col justify-center gap-4 pt-2 sm:flex-row"
-          >
-            <Button size="lg" >
-              Start studying
-            </Button>
-            <Button size="lg" variant="outline" >
-              Browse subjects
-            </Button>
-          </div>
-
-          {/* Trust line */}
-          <p
-            
-            className="pt-4 text-xs text-muted-foreground/50 sm:text-sm"
-          >
-            Used by students to quickly access notes, syllabus, and previous papers.
+          <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            Get started in 3 steps
+          </h2>
+          <p className="mt-4 text-base text-muted-foreground">
+            A simple, noise-free flow designed to get you from searching to studying in seconds.
           </p>
+        </div>
+
+        {/* Minimal Steps Layout */}
+        <div className="grid gap-10 md:grid-cols-3 md:gap-x-12">
+          {steps.map((step) => {
+            const Icon = step.icon;
+
+            return (
+              <div
+                key={step.title}
+                className="group flex flex-col"
+              >
+                {/* Structural Top Divider & Icon Box */}
+                <div className="flex items-end justify-between border-b border-border/60 pb-5 mb-6 transition-colors duration-300 group-hover:border-foreground/20">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-[10px] border border-border/80 bg-card shadow-sm text-foreground transition-all duration-300 group-hover:bg-muted/50 group-hover:shadow-md">
+                    <Icon className="h-[22px] w-[22px] text-foreground/80 transition-colors group-hover:text-foreground" />
+                  </div>
+                  <div className="text-3xl font-light tracking-tighter text-muted-foreground/30 font-mono transition-colors duration-300 group-hover:text-muted-foreground/50">
+                    {step.id}
+                  </div>
+                </div>
+
+                {/* Content Area */}
+                <div className="flex-1">
+                  <h3 className="text-xl font-semibold tracking-tight text-foreground mb-3">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground max-w-[95%]">
+                    {step.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

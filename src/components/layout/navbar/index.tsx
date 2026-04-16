@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Search, Sun, Moon, LogOut, User, BookOpen } from "lucide-react";
+import { Sun, Moon, LogOut, User, BookOpen } from "lucide-react";
 import Menu from "@/svgs/menu";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { SearchIcon } from "lucide-react";
+import { Kbd } from "@/components/ui/kbd";
 import {
   InputGroup,
   InputGroupAddon,
@@ -26,7 +25,6 @@ import { useTheme } from "@/components/theme-provider";
 import { useLocalAuth } from "@/hooks/use-local-auth";
 import { cn } from "@/lib/utils";
 
-// Navbar Search Component
 function NavbarSearch() {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
@@ -44,19 +42,35 @@ function NavbarSearch() {
     navigate(`/syllabus?search=${encodeURIComponent(normalizedQuery)}`);
   };
 
+  // ✅ Ctrl + K shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        navigate("/search"); // 🔥 redirect page
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [navigate]);
+
   return (
-    <InputGroup>
-      <InputGroupAddon>
-        <SearchIcon aria-hidden="true" />
-      </InputGroupAddon>
-      <InputGroupInput
-        aria-label="Search"
-        onChange={(e) => setQuery(e.target.value)}
-        value={query}
-        placeholder="Search"
-        type="search"
-      />
-    </InputGroup>
+    <form onSubmit={handleSubmit}>
+      <InputGroup>
+        <InputGroupInput
+          placeholder="Search…"
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)} // ✅ FIX
+        />
+        <InputGroupAddon align="inline-end">
+          <Kbd>Ctrl</Kbd>
+          <Kbd>K</Kbd>
+        </InputGroupAddon>
+      </InputGroup>
+    </form>
   );
 }
 

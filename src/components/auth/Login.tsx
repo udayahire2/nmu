@@ -7,19 +7,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { ArrowRight, Loader2 } from "lucide-react";
 
+// COSS UI Components
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
   FormField,
+  FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  AuthCard,
-  AuthField,
-  AuthForm,
-} from "@/components/auth/auth-form";
 import { buildApiUrl, getErrorMessage, parseApiData } from "@/services/api";
 
 const loginSchema = z.object({
@@ -82,91 +88,108 @@ const Login = () => {
   };
 
   return (
-    <AuthCard
-      title="Sign in"
-      description="Use your email and password to continue."
-      footer={
-        <p className="text-sm text-muted-foreground">
-          Don&apos;t have an account?{" "}
-          <Link to="/signup" className="font-medium text-foreground transition-colors hover:text-muted-foreground">
-            Create one
-          </Link>
-        </p>
-      }
-    >
-      <AuthForm onSubmit={form.handleSubmit(onSubmit)}>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <AuthField id="email" label="Email">
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="email"
-                      placeholder="name@example.com"
-                      className="h-11 rounded-md border-border/40 bg-transparent"
-                      disabled={loading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </AuthField>
+    <div className="container flex min-h-screen items-center justify-center px-4 py-12">
+      <Card className="w-full max-w-md border-border/40 bg-card/30 shadow-none backdrop-blur-sm">
+        <CardHeader className="space-y-1 pb-4">
+          <CardTitle className="text-2xl font-medium tracking-tight">Sign in</CardTitle>
+          <CardDescription className="text-base">
+            Use your email and password to continue.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="pb-4">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-normal text-muted-foreground">
+                      Email
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="email"
+                        placeholder="name@example.com"
+                        className="h-11 rounded-lg border-border/40 bg-background focus-visible:ring-1"
+                        disabled={loading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-normal text-muted-foreground">
+                      Password
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="password"
+                        placeholder="••••••••"
+                        className="h-11 rounded-lg border-border/40 bg-background focus-visible:ring-1"
+                        disabled={loading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {error && (
+                <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+                  {error}
+                </div>
               )}
-            />
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <AuthField id="password" label="Password">
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="password"
-                      placeholder="••••••••"
-                      className="h-11 rounded-md border-border/40 bg-transparent"
-                      disabled={loading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </AuthField>
-              )}
-            />
-
-            {error && (
-              <div className="rounded-md border border-destructive/50 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-                {error}
-              </div>
-            )}
-
-            <Button className="h-11 w-full rounded-md mt-6" type="submit" disabled={loading}>
-              {loading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                <>
-                  Sign in
-                  <ArrowRight className="h-4 w-4" />
-                </>
-              )}
-            </Button>
-
-            <div className="text-center pt-2">
-              <Link
-                to="/forgot-password"
-                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              <Button
+                type="submit"
+                className="h-11 w-full rounded-lg font-normal"
+                disabled={loading}
               >
-                Forgot your password?
-              </Link>
-            </div>
-          </form>
-        </Form>
-      </AuthForm>
-    </AuthCard>
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  <>
+                    Sign in
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+
+        <CardFooter className="flex flex-col items-center gap-3 border-t border-border/40 pt-5">
+          <Link
+            to="/forgot-password"
+            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Forgot your password?
+          </Link>
+          <p className="text-sm text-muted-foreground">
+            Don&apos;t have an account?{" "}
+            <Link
+              to="/signup"
+              className="font-medium text-foreground transition-colors hover:text-muted-foreground"
+            >
+              Create one
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
 
