@@ -23,10 +23,10 @@ interface VideoPlayerContextType {
     isPlaying: boolean;
     togglePlay: () => void;
     volume: number;
-    handleVolumeChange: (value: number[]) => void;
+    handleVolumeChange: (value: number | readonly number[]) => void;
     currentTime: number;
     duration: number;
-    handleSeek: (value: number[]) => void;
+    handleSeek: (value: number | readonly number[]) => void;
     videoRef: React.RefObject<HTMLVideoElement | null>;
     isMuted: boolean;
     toggleMute: () => void;
@@ -89,8 +89,8 @@ const VideoPlayer = ({ className, children, ...props }: VideoPlayerProps) => {
         }
     };
 
-    const handleVolumeChange = (value: number[]) => {
-        const newVolume = value[0];
+    const handleVolumeChange = (value: number | readonly number[]) => {
+        const newVolume = typeof value === 'number' ? value : value[0];
         setVolume(newVolume);
         if (videoRef.current) {
             videoRef.current.volume = newVolume;
@@ -112,8 +112,8 @@ const VideoPlayer = ({ className, children, ...props }: VideoPlayerProps) => {
         }
     };
 
-    const handleSeek = (value: number[]) => {
-        const newTime = value[0];
+    const handleSeek = (value: number | readonly number[]) => {
+        const newTime = typeof value === 'number' ? value : value[0];
         setCurrentTime(newTime);
         if (videoRef.current) {
             videoRef.current.currentTime = newTime;

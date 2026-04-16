@@ -197,16 +197,6 @@ export default function MarkdownPreview({ content, className }: MarkdownPreviewP
                     ref={dialogContentRef}
                     className="!max-w-none !w-screen !h-screen !p-0 !border-0 !rounded-none !bg-background !flex !flex-col focus:outline-none z-[99999] overflow-hidden !top-0 !left-0 !translate-x-0 !translate-y-0"
                     showCloseButton={false}
-                    onPointerDownOutside={(e) => e.preventDefault()} // Prevent closing on scrollbar click
-                    onInteractOutside={(e) => {
-                        // Only allow closing when clicking the backdrop, not scrollbar/content
-                        const target = e.target as HTMLElement;
-                        if (target.closest('.markdown-scrollbar') ||
-                            target.closest('.scroll-container') ||
-                            target === scrollContainerRef.current) {
-                            e.preventDefault();
-                        }
-                    }}
                 >
                     <DialogTitle className="sr-only">Markdown Preview</DialogTitle>
 
