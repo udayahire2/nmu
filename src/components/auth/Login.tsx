@@ -113,7 +113,7 @@ const Login = () => {
                         {...field}
                         type="email"
                         placeholder="name@example.com"
-                        className="h-11 rounded-lg border-border/40 bg-background focus-visible:ring-1"
+                        
                         disabled={loading}
                       />
                     </FormControl>
@@ -135,7 +135,6 @@ const Login = () => {
                         {...field}
                         type="password"
                         placeholder="••••••••"
-                        className="h-11 rounded-lg border-border/40 bg-background focus-visible:ring-1"
                         disabled={loading}
                       />
                     </FormControl>

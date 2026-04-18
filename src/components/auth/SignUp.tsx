@@ -17,9 +17,9 @@ import {
   AuthField,
   AuthForm,
   AuthGrid,
-  AuthInput,
 } from "@/components/auth/auth-form";
 import { buildApiUrl, getErrorMessage } from "@/services/api";
+import { Input } from "../ui/input";
 
 export const title = "Sign Up";
 
@@ -123,7 +123,7 @@ const SignUp = () => {
         </AuthField>
 
         <AuthField id="name" label="Full name">
-          <AuthInput
+          <Input
             id="name"
             placeholder="Your full name"
             required
@@ -133,7 +133,7 @@ const SignUp = () => {
         </AuthField>
 
         <AuthField id="email" label="Email">
-          <AuthInput
+          <Input
             id="email"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             placeholder="name@example.com"
@@ -144,7 +144,7 @@ const SignUp = () => {
         </AuthField>
 
         <AuthField id="password" label="Password">
-          <AuthInput
+          <Input
             id="password"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
             type="password"
@@ -190,7 +190,7 @@ const SignUp = () => {
         {role === "faculty" && (
           <>
             <AuthField id="designation" label="Designation">
-              <AuthInput
+              <Input
                 id="designation"
                 placeholder="Assistant Professor"
                 required
@@ -200,7 +200,7 @@ const SignUp = () => {
             </AuthField>
 
             <AuthField id="department" label="Department">
-              <AuthInput
+              <Input
                 id="department"
                 placeholder="Computer Engineering"
                 required
@@ -210,7 +210,7 @@ const SignUp = () => {
             </AuthField>
 
             <AuthField id="collegeName" label="College">
-              <AuthInput
+              <Input
                 id="collegeName"
                 placeholder="College name"
                 required
@@ -220,7 +220,7 @@ const SignUp = () => {
             </AuthField>
 
             <AuthField id="subjects" label="Subjects">
-              <AuthInput
+              <Input
                 id="subjects"
                 placeholder="DBMS, OS, TOC"
                 required
