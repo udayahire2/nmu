@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
     Table,
     TableBody,
@@ -6,17 +6,25 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { Download, FileCode, FileText, Loader2, Plus, Search } from 'lucide-react';
-import SyllabusForm from '@/components/admin/SyllabusForm';
-import { deleteSyllabus, fetchSyllabus, type SyllabusItem } from '@/services/syllabus-service';
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { Download, FileCode, FileText, Loader2, Plus, Search } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { toast } from "sonner";
+import SyllabusForm from "@/components/admin/SyllabusForm";
+import { deleteSyllabus, fetchSyllabus, type SyllabusItem } from "@/services/syllabus-service";
 
 export default function SyllabusManagerPage() {
     const [syllabusList, setSyllabusList] = useState<SyllabusItem[]>([]);
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
     const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -32,127 +40,131 @@ export default function SyllabusManagerPage() {
     }, []);
 
     const deleteItem = async (id: string) => {
-        if (!window.confirm('Are you sure?')) return;
-
+        if (!confirm("Are you sure you want to delete this syllabus item?")) return;
         const success = await deleteSyllabus(id);
         if (success) {
             setSyllabusList((prev) => prev.filter((item) => item.id !== id && item._id !== id));
-            return;
+            toast.success("Syllabus deleted successfully");
+        } else {
+            toast.error("Failed to delete syllabus item");
         }
-
-        alert('Failed to delete syllabus item.');
     };
 
-    const filtered = syllabusList.filter((item) =>
-        item.title.toLowerCase().includes(search.toLowerCase()) ||
-        item.code.toLowerCase().includes(search.toLowerCase())
+    const filtered = syllabusList.filter(
+        (item) =>
+            item.title.toLowerCase().includes(search.toLowerCase()) ||
+            item.code.toLowerCase().includes(search.toLowerCase())
     );
 
     const getTypeIcon = (type: string) => {
         switch (type.toLowerCase()) {
-            case 'pdf':
+            case "pdf":
                 return <FileText className="h-4 w-4 text-red-500" />;
-            case 'markdown':
+            case "markdown":
                 return <FileCode className="h-4 w-4 text-blue-500" />;
             default:
-                return <Download className="h-4 w-4 text-gray-500" />;
+                return <Download className="h-4 w-4 text-muted-foreground" />;
         }
     };
 
     return (
-        <div className="space-y-8 p-6">
+        <div className="space-y-8">
+            {/* Header */}
+            <div>
+                <h1 className="text-3xl font-bold tracking-tight">Syllabus Manager</h1>
+                <p className="text-muted-foreground text-sm mt-1">
+                    Manage course curriculum and syllabus content.
+                </p>
+            </div>
+
+            {/* Toolbar */}
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="space-y-1">
-                    <h1 className="text-3xl font-bold tracking-tight text-white">Syllabus Manager</h1>
-                    <p className="text-sm font-medium text-zinc-400">
-                        Manage course curriculum and syllabus content.
-                    </p>
+                <div className="relative w-full md:w-64">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                        placeholder="Search by title or code..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="pl-8"
+                    />
                 </div>
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                     <DialogTrigger asChild>
-                        <Button size="lg" className="rounded-lg bg-white font-medium text-black transition-all hover:bg-zinc-200">
-                            <Plus className="mr-2 h-5 w-5" />
+                        <Button>
+                            <Plus className="mr-2 h-4 w-4" />
                             Add Syllabus
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-h-[90vh] overflow-y-auto border-white/10 bg-[#09090b] sm:max-w-[600px]">
-                        <SyllabusForm
-                            onSuccess={() => {
-                                setDialogOpen(false);
-                                loadSyllabus();
-                            }}
-                        />
+                    <DialogContent className="sm:max-w-[650px] p-0 flex flex-col overflow-hidden max-h-[90vh]">
+                        <ScrollArea className="max-h-[90vh] w-full p-6 sm:p-8">
+                            <DialogHeader className="pb-2">
+                                <DialogTitle className="text-2xl font-bold tracking-tight">Add New Syllabus</DialogTitle>
+                            </DialogHeader>
+                            <SyllabusForm
+                                onSuccess={() => {
+                                    setDialogOpen(false);
+                                    loadSyllabus();
+                                }}
+                            />
+                        </ScrollArea>
                     </DialogContent>
                 </Dialog>
             </div>
 
-            <div className="relative w-full md:w-64">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
-                <Input
-                    placeholder="Search by title or code..."
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    className="h-10 w-full rounded-full border border-white/5 bg-[#111111] pl-9 pr-4 text-sm text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-white/10"
-                />
-            </div>
-
-            <div className="overflow-hidden rounded-xl border border-white/5 bg-[#050505] shadow-2xl">
+            {/* Table */}
+            <div className="border rounded-lg overflow-hidden">
                 <Table>
-                    <TableHeader className="border-b border-white/5 bg-[#0A0A0A]">
-                        <TableRow className="border-white/5 hover:bg-transparent">
-                            <TableHead className="h-12 w-[120px] pl-8 text-[11px] font-bold uppercase tracking-widest text-zinc-500">Code</TableHead>
-                            <TableHead className="h-12 text-[11px] font-bold uppercase tracking-widest text-zinc-500">Course Title</TableHead>
-                            <TableHead className="h-12 text-[11px] font-bold uppercase tracking-widest text-zinc-500">Branch / Sem</TableHead>
-                            <TableHead className="h-12 text-[11px] font-bold uppercase tracking-widest text-zinc-500">Type</TableHead>
-                            <TableHead className="h-12 pr-8 text-right text-[11px] font-bold uppercase tracking-widest text-zinc-500">Actions</TableHead>
+                    <TableHeader className="bg-muted/30">
+                        <TableRow>
+                            <TableHead className="w-[120px]">Code</TableHead>
+                            <TableHead>Course Title</TableHead>
+                            <TableHead>Branch / Semester</TableHead>
+                            <TableHead>Type</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {loading ? (
                             <TableRow>
-                                <TableCell colSpan={5} className="h-48 border-none text-center">
-                                    <Loader2 className="mx-auto h-8 w-8 animate-spin text-zinc-500" />
+                                <TableCell colSpan={5} className="h-48 text-center">
+                                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
                                 </TableCell>
                             </TableRow>
                         ) : filtered.length === 0 ? (
                             <TableRow>
-                                <TableCell colSpan={5} className="h-64 border-none text-center text-zinc-500">
-                                    <div className="flex h-full flex-col items-center justify-center">
-                                        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/5">
-                                            <Search className="h-8 w-8 opacity-20" />
-                                        </div>
+                                <TableCell colSpan={5} className="h-64 text-center text-muted-foreground">
+                                    <div className="flex flex-col items-center gap-2">
+                                        <Search className="h-8 w-8 opacity-50" />
                                         <p>No syllabus found matching your search.</p>
                                     </div>
                                 </TableCell>
                             </TableRow>
                         ) : (
                             filtered.map((item) => (
-                                <TableRow key={item.id || item._id} className="group border-white/[0.02] transition-colors hover:bg-white/[0.02]">
-                                    <TableCell className="pl-8 py-5 font-mono text-sm font-medium text-zinc-400">
-                                        {item.code}
-                                    </TableCell>
-                                    <TableCell className="py-5 text-base font-semibold text-white">
-                                        {item.title}
-                                    </TableCell>
-                                    <TableCell className="py-5">
-                                        <div className="flex flex-col gap-1">
-                                            <span className="text-sm font-medium text-zinc-300">{item.branch}</span>
-                                            <span className="text-xs text-zinc-500">Semester {item.semester}</span>
+                                <TableRow key={item.id || item._id}>
+                                    <TableCell className="font-mono text-sm">{item.code}</TableCell>
+                                    <TableCell className="font-medium">{item.title}</TableCell>
+                                    <TableCell>
+                                        <div className="flex flex-col gap-0.5">
+                                            <span>{item.branch}</span>
+                                            <span className="text-xs text-muted-foreground">Semester {item.semester}</span>
                                         </div>
                                     </TableCell>
-                                    <TableCell className="py-5">
-                                        <div className="flex items-center gap-3">
+                                    <TableCell>
+                                        <div className="flex items-center gap-2">
                                             {getTypeIcon(item.type)}
-                                            <span className="text-xs font-bold uppercase tracking-wider text-zinc-300">{item.type}</span>
+                                            <span className="text-xs uppercase">{item.type}</span>
                                         </div>
                                     </TableCell>
-                                    <TableCell className="py-5 pr-8 text-right">
-                                        <button
-                                            onClick={() => deleteItem(item.id || item._id || '')}
-                                            className="text-xs font-medium text-zinc-500 transition-colors hover:text-white"
+                                    <TableCell className="text-right">
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => deleteItem(item.id || item._id || "")}
+                                            className="text-destructive hover:text-destructive"
                                         >
                                             Delete
-                                        </button>
+                                        </Button>
                                     </TableCell>
                                 </TableRow>
                             ))

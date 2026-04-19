@@ -79,7 +79,8 @@ export default function ResourceForm({ onSuccess }: { onSuccess: () => void }) {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                {/* Title - full width */}
                 <FormField
                     control={form.control}
                     name="title"
@@ -94,7 +95,8 @@ export default function ResourceForm({ onSuccess }: { onSuccess: () => void }) {
                     )}
                 />
 
-                <div className="grid grid-cols-2 gap-4">
+                {/* Subject & Type - stack on mobile, side by side on sm+ */}
+                <div className="grid gap-5 sm:grid-cols-2">
                     <FormField
                         control={form.control}
                         name="subject"
@@ -133,7 +135,8 @@ export default function ResourceForm({ onSuccess }: { onSuccess: () => void }) {
                     />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                {/* Branch & Semester */}
+                <div className="grid gap-5 sm:grid-cols-2">
                     <FormField
                         control={form.control}
                         name="branch"
@@ -184,7 +187,8 @@ export default function ResourceForm({ onSuccess }: { onSuccess: () => void }) {
                     />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                {/* Year & Category */}
+                <div className="grid gap-5 sm:grid-cols-2">
                     <FormField
                         control={form.control}
                         name="year"
@@ -235,6 +239,7 @@ export default function ResourceForm({ onSuccess }: { onSuccess: () => void }) {
                     />
                 </div>
 
+                {/* URL */}
                 <FormField
                     control={form.control}
                     name="url"
@@ -249,6 +254,7 @@ export default function ResourceForm({ onSuccess }: { onSuccess: () => void }) {
                     )}
                 />
 
+                {/* Author */}
                 <FormField
                     control={form.control}
                     name="author"
@@ -263,6 +269,7 @@ export default function ResourceForm({ onSuccess }: { onSuccess: () => void }) {
                     )}
                 />
 
+                {/* Description */}
                 <FormField
                     control={form.control}
                     name="description"
@@ -281,9 +288,11 @@ export default function ResourceForm({ onSuccess }: { onSuccess: () => void }) {
                     <p className="text-sm text-destructive">{form.formState.errors.root.message}</p>
                 )}
 
-                <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                    {form.formState.isSubmitting ? 'Saving...' : 'Add Resource'}
-                </Button>
+                <div className="pt-2">
+                    <Button type="submit" className="w-full" size="lg" disabled={form.formState.isSubmitting}>
+                        {form.formState.isSubmitting ? 'Saving...' : 'Add Resource'}
+                    </Button>
+                </div>
             </form>
         </Form>
     );

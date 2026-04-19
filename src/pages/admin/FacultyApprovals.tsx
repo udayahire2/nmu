@@ -1,11 +1,23 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, X } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Check, X, Loader2, Users } from "lucide-react";
+import { toast } from "sonner";
 import { buildApiUrl, getErrorMessage } from "@/services/api";
 
+interface FacultyUser {
+    _id: string;
+    name: string;
+    email: string;
+    designation: string;
+    department: string;
+    collegeName: string;
+    subjects: string[];
+}
+
 const FacultyApprovals = () => {
-    const [faculty, setFaculty] = useState<any[]>([]);
+    const [faculty, setFaculty] = useState<FacultyUser[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchPendingFaculty = async () => {
@@ -22,6 +34,7 @@ const FacultyApprovals = () => {
             }
         } catch (error) {
             console.error("Failed to fetch pending faculty", error);
+            toast.error("Failed to load pending approvals");
         } finally {
             setLoading(false);
         }
@@ -38,13 +51,14 @@ const FacultyApprovals = () => {
             });
             const data = await res.json();
             if (data.success) {
-                // Refresh list
                 setFaculty(prev => prev.filter(f => f._id !== id));
+                toast.success(`Faculty ${action}d successfully`);
             } else {
-                alert(getErrorMessage(data, `Failed to ${action} faculty`));
+                toast.error(getErrorMessage(data, `Failed to ${action} faculty`));
             }
         } catch (error) {
             console.error(`Failed to ${action} faculty`, error);
+            toast.error(`Failed to ${action} faculty`);
         }
     };
 
@@ -52,49 +66,86 @@ const FacultyApprovals = () => {
         fetchPendingFaculty();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) {
+        return (
+            <div className="flex h-[60vh] items-center justify-center">
+                <div className="text-center space-y-3">
+                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mx-auto" />
+                    <p className="text-muted-foreground">Loading pending approvals...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className="space-y-6">
-            <h1 className="text-3xl font-bold">Faculty Approvals</h1>
+        <div className="space-y-8">
+            <div>
+                <h1 className="text-3xl font-bold tracking-tight">Faculty Approvals</h1>
+                <p className="text-muted-foreground text-sm mt-1">
+                    Review and verify faculty registration requests.
+                </p>
+            </div>
 
             {faculty.length === 0 ? (
-                <Card>
-                    <CardContent className="py-8 text-center text-muted-foreground">
-                        No pending approvals.
+                <Card className="border-dashed">
+                    <CardContent className="py-12 flex flex-col items-center justify-center text-center">
+                        <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mb-4">
+                            <Users className="h-6 w-6 text-muted-foreground" />
+                        </div>
+                        <h3 className="text-lg font-medium">No pending approvals</h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                            All faculty requests have been reviewed.
+                        </p>
                     </CardContent>
                 </Card>
             ) : (
                 <div className="grid gap-4">
                     {faculty.map((user) => (
-                        <Card key={user._id}>
-                            <CardContent className="flex items-center justify-between p-6">
-                                <div>
-                                    <h3 className="font-semibold text-lg">{user.name}</h3>
-                                    <p className="text-sm text-muted-foreground">{user.email}</p>
-                                    <div className="mt-2 text-sm space-y-1">
-                                        <p><span className="font-medium">Designation:</span> {user.designation}</p>
-                                        <p><span className="font-medium">Department:</span> {user.department}</p>
-                                        <p><span className="font-medium">College:</span> {user.collegeName}</p>
-                                        <p><span className="font-medium">Subjects:</span> {user.subjects?.join(', ')}</p>
+                        <Card key={user._id} className="overflow-hidden">
+                            <CardContent className="p-0">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6">
+                                    <div className="space-y-2">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            <h3 className="font-semibold text-lg">{user.name}</h3>
+                                            <Badge variant="outline" className="text-xs">
+                                                {user.designation}
+                                            </Badge>
+                                        </div>
+                                        <p className="text-sm text-muted-foreground">{user.email}</p>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-sm">
+                                            <div>
+                                                <span className="font-medium text-muted-foreground">Department:</span>{" "}
+                                                {user.department}
+                                            </div>
+                                            <div>
+                                                <span className="font-medium text-muted-foreground">College:</span>{" "}
+                                                {user.collegeName}
+                                            </div>
+                                            <div className="sm:col-span-2">
+                                                <span className="font-medium text-muted-foreground">Subjects:</span>{" "}
+                                                {user.subjects?.join(", ") || "—"}
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="flex gap-2">
-                                    <Button
-                                        variant="outline"
-                                        size="icon"
-                                        className="text-red-500 hover:bg-red-50 hover:text-red-600"
-                                        onClick={() => handleAction(user._id, 'reject')}
-                                    >
-                                        <X className="h-4 w-4" />
-                                    </Button>
-                                    <Button
-                                        size="icon"
-                                        className="bg-green-600 hover:bg-green-700"
-                                        onClick={() => handleAction(user._id, 'approve')}
-                                    >
-                                        <Check className="h-4 w-4" />
-                                    </Button>
+                                    <div className="flex items-center gap-2 self-start sm:self-center">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => handleAction(user._id, "reject")}
+                                            className="text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/30"
+                                        >
+                                            <X className="h-4 w-4 mr-1" />
+                                            Reject
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            onClick={() => handleAction(user._id, "approve")}
+                                            className="bg-primary hover:bg-primary/90"
+                                        >
+                                            <Check className="h-4 w-4 mr-1" />
+                                            Approve
+                                        </Button>
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>

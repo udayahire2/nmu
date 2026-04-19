@@ -144,10 +144,9 @@ function ThemeToggle() {
   );
 }
 
-// User Menu Component (Desktop)
+// User Menu Component (Desktop) — Vercel-style avatar dropdown
 function UserMenuDesktop() {
-  const { user } = useLocalAuth();
-  const navigate = useNavigate();
+  const { user, logout, getInitials } = useLocalAuth();
 
   if (!user) {
     return (
@@ -165,15 +164,92 @@ function UserMenuDesktop() {
   }
 
   return (
-    <div className="hidden items-center gap-2 md:flex">
-      <Button
-        variant="ghost"
-        size="sm"
-        className="rounded-md px-3 text-sm"
-        onClick={() => navigate("/profile")}
-      >
-        {user.name}
-      </Button>
+    <div className="hidden items-center md:flex">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-foreground/90 to-foreground/70 text-background ring-1 ring-border/50 transition-all duration-200 hover:ring-2 hover:ring-foreground/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
+            aria-label="User menu"
+          >
+            {user.avatar ? (
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback className="bg-transparent text-[11px] font-semibold text-background">
+                  {getInitials(user.name)}
+                </AvatarFallback>
+              </Avatar>
+            ) : (
+              <span className="text-[11px] font-semibold leading-none">
+                {getInitials(user.name)}
+              </span>
+            )}
+          </button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent
+          align="end"
+          sideOffset={8}
+          className="w-64 rounded-xl border-border/50 bg-popover/95 p-0 shadow-xl shadow-black/10 backdrop-blur-xl"
+        >
+          {/* User Info Header */}
+          <div className="border-b border-border/40 px-4 py-3">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-foreground/90 to-foreground/70 text-background">
+                {user.avatar ? (
+                  <Avatar className="h-9 w-9">
+                    <AvatarImage src={user.avatar} alt={user.name} />
+                    <AvatarFallback className="bg-transparent text-xs font-semibold text-background">
+                      {getInitials(user.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                ) : (
+                  <span className="text-xs font-semibold">
+                    {getInitials(user.name)}
+                  </span>
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium leading-tight">
+                  {user.name}
+                </p>
+                <p className="truncate text-xs text-muted-foreground">
+                  {user.email}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Menu Items */}
+          <div className="p-1.5">
+            <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-sm">
+              <Link to="/profile" className="flex items-center gap-2.5">
+                <User className="h-4 w-4 text-muted-foreground" />
+                <span>View Profile</span>
+              </Link>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-sm">
+              <Link to="/resources" className="flex items-center gap-2.5">
+                <BookOpen className="h-4 w-4 text-muted-foreground" />
+                <span>Study Materials</span>
+              </Link>
+            </DropdownMenuItem>
+          </div>
+
+          <DropdownMenuSeparator className="mx-2 bg-border/40" />
+
+          {/* Logout */}
+          <div className="p-1.5">
+            <DropdownMenuItem
+              onClick={logout}
+              className="cursor-pointer rounded-lg px-3 py-2 text-sm text-destructive focus:bg-destructive/10 focus:text-destructive"
+            >
+              <LogOut className="mr-2.5 h-4 w-4" />
+              Log out
+            </DropdownMenuItem>
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

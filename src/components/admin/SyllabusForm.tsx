@@ -70,8 +70,9 @@ export default function SyllabusForm({ onSuccess }: { onSuccess: () => void }) {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                {/* Title & Code - stack on mobile, side by side on sm */}
+                <div className="grid gap-5 sm:grid-cols-2">
                     <FormField
                         control={form.control}
                         name="title"
@@ -100,7 +101,8 @@ export default function SyllabusForm({ onSuccess }: { onSuccess: () => void }) {
                     />
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
+                {/* Branch, Semester, Credits - 1 col on mobile, 2 on sm, 3 on md+ */}
+                <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3">
                     <FormField
                         control={form.control}
                         name="branch"
@@ -218,7 +220,7 @@ export default function SyllabusForm({ onSuccess }: { onSuccess: () => void }) {
                     <p className="text-sm text-destructive">{form.formState.errors.root.message}</p>
                 )}
 
-                <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                <Button type="submit" className="w-full" size="lg" disabled={form.formState.isSubmitting}>
                     {form.formState.isSubmitting ? 'Saving...' : 'Save Syllabus'}
                 </Button>
             </form>

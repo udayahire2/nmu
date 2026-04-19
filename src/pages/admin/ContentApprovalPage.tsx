@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+"use client";
+
+import { useState, useEffect } from "react";
 import {
     Table,
     TableBody,
@@ -9,14 +11,43 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, FileText, Video, File, Search, Clock, Eye, RefreshCw, Loader2, BookOpen, ExternalLink } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { fetchPendingMaterials, fetchApprovedMaterials, updateMaterialStatus, type StudyMaterial } from '@/services/study-service';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import {
+    Check,
+    X,
+    FileText,
+    Video,
+    File,
+    Search,
+    Clock,
+    Eye,
+    RefreshCw,
+    Loader2,
+    BookOpen,
+    ExternalLink,
+} from "lucide-react";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { buildAssetUrl } from '@/services/api';
+import {
+    fetchPendingMaterials,
+    fetchApprovedMaterials,
+    updateMaterialStatus,
+    type StudyMaterial,
+} from "@/services/study-service";
+import { buildAssetUrl } from "@/services/api";
 
 export default function ContentApprovalPage() {
     const [pendingRequests, setPendingRequests] = useState<StudyMaterial[]>([]);
@@ -30,10 +61,9 @@ export default function ContentApprovalPage() {
         try {
             const [pending, approved] = await Promise.all([
                 fetchPendingMaterials(),
-                fetchApprovedMaterials()
+                fetchApprovedMaterials(),
             ]);
             setPendingRequests(pending);
-            // Note: Currently API gets approved
             setHistoryRequests(approved);
         } catch (error) {
             toast.error("Failed to load requests");
@@ -46,16 +76,15 @@ export default function ContentApprovalPage() {
         loadData();
     }, []);
 
-    const handleAction = async (id: string, action: 'approve' | 'reject') => {
-        const status = action === 'approve' ? 'approved' : 'rejected';
-
-        // Optimistic update
-        const request = pendingRequests.find(r => r._id === id);
+    const handleAction = async (id: string, action: "approve" | "reject") => {
+        const status = action === "approve" ? "approved" : "rejected";
+        const request = pendingRequests.find((r) => r._id === id);
         if (!request) return;
 
-        setPendingRequests(prev => prev.filter(r => r._id !== id));
-        if (action === 'approve') {
-            setHistoryRequests(prev => [{ ...request, status: 'approved' }, ...prev]);
+        // Optimistic update
+        setPendingRequests((prev) => prev.filter((r) => r._id !== id));
+        if (action === "approve") {
+            setHistoryRequests((prev) => [{ ...request, status: "approved" }, ...prev]);
         }
 
         const result = await updateMaterialStatus(id, status);
@@ -63,97 +92,106 @@ export default function ContentApprovalPage() {
             toast.success(`Content ${status} successfully!`);
         } else {
             toast.error(`Failed to ${action} content`);
-            loadData(); // Revert
+            loadData(); // revert
         }
     };
 
     const getTypeIcon = (type: string) => {
-        switch ((type || '').toLowerCase()) {
-            case 'pdf': return <FileText className="h-4 w-4 text-red-500" />;
-            case 'video': return <Video className="h-4 w-4 text-blue-500" />;
-            case 'notes': return <BookOpen className="h-4 w-4 text-emerald-500" />;
-            default: return <File className="h-4 w-4 text-gray-500" />;
+        switch ((type || "").toLowerCase()) {
+            case "pdf":
+                return <FileText className="h-4 w-4 text-red-500" />;
+            case "video":
+                return <Video className="h-4 w-4 text-blue-500" />;
+            case "notes":
+                return <BookOpen className="h-4 w-4 text-emerald-500" />;
+            default:
+                return <File className="h-4 w-4 text-muted-foreground" />;
         }
     };
 
     const getStatusBadge = (status: string) => {
         switch (status) {
-            case 'approved':
-                return <Badge className="bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 border-emerald-500/20">Approved</Badge>;
-            case 'rejected':
-                return <Badge className="bg-red-500/10 text-red-500 hover:bg-red-500/20 border-red-500/20">Rejected</Badge>;
+            case "approved":
+                return (
+                    <Badge variant="outline" className="border-emerald-500 text-emerald-600 dark:text-emerald-400">
+                        Approved
+                    </Badge>
+                );
+            case "rejected":
+                return (
+                    <Badge variant="outline" className="border-red-500 text-red-600 dark:text-red-400">
+                        Rejected
+                    </Badge>
+                );
             default:
-                return <Badge className="bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20 border-yellow-500/20">Pending</Badge>;
+                return (
+                    <Badge variant="outline" className="border-yellow-500 text-yellow-600 dark:text-yellow-400">
+                        Pending
+                    </Badge>
+                );
         }
     };
 
-    // Filtered requests based on search
-    const filteredPending = pendingRequests.filter(r =>
-        r.title.toLowerCase().includes(search.toLowerCase()) ||
-        r.author.toLowerCase().includes(search.toLowerCase())
+    const filteredPending = pendingRequests.filter(
+        (r) =>
+            r.title.toLowerCase().includes(search.toLowerCase()) ||
+            r.author.toLowerCase().includes(search.toLowerCase())
     );
 
-    const filteredHistory = historyRequests.filter(r =>
-        r.title.toLowerCase().includes(search.toLowerCase()) ||
-        r.author.toLowerCase().includes(search.toLowerCase())
+    const filteredHistory = historyRequests.filter(
+        (r) =>
+            r.title.toLowerCase().includes(search.toLowerCase()) ||
+            r.author.toLowerCase().includes(search.toLowerCase())
     );
 
     return (
         <div className="space-y-8">
+            {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex flex-col gap-1">
-                    <h1 className="text-3xl font-bold tracking-tight text-white">
-                        Content Approvals
-                    </h1>
-                    <p className="text-muted-foreground text-sm font-medium">Verify and manage student study material submissions.</p>
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight">Content Approvals</h1>
+                    <p className="text-muted-foreground text-sm">
+                        Verify and manage student study material submissions.
+                    </p>
                 </div>
-                <Button variant="outline" size="sm" onClick={loadData} disabled={loading} className="w-fit">
-                    <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                    Refresh Data
+                <Button variant="outline" size="sm" onClick={loadData} disabled={loading}>
+                    <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} />
+                    Refresh
                 </Button>
             </div>
 
-            <Tabs defaultValue="pending" className="w-full space-y-6">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <TabsList className="bg-transparent border-0 p-0 h-auto gap-2">
-                        <TabsTrigger
-                            value="pending"
-                            className="h-9 px-4 rounded-full border border-white/5 bg-black/20 data-[state=active]:bg-white/10 data-[state=active]:border-white/10 data-[state=active]:text-white transition-all"
-                        >
+            <Tabs defaultValue="pending" className="space-y-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <TabsList>
+                        <TabsTrigger value="pending">
                             Pending
-                            <Badge className="ml-2 h-5 min-w-5 px-1.5 flex items-center justify-center rounded-full bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 text-[10px]">
+                            <Badge variant="secondary" className="ml-2">
                                 {pendingRequests.length}
                             </Badge>
                         </TabsTrigger>
-                        <TabsTrigger
-                            value="history"
-                            className="h-9 px-4 rounded-full border border-white/5 bg-black/20 data-[state=active]:bg-white/10 data-[state=active]:border-white/10 data-[state=active]:text-white transition-all"
-                        >
-                            Approved History
-                        </TabsTrigger>
+                        <TabsTrigger value="history">Approved History</TabsTrigger>
                     </TabsList>
-
                     <div className="relative w-full sm:w-72">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
                             placeholder="Search requests..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="pl-9 h-10 bg-black/20 border-white/10 focus:bg-black/40 rounded-xl"
+                            className="pl-8"
                         />
                     </div>
                 </div>
 
                 <TabsContent value="pending" className="mt-0">
-                    <Card className="border border-white/5 bg-black/40 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden min-h-[400px]">
-                        <CardHeader className="border-b border-white/5 bg-white/5 px-6 py-4">
-                            <CardTitle className="text-lg font-medium">Pending Submissions</CardTitle>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Pending Submissions</CardTitle>
                             <CardDescription>Review and take action on new content uploads.</CardDescription>
                         </CardHeader>
-                        <div className="p-0">
+                        <CardContent className="p-0">
                             <Table>
                                 <TableHeader>
-                                    <TableRow className="hover:bg-transparent border-white/5">
+                                    <TableRow>
                                         <TableHead className="pl-6">Content Details</TableHead>
                                         <TableHead>Author</TableHead>
                                         <TableHead>Submitted</TableHead>
@@ -165,69 +203,64 @@ export default function ContentApprovalPage() {
                                     {loading ? (
                                         <TableRow>
                                             <TableCell colSpan={5} className="h-64 text-center">
-                                                <div className="flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+                                                <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
                                             </TableCell>
                                         </TableRow>
                                     ) : filteredPending.length === 0 ? (
                                         <TableRow>
                                             <TableCell colSpan={5} className="h-64 text-center text-muted-foreground">
-                                                <div className="flex flex-col items-center justify-center gap-2">
-                                                    <div className="h-12 w-12 rounded-full bg-white/5 flex items-center justify-center">
-                                                        <Check className="h-6 w-6 text-muted-foreground" />
-                                                    </div>
+                                                <div className="flex flex-col items-center gap-2">
+                                                    <Check className="h-8 w-8 opacity-50" />
                                                     <p>All caught up! No pending requests.</p>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
                                     ) : (
                                         filteredPending.map((req) => (
-                                            <TableRow key={req._id} className="group border-white/5 hover:bg-white/2 transition-colors">
+                                            <TableRow key={req._id}>
                                                 <TableCell className="pl-6 py-4">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="p-2 rounded-md bg-muted">
                                                             {getTypeIcon(req.type)}
                                                         </div>
-                                                        <div className="space-y-1">
-                                                            <p className="font-semibold text-sm text-white">{req.title}</p>
+                                                        <div>
+                                                            <p className="font-medium">{req.title}</p>
                                                             <p className="text-xs text-muted-foreground">{req.subject}</p>
                                                         </div>
                                                     </div>
                                                 </TableCell>
-                                                <TableCell>
-                                                    <span className="text-sm text-foreground/80">{req.author}</span>
-                                                </TableCell>
+                                                <TableCell>{req.author}</TableCell>
                                                 <TableCell>
                                                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                                         <Clock className="h-3 w-3" />
                                                         {new Date(req.createdAt).toLocaleDateString()}
                                                     </div>
                                                 </TableCell>
-                                                <TableCell>
-                                                    {getStatusBadge(req.status)}
-                                                </TableCell>
+                                                <TableCell>{getStatusBadge(req.status)}</TableCell>
                                                 <TableCell className="text-right pr-6">
                                                     <div className="flex items-center justify-end gap-2">
                                                         <Button
                                                             variant="ghost"
                                                             size="icon"
-                                                            className="h-8 w-8 text-muted-foreground hover:text-white hover:bg-white/10"
-                                                            title="View Content"
                                                             onClick={() => setViewingRequest(req)}
+                                                            title="View Content"
                                                         >
                                                             <Eye className="h-4 w-4" />
                                                         </Button>
                                                         <Button
                                                             size="sm"
-                                                            className="h-8 px-3 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20"
-                                                            onClick={() => handleAction(req._id, 'approve')}
+                                                            variant="outline"
+                                                            className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/20"
+                                                            onClick={() => handleAction(req._id, "approve")}
                                                         >
                                                             <Check className="h-4 w-4 mr-1.5" />
                                                             Approve
                                                         </Button>
                                                         <Button
                                                             size="sm"
-                                                            className="h-8 px-3 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20"
-                                                            onClick={() => handleAction(req._id, 'reject')}
+                                                            variant="outline"
+                                                            className="border-red-500 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
+                                                            onClick={() => handleAction(req._id, "reject")}
                                                         >
                                                             <X className="h-4 w-4 mr-1.5" />
                                                             Reject
@@ -239,20 +272,20 @@ export default function ContentApprovalPage() {
                                     )}
                                 </TableBody>
                             </Table>
-                        </div>
+                        </CardContent>
                     </Card>
                 </TabsContent>
 
                 <TabsContent value="history" className="mt-0">
-                    <Card className="border border-white/5 bg-black/40 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden min-h-[400px]">
-                        <CardHeader className="border-b border-white/5 bg-white/5 px-6 py-4">
-                            <CardTitle className="text-lg font-medium">History</CardTitle>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Approved History</CardTitle>
                             <CardDescription>Recently approved content.</CardDescription>
                         </CardHeader>
-                        <div className="p-0">
+                        <CardContent className="p-0">
                             <Table>
                                 <TableHeader>
-                                    <TableRow className="hover:bg-transparent border-white/5">
+                                    <TableRow>
                                         <TableHead className="pl-6">Content Details</TableHead>
                                         <TableHead>Author</TableHead>
                                         <TableHead>Status</TableHead>
@@ -263,7 +296,7 @@ export default function ContentApprovalPage() {
                                     {loading ? (
                                         <TableRow>
                                             <TableCell colSpan={4} className="h-64 text-center">
-                                                <div className="flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+                                                <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
                                             </TableCell>
                                         </TableRow>
                                     ) : filteredHistory.length === 0 ? (
@@ -274,24 +307,20 @@ export default function ContentApprovalPage() {
                                         </TableRow>
                                     ) : (
                                         filteredHistory.map((req) => (
-                                            <TableRow key={req._id} className="group border-white/5 hover:bg-white/[0.02]">
+                                            <TableRow key={req._id}>
                                                 <TableCell className="pl-6 py-4">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center opacity-60">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="p-2 rounded-md bg-muted">
                                                             {getTypeIcon(req.type)}
                                                         </div>
-                                                        <div className="space-y-1">
-                                                            <p className="font-semibold text-sm text-foreground/70">{req.title}</p>
+                                                        <div>
+                                                            <p className="font-medium">{req.title}</p>
                                                             <p className="text-xs text-muted-foreground">{req.subject}</p>
                                                         </div>
                                                     </div>
                                                 </TableCell>
-                                                <TableCell>
-                                                    <span className="text-sm text-muted-foreground">{req.author}</span>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {getStatusBadge(req.status)}
-                                                </TableCell>
+                                                <TableCell>{req.author}</TableCell>
+                                                <TableCell>{getStatusBadge(req.status)}</TableCell>
                                                 <TableCell className="text-right pr-6 text-sm text-muted-foreground">
                                                     {new Date(req.createdAt).toLocaleDateString()}
                                                 </TableCell>
@@ -300,23 +329,21 @@ export default function ContentApprovalPage() {
                                     )}
                                 </TableBody>
                             </Table>
-                        </div>
+                        </CardContent>
                     </Card>
                 </TabsContent>
             </Tabs>
 
-            {/* Preview Modal */}
+            {/* Preview Dialog */}
             <Dialog open={!!viewingRequest} onOpenChange={(open) => !open && setViewingRequest(null)}>
-                <DialogContent className="max-w-4xl w-[90vw] p-0 overflow-hidden bg-background/95 backdrop-blur-xl border-border/50">
-                    <DialogHeader className="p-4 border-b border-border/40 flex flex-row items-center justify-between">
+                <DialogContent className="max-w-4xl w-[90vw] p-0 overflow-hidden">
+                    <DialogHeader className="p-4 border-b">
                         <div className="flex items-center gap-3">
-                            <div className={`p-2 rounded-lg ${viewingRequest?.type.toLowerCase() === 'video' ? 'bg-red-500/10 text-red-500' :
-                                viewingRequest?.type.toLowerCase() === 'pdf' ? 'bg-blue-500/10 text-blue-500' : 'bg-primary/10 text-primary'
-                                }`}>
+                            <div className="p-2 rounded-md bg-muted">
                                 {viewingRequest && getTypeIcon(viewingRequest.type)}
                             </div>
                             <div>
-                                <DialogTitle className="text-lg font-semibold leading-none mb-1">
+                                <DialogTitle className="text-lg font-semibold">
                                     {viewingRequest?.title}
                                 </DialogTitle>
                                 <p className="text-xs text-muted-foreground">
@@ -325,9 +352,8 @@ export default function ContentApprovalPage() {
                             </div>
                         </div>
                     </DialogHeader>
-
-                    <div className="flex-1 bg-muted/20 min-h-[60vh] relative flex items-center justify-center">
-                        {viewingRequest?.type.toLowerCase() === 'video' ? (
+                    <div className="flex-1 min-h-[60vh] bg-muted/20 flex items-center justify-center">
+                        {viewingRequest?.type.toLowerCase() === "video" ? (
                             <iframe
                                 src={viewingRequest.url}
                                 className="w-full h-[60vh]"
@@ -335,21 +361,21 @@ export default function ContentApprovalPage() {
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen
                             />
-                        ) : viewingRequest?.type.toLowerCase() === 'pdf' ? (
+                        ) : viewingRequest?.type.toLowerCase() === "pdf" ? (
                             <iframe
-                                src={viewingRequest.url || (viewingRequest.filePath ? buildAssetUrl(viewingRequest.filePath) : '')}
+                                src={viewingRequest.url || (viewingRequest.filePath ? buildAssetUrl(viewingRequest.filePath) : "")}
                                 className="w-full h-[80vh]"
                                 title={viewingRequest.title}
                             />
                         ) : (
                             <div className="text-center p-10">
-                                <h3 className="text-lg font-medium text-foreground">Preview Not Available</h3>
+                                <p className="text-muted-foreground">Preview Not Available</p>
                                 {viewingRequest?.url && (
-                                    <a href={viewingRequest.url} target="_blank" rel="noreferrer">
-                                        <Button className="mt-4" variant="outline">
+                                    <Button variant="outline" className="mt-4" asChild>
+                                        <a href={viewingRequest.url} target="_blank" rel="noreferrer">
                                             <ExternalLink className="mr-2 h-4 w-4" /> Open Link
-                                        </Button>
-                                    </a>
+                                        </a>
+                                    </Button>
                                 )}
                             </div>
                         )}

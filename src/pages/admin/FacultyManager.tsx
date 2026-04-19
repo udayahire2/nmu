@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, X, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Check, X, User, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { buildApiUrl, getErrorMessage } from "@/services/api";
 
 interface Faculty {
@@ -25,11 +26,14 @@ export default function FacultyManager() {
 
     const fetchFaculty = async () => {
         try {
-            const token = localStorage.getItem('token');
-
+            const token = localStorage.getItem("token");
             const [pendingRes, allRes] = await Promise.all([
-                fetch(buildApiUrl('/admin/faculty/pending'), { headers: { Authorization: `Bearer ${token}` } }),
-                fetch(buildApiUrl('/admin/faculty/all'), { headers: { Authorization: `Bearer ${token}` } })
+                fetch(buildApiUrl("/admin/faculty/pending"), {
+                    headers: { Authorization: `Bearer ${token}` },
+                }),
+                fetch(buildApiUrl("/admin/faculty/all"), {
+                    headers: { Authorization: `Bearer ${token}` },
+                }),
             ]);
 
             const pendingData = await pendingRes.json();
@@ -37,9 +41,8 @@ export default function FacultyManager() {
 
             if (pendingData.success) setPendingFaculty(pendingData.data);
             if (allData.success) setAllFaculty(allData.data);
-
-        } catch (error) {
-            console.error("Error fetching faculty:", error);
+        } catch (err) {
+            console.error("Error fetching faculty:", err);
             setError("Failed to load faculty data. Please try again.");
         } finally {
             setLoading(false);
@@ -50,52 +53,63 @@ export default function FacultyManager() {
         fetchFaculty();
     }, []);
 
-    const handleAction = async (id: string, action: 'approve' | 'reject') => {
+    const handleAction = async (id: string, action: "approve" | "reject") => {
         try {
-            const token = localStorage.getItem('token');
-
+            const token = localStorage.getItem("token");
             const res = await fetch(buildApiUrl(`/admin/faculty/${id}/${action}`), {
-                method: 'PATCH',
-                headers: { Authorization: `Bearer ${token}` }
+                method: "PATCH",
+                headers: { Authorization: `Bearer ${token}` },
             });
-
             const data = await res.json();
             if (data.success) {
-                fetchFaculty(); // Refresh lists
+                toast.success(`Faculty ${action}d successfully`);
+                fetchFaculty(); // refresh lists
             } else {
-                alert(getErrorMessage(data, 'Action failed'));
+                toast.error(getErrorMessage(data, "Action failed"));
             }
-        } catch (error) {
-            console.error(error);
-            alert('Error performing action');
+        } catch (err) {
+            console.error(err);
+            toast.error("Error performing action");
         }
     };
 
     if (error) {
         return (
-            <div className="p-8 text-center">
-                <p className="text-red-500 mb-4">{error}</p>
-                <Button onClick={() => window.location.reload()} variant="outline">Retry</Button>
+            <div className="p-8 text-center space-y-4">
+                <p className="text-destructive">{error}</p>
+                <Button variant="outline" onClick={() => window.location.reload()}>
+                    Retry
+                </Button>
             </div>
         );
     }
 
     if (loading) {
-        return <div className="p-8 text-center text-muted-foreground">Loading faculty data...</div>;
+        return (
+            <div className="flex h-[60vh] items-center justify-center">
+                <div className="text-center space-y-3">
+                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mx-auto" />
+                    <p className="text-muted-foreground">Loading faculty data...</p>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <h2 className="text-3xl font-bold tracking-tight">Faculty Management</h2>
+        <div className="space-y-8">
+            <div>
+                <h1 className="text-3xl font-bold tracking-tight">Faculty Management</h1>
+                <p className="text-muted-foreground text-sm mt-1">
+                    Review registration requests and manage faculty members.
+                </p>
             </div>
 
-            <Tabs defaultValue="pending" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
-                    <TabsTrigger value="pending" className="flex items-center gap-2">
-                        Pending Requests
+            <Tabs defaultValue="pending" className="space-y-6">
+                <TabsList>
+                    <TabsTrigger value="pending" className="gap-2">
+                        Pending
                         {pendingFaculty.length > 0 && (
-                            <Badge variant="destructive" className="h-5 w-5 rounded-full p-0 flex items-center justify-center text-[10px]">
+                            <Badge variant="secondary" className="h-5 px-1.5 text-xs">
                                 {pendingFaculty.length}
                             </Badge>
                         )}
@@ -103,66 +117,89 @@ export default function FacultyManager() {
                     <TabsTrigger value="all">All Faculty</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="pending" className="mt-6">
+                <TabsContent value="pending" className="mt-0">
                     {pendingFaculty.length === 0 ? (
-                        <div className="text-center py-12 border border-dashed rounded-lg">
-                            <User className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                            <h3 className="mt-4 text-lg font-medium">No Pending Requests</h3>
-                            <p className="text-sm text-muted-foreground mt-2">All faculty applications have been verified.</p>
-                        </div>
+                        <EmptyState message="No pending requests" />
                     ) : (
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                             {pendingFaculty.map((faculty) => (
-                                <FacultyCard key={faculty._id} faculty={faculty} onAction={handleAction} isPending={true} />
+                                <FacultyCard
+                                    key={faculty._id}
+                                    faculty={faculty}
+                                    onAction={handleAction}
+                                    showActions={true}
+                                />
                             ))}
                         </div>
                     )}
                 </TabsContent>
 
-                <TabsContent value="all" className="mt-6">
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                        {allFaculty.map((faculty) => (
-                            <FacultyCard key={faculty._id} faculty={faculty} onAction={handleAction} isPending={false} />
-                        ))}
-                    </div>
+                <TabsContent value="all" className="mt-0">
+                    {allFaculty.length === 0 ? (
+                        <EmptyState message="No faculty members found" />
+                    ) : (
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            {allFaculty.map((faculty) => (
+                                <FacultyCard
+                                    key={faculty._id}
+                                    faculty={faculty}
+                                    onAction={handleAction}
+                                    showActions={false}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </TabsContent>
             </Tabs>
         </div>
     );
 }
 
-function FacultyCard({ faculty, onAction, isPending }: { faculty: Faculty, onAction: any, isPending: boolean }) {
+function EmptyState({ message }: { message: string }) {
     return (
-        <Card className="overflow-hidden border-border/50 bg-secondary/20 hover:bg-secondary/40 transition-all">
-            <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-4">
+        <div className="border rounded-lg p-12 text-center">
+            <User className="h-10 w-10 mx-auto text-muted-foreground/50" />
+            <h3 className="mt-3 text-lg font-medium">{message}</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+                All faculty applications have been processed.
+            </p>
+        </div>
+    );
+}
+
+function FacultyCard({
+    faculty,
+    onAction,
+    showActions,
+}: {
+    faculty: Faculty;
+    onAction: (id: string, action: "approve" | "reject") => void;
+    showActions: boolean;
+}) {
+    return (
+        <Card className="overflow-hidden">
+            <CardContent className="p-6 space-y-4">
+                {/* Header: name + status */}
+                <div className="flex justify-between items-start">
                     <div>
                         <h3 className="font-semibold text-lg">{faculty.name}</h3>
                         <p className="text-sm text-muted-foreground">{faculty.email}</p>
                     </div>
-                    <Badge variant={faculty.isApproved ? "default" : "secondary"} className={faculty.isApproved ? "bg-green-500/15 text-green-600 hover:bg-green-500/25" : "bg-yellow-500/15 text-yellow-600 hover:bg-yellow-500/25"}>
+                    <Badge variant={faculty.isApproved ? "default" : "secondary"}>
                         {faculty.isApproved ? "Approved" : "Pending"}
                     </Badge>
                 </div>
 
-                <div className="space-y-2 text-sm mb-6">
-                    <div className="flex justify-between py-1 border-b border-border/50">
-                        <span className="text-muted-foreground">Designation</span>
-                        <span className="font-medium">{faculty.designation}</span>
-                    </div>
-                    <div className="flex justify-between py-1 border-b border-border/50">
-                        <span className="text-muted-foreground">Department</span>
-                        <span className="font-medium">{faculty.department}</span>
-                    </div>
-                    <div className="flex justify-between py-1 border-b border-border/50">
-                        <span className="text-muted-foreground">College</span>
-                        <span className="font-medium">{faculty.collegeName}</span>
-                    </div>
-                    <div className="pt-2">
+                {/* Details grid */}
+                <div className="space-y-2 text-sm">
+                    <DetailRow label="Designation" value={faculty.designation} />
+                    <DetailRow label="Department" value={faculty.department} />
+                    <DetailRow label="College" value={faculty.collegeName} />
+                    <div className="pt-1">
                         <span className="text-muted-foreground block mb-1">Subjects</span>
                         <div className="flex flex-wrap gap-1">
-                            {faculty.subjects.map((sub, i) => (
-                                <Badge key={i} variant="outline" className="text-xs bg-background/50">
+                            {faculty.subjects.map((sub, idx) => (
+                                <Badge key={idx} variant="outline" className="text-xs">
                                     {sub}
                                 </Badge>
                             ))}
@@ -170,20 +207,21 @@ function FacultyCard({ faculty, onAction, isPending }: { faculty: Faculty, onAct
                     </div>
                 </div>
 
-                {isPending && (
-                    <div className="grid grid-cols-2 gap-3">
+                {/* Action buttons */}
+                {showActions && (
+                    <div className="grid grid-cols-2 gap-3 pt-2">
                         <Button
                             variant="outline"
-                            className="w-full border-green-500/30 text-green-600 hover:bg-green-500/10 hover:text-green-700"
-                            onClick={() => onAction(faculty._id, 'approve')}
+                            onClick={() => onAction(faculty._id, "approve")}
+                            className="border-emerald-500/50 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/20"
                         >
                             <Check className="mr-2 h-4 w-4" />
                             Approve
                         </Button>
                         <Button
                             variant="outline"
-                            className="w-full border-red-500/30 text-red-500 hover:bg-red-500/10 hover:text-red-700"
-                            onClick={() => onAction(faculty._id, 'reject')}
+                            onClick={() => onAction(faculty._id, "reject")}
+                            className="border-red-500/50 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
                         >
                             <X className="mr-2 h-4 w-4" />
                             Reject
@@ -191,21 +229,22 @@ function FacultyCard({ faculty, onAction, isPending }: { faculty: Faculty, onAct
                     </div>
                 )}
 
-                {!isPending && !faculty.isApproved && (
+                {!showActions && !faculty.isApproved && (
                     <Button
                         variant="outline"
-                        className="w-full border-green-500/30 text-green-600 hover:bg-green-500/10 hover:text-green-700 mt-2"
-                        onClick={() => onAction(faculty._id, 'approve')}
+                        onClick={() => onAction(faculty._id, "approve")}
+                        className="w-full border-emerald-500/50 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/20"
                     >
                         <Check className="mr-2 h-4 w-4" />
                         Approve Now
                     </Button>
                 )}
-                {!isPending && faculty.isApproved && (
+
+                {!showActions && faculty.isApproved && (
                     <Button
                         variant="outline"
-                        className="w-full border-red-500/30 text-red-500 hover:bg-red-500/10 hover:text-red-700 mt-2"
-                        onClick={() => onAction(faculty._id, 'reject')}
+                        onClick={() => onAction(faculty._id, "reject")}
+                        className="w-full border-red-500/50 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
                     >
                         <X className="mr-2 h-4 w-4" />
                         Revoke Access
@@ -213,5 +252,14 @@ function FacultyCard({ faculty, onAction, isPending }: { faculty: Faculty, onAct
                 )}
             </CardContent>
         </Card>
+    );
+}
+
+function DetailRow({ label, value }: { label: string; value: string }) {
+    return (
+        <div className="flex justify-between py-1 border-b border-border/40">
+            <span className="text-muted-foreground">{label}</span>
+            <span className="font-medium">{value}</span>
+        </div>
     );
 }
