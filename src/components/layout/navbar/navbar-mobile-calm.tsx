@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   LogOut,
   Shield,
+  UploadCloud,
   User,
   X,
 } from "lucide-react";
@@ -46,6 +47,7 @@ export function NavbarMobileCalm() {
     if (path === "/") return Home;
     if (path === "/resources") return BookOpen;
     if (path === "/syllabus") return FileText;
+    if (path === "/add-study-content") return UploadCloud;
     if (path === "/dashboard/faculty") return LayoutDashboard;
     if (path === "/admin/dashboard") return Shield;
     return ChevronRight;
@@ -55,6 +57,7 @@ export function NavbarMobileCalm() {
     if (path === "/") return "Overview and latest sections";
     if (path === "/resources") return "Notes, videos, and topic pages";
     if (path === "/syllabus") return "Subjects and semester syllabus";
+    if (path === "/add-study-content") return "Share your study material";
     if (path === "/dashboard/faculty") return "Faculty workflow";
     if (path === "/admin/dashboard") return "Admin controls";
     return "Open section";

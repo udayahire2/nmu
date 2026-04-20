@@ -44,6 +44,7 @@ import { toast } from "sonner";
 import {
     fetchPendingMaterials,
     fetchApprovedMaterials,
+    fetchRejectedMaterials,
     updateMaterialStatus,
     type StudyMaterial,
 } from "@/services/study-service";
@@ -59,13 +60,14 @@ export default function ContentApprovalPage() {
     const loadData = async () => {
         setLoading(true);
         try {
-            const [pending, approved] = await Promise.all([
+            const [pending, approved, rejected] = await Promise.all([
                 fetchPendingMaterials(),
                 fetchApprovedMaterials(),
+                fetchRejectedMaterials(),
             ]);
             setPendingRequests(pending);
-            setHistoryRequests(approved);
-        } catch (error) {
+            setHistoryRequests([...approved, ...rejected]);
+        } catch {
             toast.error("Failed to load requests");
         } finally {
             setLoading(false);
@@ -83,9 +85,7 @@ export default function ContentApprovalPage() {
 
         // Optimistic update
         setPendingRequests((prev) => prev.filter((r) => r._id !== id));
-        if (action === "approve") {
-            setHistoryRequests((prev) => [{ ...request, status: "approved" }, ...prev]);
-        }
+        setHistoryRequests((prev) => [{ ...request, status }, ...prev]);
 
         const result = await updateMaterialStatus(id, status);
         if (result) {
@@ -100,6 +100,12 @@ export default function ContentApprovalPage() {
         switch ((type || "").toLowerCase()) {
             case "pdf":
                 return <FileText className="h-4 w-4 text-red-500" />;
+            case "ppt":
+                return <File className="h-4 w-4 text-orange-500" />;
+            case "docx":
+                return <FileText className="h-4 w-4 text-blue-500" />;
+            case "markdown":
+                return <BookOpen className="h-4 w-4 text-emerald-500" />;
             case "video":
                 return <Video className="h-4 w-4 text-blue-500" />;
             case "notes":
@@ -135,14 +141,18 @@ export default function ContentApprovalPage() {
     const filteredPending = pendingRequests.filter(
         (r) =>
             r.title.toLowerCase().includes(search.toLowerCase()) ||
-            r.author.toLowerCase().includes(search.toLowerCase())
+            r.author.toLowerCase().includes(search.toLowerCase()) ||
+            r.subject.toLowerCase().includes(search.toLowerCase())
     );
 
     const filteredHistory = historyRequests.filter(
         (r) =>
             r.title.toLowerCase().includes(search.toLowerCase()) ||
-            r.author.toLowerCase().includes(search.toLowerCase())
+            r.author.toLowerCase().includes(search.toLowerCase()) ||
+            r.subject.toLowerCase().includes(search.toLowerCase())
     );
+    const viewingType = viewingRequest?.type.toLowerCase() || "";
+    const viewingUrl = viewingRequest?.url || (viewingRequest?.filePath ? buildAssetUrl(viewingRequest.filePath) : "");
 
     return (
         <div className="space-y-8">
@@ -169,7 +179,7 @@ export default function ContentApprovalPage() {
                                 {pendingRequests.length}
                             </Badge>
                         </TabsTrigger>
-                        <TabsTrigger value="history">Approved History</TabsTrigger>
+                            <TabsTrigger value="history">Review History</TabsTrigger>
                     </TabsList>
                     <div className="relative w-full sm:w-72">
                         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -279,8 +289,8 @@ export default function ContentApprovalPage() {
                 <TabsContent value="history" className="mt-0">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Approved History</CardTitle>
-                            <CardDescription>Recently approved content.</CardDescription>
+                            <CardTitle>Review History</CardTitle>
+                            <CardDescription>Recently approved and rejected content.</CardDescription>
                         </CardHeader>
                         <CardContent className="p-0">
                             <Table>
@@ -289,7 +299,7 @@ export default function ContentApprovalPage() {
                                         <TableHead className="pl-6">Content Details</TableHead>
                                         <TableHead>Author</TableHead>
                                         <TableHead>Status</TableHead>
-                                        <TableHead className="text-right pr-6">Date</TableHead>
+                                                <TableHead className="text-right pr-6">Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -321,8 +331,15 @@ export default function ContentApprovalPage() {
                                                 </TableCell>
                                                 <TableCell>{req.author}</TableCell>
                                                 <TableCell>{getStatusBadge(req.status)}</TableCell>
-                                                <TableCell className="text-right pr-6 text-sm text-muted-foreground">
-                                                    {new Date(req.createdAt).toLocaleDateString()}
+                                                <TableCell className="text-right pr-6">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => setViewingRequest(req)}
+                                                        title="View Content"
+                                                    >
+                                                        <Eye className="h-4 w-4" />
+                                                    </Button>
                                                 </TableCell>
                                             </TableRow>
                                         ))
@@ -353,26 +370,33 @@ export default function ContentApprovalPage() {
                         </div>
                     </DialogHeader>
                     <div className="flex-1 min-h-[60vh] bg-muted/20 flex items-center justify-center">
-                        {viewingRequest?.type.toLowerCase() === "video" ? (
+                        {viewingType === "video" ? (
                             <iframe
-                                src={viewingRequest.url}
+                                src={viewingUrl}
                                 className="w-full h-[60vh]"
-                                title={viewingRequest.title}
+                                title={viewingRequest?.title}
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen
                             />
-                        ) : viewingRequest?.type.toLowerCase() === "pdf" ? (
+                        ) : ["pdf", "markdown"].includes(viewingType) ? (
                             <iframe
-                                src={viewingRequest.url || (viewingRequest.filePath ? buildAssetUrl(viewingRequest.filePath) : "")}
+                                src={viewingUrl}
                                 className="w-full h-[80vh]"
-                                title={viewingRequest.title}
+                                title={viewingRequest?.title}
                             />
                         ) : (
                             <div className="text-center p-10">
                                 <p className="text-muted-foreground">Preview Not Available</p>
-                                {viewingRequest?.url && (
+                                <p className="mt-2 text-xs text-muted-foreground">
+                                    {viewingRequest?.originalFilename || "Open the uploaded file to verify it."}
+                                </p>
+                                {viewingUrl && (
                                     <Button variant="outline" className="mt-4" asChild>
-                                        <a href={viewingRequest.url} target="_blank" rel="noreferrer">
+                                        <a
+                                            href={viewingUrl}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
                                             <ExternalLink className="mr-2 h-4 w-4" /> Open Link
                                         </a>
                                     </Button>

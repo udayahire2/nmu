@@ -11,7 +11,7 @@ const studyMaterialSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['PDF', 'Video', 'Notes'],
+        enum: ['PDF', 'PPT', 'DOCX', 'Markdown', 'Video', 'Notes'],
         required: true,
     },
     // For external links (e.g. YouTube)
@@ -21,6 +21,15 @@ const studyMaterialSchema = new mongoose.Schema({
     // For uploaded files (local path)
     filePath: {
         type: String,
+    },
+    originalFilename: {
+        type: String,
+    },
+    mimeType: {
+        type: String,
+    },
+    fileSize: {
+        type: Number,
     },
     status: {
         type: String,

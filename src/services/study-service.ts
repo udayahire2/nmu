@@ -6,12 +6,16 @@ export interface StudyMaterial {
     _id: string;
     title: string;
     subject: string;
-    type: 'PDF' | 'Video' | 'Notes';
+    type: 'PDF' | 'PPT' | 'DOCX' | 'Markdown' | 'Video' | 'Notes';
     url?: string;
     filePath?: string;
+    originalFilename?: string;
+    mimeType?: string;
+    fileSize?: number;
     status: 'pending' | 'approved' | 'rejected';
     author: string;
     createdAt: string;
+    updatedAt?: string;
 }
 
 export const fetchApprovedMaterials = async (): Promise<StudyMaterial[]> => {
@@ -42,6 +46,23 @@ export const fetchPendingMaterials = async (): Promise<StudyMaterial[]> => {
         return parseApiData<StudyMaterial[]>(payload, []);
     } catch (error) {
         console.error('Error fetching pending materials:', error);
+        return [];
+    }
+};
+
+export const fetchRejectedMaterials = async (): Promise<StudyMaterial[]> => {
+    try {
+        const response = await fetch(`${API_URL}/rejected`, {
+            headers: getAuthHeaders(),
+        });
+        const payload = await response.json();
+        if (!response.ok || payload.success === false) {
+            throw new Error(getErrorMessage(payload, 'Failed to fetch rejected materials'));
+        }
+
+        return parseApiData<StudyMaterial[]>(payload, []);
+    } catch (error) {
+        console.error('Error fetching rejected materials:', error);
         return [];
     }
 };

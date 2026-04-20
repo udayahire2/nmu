@@ -7,6 +7,7 @@ import SignUpPage from "./pages/SignUpPage";
 import VerifyOtpPage from "./pages/VerifyOtpPage";
 import ProfilePage from "./pages/ProfilePage";
 import StudyMaterialsPage from "./pages/StudyMaterialsPage";
+import AddStudyContentPage from "./pages/AddStudyContentPage";
 import SyllabusPage from "./pages/SyllabusPage";
 import AdminLayout from "./layouts/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
@@ -66,6 +67,10 @@ export const router = createBrowserRouter([
                     {
                         path: "/syllabus",
                         element: <SyllabusPage />,
+                    },
+                    {
+                        path: "/add-study-content",
+                        element: <AddStudyContentPage />,
                     },
                 ],
             },

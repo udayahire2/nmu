@@ -1,5 +1,5 @@
-import { ChevronRight, Home } from "lucide-react";
-import { useState } from "react";
+import { ChevronRight, ExternalLink, FileText, Home, Loader2, UploadCloud } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { BranchSemesterSelection } from "@/components/study/BranchSemesterSelection";
@@ -7,12 +7,37 @@ import { SubjectDashboard } from "@/components/study/SubjectDashboard";
 import { SubjectGrid } from "@/components/study/SubjectGrid";
 import { TopicViewer } from "@/components/study/TopicViewer";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { getSubject, getSubjects } from "@/data/study-data";
+import { buildAssetUrl } from "@/services/api";
+import { fetchApprovedMaterials, type StudyMaterial } from "@/services/study-service";
 
 export default function StudyMaterialsPage() {
   const { branch, semester, subjectId, topicId } = useParams();
   const navigate = useNavigate();
   const [tempBranch, setTempBranch] = useState<string | null>(null);
+  const [approvedUploads, setApprovedUploads] = useState<StudyMaterial[]>([]);
+  const [loadingUploads, setLoadingUploads] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+
+    fetchApprovedMaterials()
+      .then((materials) => {
+        if (mounted) {
+          setApprovedUploads(materials);
+        }
+      })
+      .finally(() => {
+        if (mounted) {
+          setLoadingUploads(false);
+        }
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleBranchSelect = (selectedBranch: string) => {
     setTempBranch(selectedBranch);
@@ -130,12 +155,15 @@ export default function StudyMaterialsPage() {
       {/* Routing Views Container */}
       <div className="min-h-[400px] w-full">
         {isRoot && (
-          <BranchSemesterSelection
-            selectedBranch={tempBranch}
-            selectedSemester={null}
-            onBranchSelect={handleBranchSelect}
-            onSemesterSelect={handleSemesterSelect}
-          />
+          <div className="space-y-10">
+            <BranchSemesterSelection
+              selectedBranch={tempBranch}
+              selectedSemester={null}
+              onBranchSelect={handleBranchSelect}
+              onSemesterSelect={handleSemesterSelect}
+            />
+            <ApprovedUploadsSection materials={approvedUploads} loading={loadingUploads} />
+          </div>
         )}
 
         {isSubjectList && <SubjectGrid subjects={subjects} branch={branch!} semester={semester!} />}
@@ -146,5 +174,86 @@ export default function StudyMaterialsPage() {
       </div>
       
     </div>
+  );
+}
+
+function ApprovedUploadsSection({
+  materials,
+  loading,
+}: {
+  materials: StudyMaterial[];
+  loading: boolean;
+}) {
+  return (
+    <section className="space-y-5 border-t border-border/50 pt-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-2">
+          <Badge variant="outline" className="w-fit rounded-md">
+            Community uploads
+          </Badge>
+          <div>
+            <h2 className="text-2xl font-semibold text-foreground">Approved study content</h2>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
+              Student submissions reviewed by admins and shared with proper credit.
+            </p>
+          </div>
+        </div>
+        <Button asChild variant="outline" className="w-full rounded-md sm:w-auto">
+          <Link to="/add-study-content">
+            <UploadCloud className="h-4 w-4" />
+            Add Your Study Content
+          </Link>
+        </Button>
+      </div>
+
+      {loading ? (
+        <div className="flex min-h-36 items-center justify-center rounded-md border border-border/50">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </div>
+      ) : materials.length === 0 ? (
+        <div className="rounded-md border border-dashed border-border/50 p-8 text-center">
+          <FileText className="mx-auto h-8 w-8 text-muted-foreground/50" />
+          <p className="mt-3 text-sm font-medium text-foreground">No approved uploads yet</p>
+          <p className="mt-1 text-sm text-muted-foreground">Be the first to submit useful study material.</p>
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2">
+          {materials.map((material) => {
+            const href = material.url || (material.filePath ? buildAssetUrl(material.filePath) : "");
+
+            return (
+              <article key={material._id} className="rounded-md border border-border/50 bg-background p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex min-w-0 gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border/60 bg-muted/30">
+                      <FileText className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="min-w-0 space-y-1">
+                      <h3 className="truncate text-sm font-semibold text-foreground">{material.title}</h3>
+                      <p className="text-xs text-muted-foreground">{material.subject}</p>
+                    </div>
+                  </div>
+                  <Badge variant="secondary" className="rounded-md text-xs">
+                    {material.type}
+                  </Badge>
+                </div>
+
+                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-xs font-medium text-muted-foreground">Uploaded by {material.author}</p>
+                  {href && (
+                    <Button asChild size="sm" className="rounded-md">
+                      <a href={href} target="_blank" rel="noreferrer">
+                        Open
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
+    </section>
   );
 }

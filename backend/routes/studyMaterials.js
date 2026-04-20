@@ -4,6 +4,18 @@ const multer = require('multer');
 const path = require('path');
 const StudyMaterial = require('../models/StudyMaterial');
 
+const FILE_TYPE_BY_EXTENSION = {
+    '.pdf': 'PDF',
+    '.ppt': 'PPT',
+    '.pptx': 'PPT',
+    '.docx': 'DOCX',
+    '.md': 'Markdown',
+};
+
+function getFileType(originalName) {
+    return FILE_TYPE_BY_EXTENSION[path.extname(originalName).toLowerCase()] || null;
+}
+
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -21,7 +33,18 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 50 * 1024 * 1024 },
+    fileFilter: (_req, file, cb) => {
+        if (getFileType(file.originalname)) {
+            cb(null, true);
+            return;
+        }
+
+        cb(new Error('Only .pdf, .ppt, .pptx, .docx, and .md files can be uploaded'));
+    },
+});
 
 // GET /api/materials/approved - Get all approved materials (Student View)
 router.get('/approved', async (req, res) => {
@@ -43,6 +66,16 @@ router.get('/pending', async (req, res) => {
     }
 });
 
+// GET /api/materials/rejected - Get all rejected materials (Admin View)
+router.get('/rejected', async (req, res) => {
+    try {
+        const materials = await StudyMaterial.find({ status: 'rejected' }).sort({ createdAt: -1 });
+        res.json(materials);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 // POST /api/materials - Upload/Create new material
 // supports multipart/form-data for file uploads
 router.post('/', upload.single('file'), async (req, res) => {
@@ -55,12 +88,24 @@ router.post('/', upload.single('file'), async (req, res) => {
             filePath = `/uploads/${req.file.filename}`;
         }
 
+        const inferredType = req.file ? getFileType(req.file.originalname) : type;
+        if (!inferredType) {
+            return res.status(400).json({ message: 'A supported study file is required' });
+        }
+
+        if (type && type !== inferredType) {
+            return res.status(400).json({ message: `Selected type does not match uploaded file. Expected ${inferredType}.` });
+        }
+
         const newMaterial = new StudyMaterial({
             title,
             subject,
-            type,
+            type: inferredType,
             url: url || '', // Optional if file provided
             filePath: filePath,
+            originalFilename: req.file?.originalname,
+            mimeType: req.file?.mimetype,
+            fileSize: req.file?.size,
             author: author || 'Student',
             status: 'pending' // Default status
         });
