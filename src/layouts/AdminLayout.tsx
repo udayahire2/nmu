@@ -1,190 +1,301 @@
-import { useState, useEffect, useRef } from 'react';
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { useLocalAuth } from "@/hooks/use-local-auth";
+import { useEffect, useMemo, useState } from "react";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
-    LayoutDashboard,
-    BookOpen,
-    Settings,
-    LogOut,
-    Menu,
-
-    Search,
-    Bell,
-    ClipboardCheck,
-    Users,
-} from 'lucide-react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Lenis from 'lenis';
-
+  Bell,
+  BookOpen,
+  ChevronRight,
+  ClipboardCheck,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Search,
+  Settings,
+  Users,
+} from "lucide-react";
+import { useLocalAuth } from "@/hooks/use-local-auth";
+import { NavbarThemeToggle } from "@/components/layout/navbar/navbar-theme-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/ui/logo";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+
+const navSections = [
+  {
+    label: "Workspace",
+    items: [
+      { icon: LayoutDashboard, label: "Dashboard", path: "/admin/dashboard" },
+      { icon: ClipboardCheck, label: "Approvals", path: "/admin/approvals" },
+      { icon: Users, label: "Students", path: "/admin/students" },
+    ],
+  },
+  {
+    label: "Content",
+    items: [
+      { icon: BookOpen, label: "Syllabus", path: "/admin/syllabus" },
+      { icon: BookOpen, label: "Resources", path: "/admin/resources" },
+      { icon: Users, label: "Faculty", path: "/admin/faculty" },
+      { icon: Settings, label: "Settings", path: "/admin/settings" },
+    ],
+  },
+];
 
 export default function AdminLayout() {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const location = useLocation();
-    const scrollContainerRef = useRef<HTMLElement>(null);
-    const { user } = useLocalAuth();
-    const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout, getInitials } = useLocalAuth();
 
-    useEffect(() => {
-        if (user && user.role !== 'admin') {
-            navigate('/dashboard');
-        } else if (!user && !localStorage.getItem('token')) {
-            navigate('/login');
-        }
-    }, [user, navigate]);
+  useEffect(() => {
+    if (user && user.role !== "admin") {
+      navigate("/dashboard");
+    } else if (!user && !localStorage.getItem("token")) {
+      navigate("/login");
+    }
+  }, [navigate, user]);
 
-    useEffect(() => {
-        if (!scrollContainerRef.current) return;
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
 
-        const lenis = new Lenis({
-            wrapper: scrollContainerRef.current,
-            content: scrollContainerRef.current.firstElementChild as HTMLElement,
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            orientation: 'vertical',
-            gestureOrientation: 'vertical',
-            smoothWheel: true,
-            wheelMultiplier: 1,
-            touchMultiplier: 2,
-        });
-
-        function raf(time: number) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-
-        requestAnimationFrame(raf);
-
-        return () => {
-            lenis.destroy();
-        };
-    }, []);
-
-    const navItems = [
-        { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
-        { icon: Users, label: 'Students', path: '/admin/students' },
-        { icon: BookOpen, label: 'Syllabus', path: '/admin/syllabus' },
-        { icon: BookOpen, label: 'Resources', path: '/admin/resources' },
-        { icon: Users, label: 'Faculty', path: '/admin/faculty' },
-        { icon: ClipboardCheck, label: 'Approvals', path: '/admin/approvals' },
-        { icon: Settings, label: 'Settings', path: '/admin/settings' },
-    ];
-
+  const currentPage = useMemo(() => {
     return (
-        <div className="h-screen bg-[#09090b] flex overflow-hidden font-inter selection:bg-primary/20">
-            {/* Sidebar (Glass) */}
-            <aside className={`
-                fixed inset-y-4 left-4 z-50 w-64 rounded-3xl border border-white/5 bg-black/40 backdrop-blur-2xl shadow-2xl flex flex-col
-                md:relative md:translate-x-0 md:inset-y-0 md:left-0 md:h-screen md:rounded-none md:border-y-0 md:border-l-0 md:border-r md:bg-black/20
-                ${sidebarOpen ? 'translate-x-0' : '-translate-x-[110%] md:translate-x-0'}
-            `}>
-                {/* Sidebar Header */}
-                <div className="h-20 flex items-center px-8 border-b border-white/5">
-                    <div className="scale-90 origin-left">
-                        <Logo />
-                    </div>
-                </div>
-
-                {/* Sidebar Nav */}
-                <div className="flex-1 py-8 px-4 space-y-1 overflow-y-auto scrollbar-none">
-                    <div className="px-4 mb-4 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">
-                        Overview
-                    </div>
-                    {navItems.map((item) => {
-                        const isActive = location.pathname === item.path;
-                        return (
-                            <Link key={item.path} to={item.path} className="block group">
-                                <div className={`
-                                    relative flex items-center gap-3 px-4 py-3 rounded-xl
-                                    ${isActive
-                                        ? "text-primary bg-primary/10 shadow-[0_0_20px_rgba(var(--primary),0.15)]"
-                                        : "text-muted-foreground/80 hover:text-foreground hover:bg-white/5"
-                                    }
-                                `}>
-                                    {isActive && (
-                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full shadow-[0_0_10px_var(--primary)]" />
-                                    )}
-                                    <item.icon className={`h-[18px] w-[18px] group-hover:scale-110 ${isActive ? "text-primary" : ""}`} />
-                                    <span className="font-medium text-sm tracking-wide">{item.label}</span>
-                                </div>
-                            </Link>
-                        )
-                    })}
-                </div>
-
-                {/* Sidebar Footer (Profile) */}
-                <div className="p-4 mx-4 mb-4 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-md">
-                    <div className="flex items-center gap-3">
-                        <Avatar className="h-9 w-9 border-2 border-white/10 ring-2 ring-black/20">
-                            <AvatarImage src="https://github.com/shadcn.png" />
-                            <AvatarFallback>AD</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0 overflow-hidden">
-                            <p className="text-sm font-semibold truncate text-foreground">Admin User</p>
-                            <p className="text-[10px] text-muted-foreground truncate">Premium Plan</p>
-                        </div>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-red-400 hover:bg-red-400/10">
-                            <LogOut className="h-4 w-4" />
-                        </Button>
-                    </div>
-                </div>
-            </aside>
-
-            {/* Mobile Overlay */}
-            {sidebarOpen && (
-                <div
-                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden animate-in fade-in duration-300"
-                    onClick={() => setSidebarOpen(false)}
-                />
-            )}
-
-            {/* Main Content Area */}
-            <div className="flex-1 flex flex-col h-full relative overflow-hidden">
-
-                {/* Top Header */}
-                <header className="h-20 flex items-center justify-between px-6 md:px-10 sticky top-0 z-30 bg-background md:bg-transparent border-b md:border-b-0 border-white/5">
-
-                    <div className="flex items-center gap-4 z-10">
-                        <Button variant="ghost" size="icon" className="md:hidden text-muted-foreground hover:bg-white/10" onClick={() => setSidebarOpen(true)}>
-                            <Menu className="h-5 w-5" />
-                        </Button>
-                        <div className="hidden md:flex flex-col">
-                            <h2 className="text-lg font-semibold tracking-tight text-foreground">
-                                {navItems.find(i => i.path === location.pathname)?.label || 'Dashboard'}
-                            </h2>
-                            <p className="text-xs text-muted-foreground">Welcome back, Admin</p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 md:gap-4 z-10">
-                        <div className="relative hidden md:block group">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                            <Input
-                                type="search"
-                                placeholder="Search..."
-                                className="w-64 pl-9 h-10 bg-black/20 border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:bg-black/30 rounded-xl transition-all"
-                            />
-                        </div>
-
-                        <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-foreground hover:bg-white/5 rounded-xl">
-                            <Bell className="h-5 w-5" />
-                            <span className="absolute top-2.5 right-2.5 h-2 w-2 bg-red-500 rounded-full border-2 border-background" />
-                        </Button>
-                    </div>
-                </header>
-
-                {/* Scrollable Page Content */}
-                <main
-                    ref={scrollContainerRef}
-                    className="flex-1 overflow-y-auto overflow-x-hidden p-6 md:p-10 scrollbar-none"
-                >
-                    <div className="max-w-7xl mx-auto space-y-8">
-                        <Outlet />
-                    </div>
-                </main>
-            </div>
-        </div>
+      navSections
+        .flatMap((section) => section.items)
+        .find((item) => item.path === location.pathname)?.label ?? "Dashboard"
     );
+  }, [location.pathname]);
+
+  const displayName = user?.name || "Admin User";
+  const displayEmail = user?.email || "admin@studyhub.com";
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1600px]">
+        {/* Mobile overlay */}
+        <div
+          aria-hidden="true"
+          className={cn(
+            "fixed inset-0 z-40 bg-black/40 transition-opacity md:hidden",
+            sidebarOpen ? "opacity-100" : "pointer-events-none opacity-0",
+          )}
+          onClick={() => setSidebarOpen(false)}
+        />
+
+        {/* Sidebar */}
+        <aside
+          className={cn(
+            "fixed inset-y-0 left-0 z-50 w-[280px] border-r bg-background transition-transform duration-200 md:sticky md:top-0 md:h-screen md:translate-x-0",
+            sidebarOpen ? "translate-x-0" : "-translate-x-full",
+          )}
+        >
+          <div className="flex h-full flex-col">
+            {/* Sidebar header */}
+            <div className="flex h-16 items-center justify-between px-4">
+              <Link className="min-w-0" to="/admin/dashboard">
+                <Logo />
+              </Link>
+              <Badge variant="outline">Admin</Badge>
+            </div>
+
+            <Separator />
+
+            {/* Info card */}
+            <div className="px-3 py-3">
+              <div className="rounded-lg border p-3">
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  Today
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Keep reviews moving and the campus workspace tidy.
+                </p>
+              </div>
+            </div>
+
+            {/* Navigation */}
+            <ScrollArea className="flex-1 px-3 pb-3">
+              <div className="space-y-5">
+                {navSections.map((section) => (
+                  <div key={section.label} className="space-y-2">
+                    <div className="px-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                      {section.label}
+                    </div>
+                    <div className="space-y-1">
+                      {section.items.map((item) => {
+                        const isActive =
+                          location.pathname === item.path ||
+                          (location.pathname === "/admin" &&
+                            item.path === "/admin/dashboard");
+
+                        return (
+                          <Link key={item.path} to={item.path}>
+                            <div
+                              className={cn(
+                                "flex items-center justify-between rounded-md px-3 py-2 text-sm transition-colors",
+                                isActive
+                                  ? "bg-accent text-accent-foreground"
+                                  : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
+                              )}
+                            >
+                              <div className="flex items-center gap-3">
+                                <item.icon className="h-4 w-4" />
+                                <span>{item.label}</span>
+                              </div>
+                              <ChevronRight
+                                className={cn(
+                                  "h-4 w-4 transition-opacity",
+                                  isActive ? "opacity-100" : "opacity-0",
+                                )}
+                              />
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+
+            {/* User footer */}
+            <div className="border-t p-3">
+              <div className="rounded-lg border p-3">
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={user?.avatar} />
+                    <AvatarFallback>{getInitials(displayName)}</AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">
+                      {displayName}
+                    </p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {displayEmail}
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  className="mt-3 w-full justify-start"
+                  onClick={logout}
+                  variant="outline"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign out
+                </Button>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* Main content */}
+        <div className="flex min-w-0 flex-1 flex-col">
+          {/* Header */}
+          <header className="sticky top-0 z-30 border-b bg-background">
+            <div className="flex h-16 items-center gap-3 px-4 sm:px-6 lg:px-8">
+              <Button
+                className="md:hidden"
+                onClick={() => setSidebarOpen(true)}
+                size="icon"
+                variant="outline"
+              >
+                <Menu className="h-4 w-4" />
+              </Button>
+
+              <div className="min-w-0 flex-1">
+                <Breadcrumb>
+                  <BreadcrumbList>
+                    <BreadcrumbItem>
+                      <span className="text-muted-foreground">Admin</span>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage>{currentPage}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </BreadcrumbList>
+                </Breadcrumb>
+              </div>
+
+              <div className="relative hidden w-full max-w-xs lg:block">
+                <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/50" />
+                <Input
+                  className="pl-8"
+                  placeholder="Search students, approvals, resources..."
+                  type="search"
+                />
+              </div>
+
+              <NavbarThemeToggle />
+
+              <Button className="relative" size="icon" variant="outline">
+                <Bell className="h-4 w-4" />
+                <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-amber-500" />
+              </Button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="rounded-full">
+                    <Avatar className="h-7 w-7">
+                      <AvatarImage src={user?.avatar} />
+                      <AvatarFallback>
+                        {getInitials(displayName)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium">{displayName}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {displayEmail}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin/settings">
+                      <Settings className="mr-2 h-4 w-4" />
+                      Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={logout}
+                    className="text-destructive"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </header>
+
+          {/* Main page content */}
+          <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+            <div className="mx-auto w-full max-w-6xl">
+              <Outlet />
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  );
 }
