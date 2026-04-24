@@ -52,6 +52,7 @@ export function NavbarMobile() {
                             <div className="text-[11px] font-bold text-muted-foreground/50 tracking-widest uppercase px-3 mb-2">Navigation</div>
                             {[
                                 ...NAV_LINKS,
+                                ...(user ? [{ path: '/add-study-content', label: 'Add Content' }] : []),
                                 ...(user?.role === 'faculty' ? [{ path: '/dashboard/faculty', label: 'Dashboard' }] : []),
                                 ...(user?.role === 'admin' ? [{ path: '/admin/dashboard', label: 'Admin' }] : [])
                             ].map((link) => (

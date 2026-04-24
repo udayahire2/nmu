@@ -36,6 +36,7 @@ export function NavbarMobileCalm() {
 
   const links = [
     ...NAV_LINKS,
+    ...(user ? [{ path: "/add-study-content", label: "Add Content" }] : []),
     ...(user?.role === "faculty" ? [{ path: "/dashboard/faculty", label: "Dashboard" }] : []),
     ...(user?.role === "admin" ? [{ path: "/admin/dashboard", label: "Admin" }] : []),
   ];

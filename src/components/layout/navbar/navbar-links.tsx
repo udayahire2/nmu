@@ -12,6 +12,7 @@ export function NavbarLinks() {
 
   const links = [
     ...NAV_LINKS,
+    ...(user ? [{ path: "/add-study-content", label: "Add Content" }] : []),
     ...(user?.role === "faculty"
       ? [{ path: "/dashboard/faculty", label: "Dashboard" }]
       : []),

@@ -1,5 +1,5 @@
-import { createBrowserRouter, Outlet, Navigate } from "react-router-dom";
-import { RootProvider } from "fumadocs-ui/provider/react-router";
+import { createBrowserRouter, Outlet } from "react-router-dom";
+
 import Layout from "./components/layout/Layout";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -18,15 +18,15 @@ import FacultyManager from "./pages/admin/FacultyManager";
 import ContentApprovalPage from "./pages/admin/ContentApprovalPage";
 import SettingsPage from "./pages/admin/SettingsPage";
 import FacultyDashboard from "./pages/dashboard/FacultyDashboard";
-import DocsPageRoute from "./pages/DocsPageRoute";
+
 
 import ErrorPage from "./pages/ErrorPage";
 
 const GlobalLayout = () => {
     return (
-        <RootProvider>
+        <>
             <Outlet />
-        </RootProvider>
+        </>
     );
 };
 
@@ -137,15 +137,6 @@ export const router = createBrowserRouter([
                 path: "/dashboard/faculty",
                 element: <Layout><FacultyDashboard /></Layout>,
                 errorElement: <ErrorPage />,
-            },
-            {
-                path: "/docs/*",
-                element: <DocsPageRoute />,
-                errorElement: <ErrorPage />,
-            },
-            {
-                path: "/docs-demo",
-                element: <Navigate to="/docs/fumadocs-setup" replace />,
             },
         ]
     },

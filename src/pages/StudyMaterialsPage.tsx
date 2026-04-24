@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { getSubject, getSubjects } from "@/data/study-data";
 import { buildAssetUrl } from "@/services/api";
 import { fetchApprovedMaterials, type StudyMaterial } from "@/services/study-service";
+import { useLocalAuth } from "@/hooks/use-local-auth";
 
 export default function StudyMaterialsPage() {
   const { branch, semester, subjectId, topicId } = useParams();
@@ -184,6 +185,7 @@ function ApprovedUploadsSection({
   materials: StudyMaterial[];
   loading: boolean;
 }) {
+  const { user } = useLocalAuth();
   return (
     <section className="space-y-5 border-t border-border/50 pt-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -198,12 +200,14 @@ function ApprovedUploadsSection({
             </p>
           </div>
         </div>
-        <Button asChild variant="outline" className="w-full rounded-md sm:w-auto">
-          <Link to="/add-study-content">
-            <UploadCloud className="h-4 w-4" />
-            Add Your Study Content
-          </Link>
-        </Button>
+        {user && (
+          <Button asChild variant="outline" className="w-full rounded-md sm:w-auto">
+            <Link to="/add-study-content">
+              <UploadCloud className="h-4 w-4" />
+              Add Your Study Content
+            </Link>
+          </Button>
+        )}
       </div>
 
       {loading ? (
